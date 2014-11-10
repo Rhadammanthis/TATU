@@ -1,0 +1,20 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res/sample.actionscontentview"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" xmlns:app1="http://schemas.android.com/apk/res/com.example.navigationsample">
+    
+    <shared.ui.actionscontentview.ActionsContentView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/dieta_actionsContentView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:effect_actions="@anim/actions"
+        app:actions_layout="@layout/side_menu"        
+        app:content_layout="@layout/activity_dieta"
+        app:swiping_type="full"
+        app:spacing_type="actions_width"
+        app:spacing="200dip"
+        app:fade_type="actions" />
+ 
+
+</RelativeLayout>

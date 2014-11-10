@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">MiYoIdeal</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="menu_settings">MENU</string>
+    <string name="swipe">SWIPE</string>
+    <string name="title_activity_home">Home</string>
+    <string name="title_activity_mi_perfil">MiPerfilActivity</string>
+
+    <string-array name="nivel_array">
+        <item>Bajo</item>
+        <item>Medio</item>
+        <item>Alto</item>
+    </string-array>
+
+    <string name="title_activity_ejercicio">EjercicioActivity</string>
+    <string name="title_activity_calendario">CalendarioActivity</string>
+    <string name="title_activity_dieta">DietaActivity</string>
+
+    <string name="title">Calendar Card Sample</string>
+    <string name="card">Calendar Card</string>
+    <string name="card_pager">Calendar Card Pager</string>
+    <string name="sel_date">Selected date: %s</string>
+
+</resources>

@@ -1,0 +1,82 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res/sample.actionscontentview"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:paddingTop="6dip"
+        android:text="Resumen de Dieta"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <ImageView
+        android:id="@+id/foto"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_below="@+id/textView1"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="26dp"
+      	android:clickable="true"
+        android:src="@drawable/abc_ab_stacked_transparent_light_holo" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/imageView1"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp"
+        android:text="Tipo de Dieta"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <EditText
+        android:id="@+id/editText2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/editText1"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="14dp"
+        android:hint="Peso"
+        android:ems="10" />
+
+    <Button
+        android:id="@+id/buttonGuardar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/editText2"
+        android:layout_alignRight="@+id/editText2"
+        android:layout_below="@+id/editText2"
+        android:layout_marginTop="16dp"
+        android:paddingEnd="16dip"
+        android:text="Guardar" />
+
+    <EditText
+        android:id="@+id/editText1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/buttonGuardar"
+        android:layout_below="@+id/foto"
+        android:layout_marginTop="16dp"
+        android:ems="10"
+        android:hint="Talla" />
+
+</RelativeLayout>
+
+<!-- <shared.ui.actionscontentview.ActionsContentView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res/sample.actionscontentview"
+    android:id="@+id/actionsContentView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:actions_layout="@layout/effect_actions"
+    app:actions_spacing="0dp"
+    app:content_layout="@layout/effect_content"
+    app:effect_content="@anim/effect_alpha_content"
+    app:fade_max_value="@integer/default_pref_fade_max_value"
+    app:fade_type="none"
+    app:fling_duration="@integer/default_pref_fling_delay"
+    app:spacing="0dp"
+    app:swiping_type="full" /> -->

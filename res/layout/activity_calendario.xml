@@ -1,0 +1,40 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/content1"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white" 
+    android:orientation="vertical">   
+    
+    <com.wt.calendarcard.CalendarCardPager
+        android:id="@+id/calendarCard6"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    
+    <View
+        android:layout_height="2dip"
+        android:layout_width="match_parent"
+        android:background="#FF909090" />
+
+    <ScrollView
+        android:id="@+id/scrollView1"
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent" >
+
+        <LinearLayout
+            android:id="@+id/calendarLinearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="fill_parent"
+            android:background="@android:color/white"
+            android:paddingLeft="16dip"
+            android:paddingTop="16dip"
+            android:orientation="vertical" >
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>
+
+<!--  <com.wt.calendarcard.CalendarCardPager
+calendarLinearLayout
+        android:id="@+id/calendarCard6"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" /> -->
