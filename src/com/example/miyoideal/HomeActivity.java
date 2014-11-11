@@ -6,7 +6,7 @@ import shared.ui.actionscontentview.ActionsContentView;
 
 
 import com.dgmltn.shareeverywhere.ShareView;
-import com.example.miyoideal.widget.SQLiteUserDataBase;
+import com.example.miyoideal.widget.SQLiteUserDB;
 import com.example.miyoideal.widget.SideMenu;
 
 import android.R.menu;
@@ -128,7 +128,7 @@ public class HomeActivity extends ActionBarActivity {
 		ShareView shareView = (ShareView) findViewById(R.id.share_view);
 		shareView.setShareIntent(mSharedIntents);
 		
-		SQLiteUserDataBase dbUser = new SQLiteUserDataBase(this);
+		SQLiteUserDB dbUser = new SQLiteUserDB(this);
 		dbUser.getReadableDatabase();
 		String query = "Select * FROM " + "users" + " WHERE " + "id" + " =  \"" + "1" + "\"";
 		Cursor cursor = dbUser.getReadableDatabase().rawQuery(query, null);

@@ -2,7 +2,8 @@ package com.example.miyoideal;
 
 import java.util.HashMap;
 
-import com.example.miyoideal.widget.SQLiteUserDataBase;
+import com.example.miyoideal.widget.SQLiteFactory;
+import com.example.miyoideal.widget.SQLiteUserDB;
 
 import android.support.v7.app.ActionBarActivity;
 import android.content.ContentValues;
@@ -17,7 +18,7 @@ import android.view.View;
 import android.widget.Button;
 
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends ActionBarActivity{
 	
 	//layout components
 	private Button button;
@@ -27,7 +28,7 @@ public class MainActivity extends ActionBarActivity {
 	private int height;
 	
 	//database
-	private SQLiteUserDataBase userDB;
+	private SQLiteUserDB userDB;
 	private ContentValues values;
 
     @Override
@@ -45,10 +46,10 @@ public class MainActivity extends ActionBarActivity {
         
         button = (Button) findViewById(R.id.button1);
         
-        userDB = new SQLiteUserDataBase(this);
+        userDB = new SQLiteUserDB(this);
 		
 		userDB.getReadableDatabase();
-		String query = "Select * FROM " + "users" + " WHERE " + "id" + " =  \"" + "1" + "\"";
+		String query = "Select * FROM " + "usuario" + " WHERE " + "id_usuario" + " =  \"" + "1" + "\"";
 		values = new ContentValues();
 		Cursor cursor = userDB.getReadableDatabase().rawQuery(query, null);
 		if(cursor.moveToFirst())
@@ -65,9 +66,9 @@ public class MainActivity extends ActionBarActivity {
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				userDB.getWritableDatabase();
-				values.put("id", "1");
-				values.put("name", "Hugo");
-				values.put("weight", "85 kg");
+				values.put("id_usuario", "1");
+				values.put("nombre", "Hugo");
+				values.put("peso", "85 kg");
 				userDB.getWritableDatabase().insert("users", null, values);
 				userDB.close();
 				Intent intent = new Intent(MainActivity.this, HomeActivity.class);
@@ -98,4 +99,5 @@ public class MainActivity extends ActionBarActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
 }
