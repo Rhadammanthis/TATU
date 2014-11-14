@@ -1,6 +1,7 @@
 package com.example.miyoideal;
 
 import java.io.File;
+import java.io.IOException;
 
 import shared.ui.actionscontentview.ActionsContentView;
 
@@ -65,6 +66,7 @@ public class HomeActivity extends ActionBarActivity {
     private String filePath;
     public static final int MEDIA_TYPE_IMAGE = 1;
     private File mediaFile;
+    private CameraActivity activity;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -104,14 +106,43 @@ public class HomeActivity extends ActionBarActivity {
                 
                 save.setOnClickListener(new View.OnClickListener(){
                     public void onClick(View v) {
-                    	String path = Environment.getExternalStorageDirectory() + "/photo1.jpg";
+                    	// Camera exists? Then proceed... 
+                    	Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE); 
+                    	// Ensure that there's a camera activity to handle the intent 
+                    	activity = new CameraActivity();
+
+                    		// Create the File where the photo should go. 
+                    		// If you don't do this, you may get a crash in some devices. 
+                    		File photoFile = null; 
+                    		try 
+                    		{ 
+								photoFile = new File(Environment.getExternalStorageDirectory() + File.separator + "share_image.png");
+								photoFile.createNewFile();
+                    		} catch (IOException ex) { 
+                    			// Error occurred while creating the File 
+                    			Toast toast = Toast.makeText(activity, "There was a problem saving the photo...", Toast.LENGTH_SHORT); toast.show(); 
+                    			} 
+                    		// Continue only if the File was successfully created 
+                    		if (photoFile != null) 
+                    		{ 
+                    			Uri fileUri = Uri.fromFile(photoFile); 
+                    			activity.setCapturedImageURI(fileUri); 
+                    			activity.setCurrentPhotoPath(fileUri.getPath()); 
+                    			//takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, activity.getCapturedImageURI()); 
+                    			startActivityForResult(takePictureIntent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE); 
+                    			} 
+                    		}
+                    		
+                
+            
+                    	/*String path = Environment.getExternalStorageDirectory() + "/photo1.jpg";
                     	File file = new File(path);
                         fileUri = Uri.fromFile(file);
                         Intent intent = new Intent(
                                 android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
                         intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
-                        startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
-                    }
+                        startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);*/
+                    
                 });
 				
 			}
@@ -130,7 +161,7 @@ public class HomeActivity extends ActionBarActivity {
 		
 		SQLiteUserDB dbUser = new SQLiteUserDB(this);
 		dbUser.getReadableDatabase();
-		String query = "Select * FROM " + "users" + " WHERE " + "id" + " =  \"" + "1" + "\"";
+		String query = "Select * FROM " + "usuario" + " WHERE " + "id_usuario" + " =  \"" + "1" + "\"";
 		Cursor cursor = dbUser.getReadableDatabase().rawQuery(query, null);
 		if(cursor.moveToFirst())
 		{
@@ -145,7 +176,19 @@ public class HomeActivity extends ActionBarActivity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		try {
+		if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) { 
+			//CameraActivity activity = (CameraActivity)getActivity(); 
+			// Show the full sized image. 
+			//setFullImageFromFilePath(activity.getCurrentPhotoPath(), mImageView); 
+			//setFullImageFromFilePath(activity.getCurrentPhotoPath(), mThumbnailImageView); 
+			dialogIV.setImageBitmap((Bitmap) data.getExtras().get("data"));
+			//dialogIV.setImageURI(activity.getCapturedImageURI());
+			} 
+		else { 
+			Toast.makeText(this, "Image Capture Failed", Toast.LENGTH_SHORT) .show(); 
+			}
+		
+		/*try {
 			if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
 		        if (resultCode == RESULT_OK) {
 		        	//Bitmap photo = (Bitmap) data.getExtras().get("data"); 
@@ -176,7 +219,7 @@ public class HomeActivity extends ActionBarActivity {
             Toast.makeText(this, "Picture Not taken",
                             Toast.LENGTH_LONG).show();
             e.printStackTrace();
-        }
+        }*/
 	    
 	}
 	
@@ -241,7 +284,7 @@ public class HomeActivity extends ActionBarActivity {
 	{
 		final String[] values = new String[] { "Mi Perfil", "Mi Dieta", "Mi Ejercicio", 
 	    		"Mas Dietas", "Calendario", "Estadisticas", "Preguntanos",
-	    		"Comparte", "Tips y Sujerencias", "Recordatorios"};
+	    		"Comparte", "Tips y Sujerencias", "Recordatorios", "Seleccionar Dieta"};
 	    final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
 	        android.R.layout.simple_list_item_1, android.R.id.text1, values);
 
@@ -277,6 +320,11 @@ public class HomeActivity extends ActionBarActivity {
 	      break;
 	    case 4:
 	    	intent = new Intent(HomeActivity.this, CalendarioActivity.class);
+	    	intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(intent);
+	      break;
+	    case 10:
+	    	intent = new Intent(HomeActivity.this, SelecDieta.class);
 	    	intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(intent);
 	      break;

@@ -11,6 +11,7 @@ public class SQLiteDietaDB extends SQLiteOpenHelper{
 	private static final String TABLE_CREATE =
             "CREATE TABLE " + TABLE_NAME + " (" +
             "id_dieta" + " TEXT, " +
+            "nombre" + " TEXT, " +
             "tipo" + " TEXT, " +
             "duracion" + " TEXT);";
 

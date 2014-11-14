@@ -18,10 +18,11 @@
     <string name="title_activity_ejercicio">EjercicioActivity</string>
     <string name="title_activity_calendario">CalendarioActivity</string>
     <string name="title_activity_dieta">DietaActivity</string>
-
     <string name="title">Calendar Card Sample</string>
     <string name="card">Calendar Card</string>
     <string name="card_pager">Calendar Card Pager</string>
     <string name="sel_date">Selected date: %s</string>
+    <string name="title_activity_camera">CameraActivity</string>
+    <string name="title_activity_selec_dieta">SelecDieta</string>
 
 </resources>

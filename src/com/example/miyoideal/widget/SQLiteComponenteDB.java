@@ -7,11 +7,12 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class SQLiteComponenteDB extends SQLiteOpenHelper{
 
 	private static final int DATABASE_VERSION = 2;
-	private static final String TABLE_NAME = "ejercicio";
+	private static final String TABLE_NAME = "componente";
 	private static final String TABLE_CREATE =
             "CREATE TABLE " + TABLE_NAME + " (" +
             "id_componente" + " TEXT, " +
             "id_dieta" + " TEXT, " +
+            "dia" + " TEXT, " +
             "alimento" + " TEXT, " +
             "descripcion" + " TEXT);";
 

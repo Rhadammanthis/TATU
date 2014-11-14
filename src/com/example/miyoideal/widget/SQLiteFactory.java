@@ -4,6 +4,7 @@ import android.database.Cursor;
 
 public interface SQLiteFactory {
 	
-	public boolean isInitialized();
+	public void initDietaDB();
 
+	public void initComponenteDB();
 }
