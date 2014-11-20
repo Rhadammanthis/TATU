@@ -1,12 +1,26 @@
 package com.example.miyoideal;
 
+import java.sql.Date;
+import java.text.DateFormat.Field;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
+
 import shared.ui.actionscontentview.ActionsContentView;
 
-import com.example.miyoideal.widget.DietaChildFactory;
-import com.example.miyoideal.widget.EjercicioChildFactory;
+import com.example.miyoideal.extra.DietaChildFactory;
+import com.example.miyoideal.extra.EjercicioChildFactory;
 
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.ActionBar.TabListener;
+import android.app.ActionBar.Tab;
+import android.app.Activity;
+import android.app.Fragment;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.Menu;
@@ -22,11 +36,18 @@ public class DietaActivity extends ActionBarActivity {
 	private LinearLayout mainLayout;
 	private ActionsContentView viewActionsContentView;
 	private ListView viewActionsList;
+	
+	private DietaChildFactory dietaChildFactory;
+	private EjercicioChildFactory ejercicioChildFactory;
+	private Context con;
+	private android.support.v7.app.ActionBar.Tab tab11;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+		super.onCreate(savedInstanceState);	
 		setContentView(R.layout.baseline_dieta);
+		
+		con = this;
 		
 		viewActionsContentView = (ActionsContentView) findViewById(R.id.ejercicio_actionsContentView);
 		viewActionsList = (ListView) findViewById(R.id.actions);	
@@ -34,19 +55,123 @@ public class DietaActivity extends ActionBarActivity {
 		
 		mainLayout = (LinearLayout) findViewById(R.id.dieta_linearLayout);
 		
-		String lol[] = new String[2];
-		lol[0] = "Huevo";
-		lol[1] = "Pollo";
+		dietaChildFactory = new DietaChildFactory();
+		ejercicioChildFactory = new EjercicioChildFactory();
 		
-		DietaChildFactory factory = new DietaChildFactory();
-		EjercicioChildFactory fac = new EjercicioChildFactory();
+		ActionBar actionBar = getSupportActionBar();
+	    actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+	    actionBar.setDisplayShowTitleEnabled(false);
+
+	    android.support.v7.app.ActionBar.Tab tab = actionBar.newTab()
+	                       .setText("<-")
+	                       .setTabListener(new TabListener() {
+							
+							@Override
+							public void onTabUnselected(android.support.v7.app.ActionBar.Tab arg0,
+									FragmentTransaction arg1) {
+								// TODO Auto-generated method stub
+								
+							}
+							
+							@Override
+							public void onTabSelected(android.support.v7.app.ActionBar.Tab arg0,
+									FragmentTransaction arg1) {
+								// TODO Auto-generated method stub
+								DisplayMetrics metrics = getResources().getDisplayMetrics();
+								int densityDpi = (int)(metrics.density);
+								
+								mainLayout.addView(ejercicioChildFactory.GenerateChildEjercicio(con, "LOL", "w", densityDpi));
+								mainLayout.addView(ejercicioChildFactory.GenerateChildEjercicio(con, "ROFL", "w", densityDpi));
+								mainLayout.addView(ejercicioChildFactory.GenerateChildEjercicio(con, "LMFAO", "w", densityDpi));
+								
+							}
+							
+							@Override
+							public void onTabReselected(android.support.v7.app.ActionBar.Tab arg0,
+									FragmentTransaction arg1) {
+								// TODO Auto-generated method stub
+								
+							}
+						});
+	    actionBar.addTab(tab);
+
+	    tab11 = actionBar.newTab()
+                .setText("FECHA")
+                .setTabListener(new TabListener() {
+					
+					@Override
+					public void onTabUnselected(android.support.v7.app.ActionBar.Tab arg0,
+							FragmentTransaction arg1) {
+						// TODO Auto-generated method stub
+						
+					}
+					
+					@Override
+					public void onTabSelected(android.support.v7.app.ActionBar.Tab arg0,
+							FragmentTransaction arg1) {
+						// TODO Auto-generated method stub
+						String lol[] = new String[2];
+						lol[0] = "Huevo";
+						lol[1] = "Pollo";
+						
+						mainLayout.addView(dietaChildFactory.GenerateChild(con, "Desayuno", lol, "10 am"));
+						mainLayout.addView(dietaChildFactory.GenerateChild(con, "Comida", lol = new String[]{"Carne","Brocoli"}, "2 pm"));
+						mainLayout.addView(dietaChildFactory.GenerateChild(con, "Cena", lol = new String[]{"Cereal","Leche"}, "2 pm"));
+						mainLayout.addView(dietaChildFactory.GenerateChild(con, "Correr 5km", "8 am"));
+						mainLayout.addView(dietaChildFactory.GenerateChild(con, "Subir 100 escalones", "8 am"));
+						mainLayout.addView(dietaChildFactory.GenerateChild(con, "Desayuno", lol, "10 am"));
+						mainLayout.addView(dietaChildFactory.GenerateChild(con, "Comida", lol = new String[]{"Carne","Brocoli"}, "2 pm"));
+						mainLayout.addView(dietaChildFactory.GenerateChild(con, "Cena", lol = new String[]{"Cereal","Leche"}, "2 pm"));
+						mainLayout.addView(dietaChildFactory.GenerateChild(con, "Correr 5km", "8 am"));
+						mainLayout.addView(dietaChildFactory.GenerateChild(con, "Subir 100 escalones", "8 am"));
+						
+					}
+					
+					@Override
+					public void onTabReselected(android.support.v7.app.ActionBar.Tab arg0,
+							FragmentTransaction arg1) {
+						// TODO Auto-generated method stub
+						
+					}
+				});
+	    actionBar.addTab(tab11);
+	    
+	    android.support.v7.app.ActionBar.Tab tab2 = actionBar.newTab()
+                .setText("->")
+                .setTabListener(new TabListener() {
+					
+					@Override
+					public void onTabUnselected(android.support.v7.app.ActionBar.Tab arg0,
+							FragmentTransaction arg1) {
+						// TODO Auto-generated method stub
+					
+						
+					}
+					
+					@Override
+					public void onTabSelected(android.support.v7.app.ActionBar.Tab arg0,
+							FragmentTransaction arg1) {
+						// TODO Auto-generated method stub
+						DisplayMetrics metrics = getResources().getDisplayMetrics();
+						int densityDpi = (int)(metrics.density);
+						
+						
+					}
+					
+					@Override
+					public void onTabReselected(android.support.v7.app.ActionBar.Tab arg0,
+							FragmentTransaction arg1) {
+						// TODO Auto-generated method stub
+						
+					}
+				});
+	    actionBar.addTab(tab2);
 		
-		DisplayMetrics metrics = getResources().getDisplayMetrics();
-		int densityDpi = (int)(metrics.density);
 		
-		mainLayout.addView(fac.GenerateChildEjercicio(this, "LOL", "w", densityDpi));
-		mainLayout.addView(fac.GenerateChildEjercicio(this, "ROFL", "w", densityDpi));
-		mainLayout.addView(fac.GenerateChildEjercicio(this, "LMFAO", "w", densityDpi));
+		
+		
+		
+		
 		/*mainLayout.addView(factory.GenerateChild(this, "Desayuno", lol, "10 am"));
 		mainLayout.addView(factory.GenerateChild(this, "Comida", lol = new String[]{"Carne","Brocoli"}, "2 pm"));
 		mainLayout.addView(factory.GenerateChild(this, "Cena", lol = new String[]{"Cereal","Leche"}, "2 pm"));
@@ -57,6 +182,7 @@ public class DietaActivity extends ActionBarActivity {
 		mainLayout.addView(factory.GenerateChild(this, "Cena", lol = new String[]{"Cereal","Leche"}, "2 pm"));
 		mainLayout.addView(factory.GenerateChild(this, "Correr 5km", "8 am"));
 		mainLayout.addView(factory.GenerateChild(this, "Subir 100 escalones", "8 am"));*/
+		
 		
 	}
 

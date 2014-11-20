@@ -5,8 +5,9 @@ import java.util.Locale;
 
 import shared.ui.actionscontentview.ActionsContentView;
 
-import com.example.miyoideal.widget.CalendarioChildFactory;
-import com.example.miyoideal.widget.SideMenu;
+import com.example.miyoideal.extra.CalendarioChildFactory;
+import com.example.miyoideal.extra.SideMenu;
+
 import android.support.v7.app.ActionBarActivity;
 import android.content.Intent;
 import android.graphics.Color;

@@ -2,10 +2,7 @@ package com.example.miyoideal;
 
 import java.util.HashMap;
 
-import com.example.miyoideal.widget.SQLiteComponenteDB;
-import com.example.miyoideal.widget.SQLiteDietaDB;
-import com.example.miyoideal.widget.SQLiteFactory;
-import com.example.miyoideal.widget.SQLiteUserDB;
+import com.example.DB.*;
 
 import android.support.v7.app.ActionBarActivity;
 import android.content.ContentValues;
@@ -69,6 +66,7 @@ public class MainActivity extends ActionBarActivity implements SQLiteFactory{
 				// TODO Auto-generated method stub
 				initComponenteDB();
 				initDietaDB();
+				initControlDB();
 				
 				userDB.getWritableDatabase();
 				values.put("id_usuario", "1");
@@ -190,6 +188,21 @@ public class MainActivity extends ActionBarActivity implements SQLiteFactory{
 		db.getWritableDatabase().insert("componente", null, values);
 		
 		db.close();
+	}
+
+
+	@Override
+	public void initControlDB() {
+		// TODO Auto-generated method stub
+		SQLiteControl db = new SQLiteControl(this);
+		db.getWritableDatabase();
+		
+		ContentValues values = new ContentValues();
+		values.put("id_control", "1");
+		values.put("id_dieta", "0");
+		values.put("dia", "0");
+		db.getWritableDatabase().insert("control", null, values);
+		
 	}
 
 

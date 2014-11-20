@@ -8,10 +8,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 
+import com.example.DB.SQLiteDietaDB;
 import com.example.DTO.*;
 import com.example.miyoideal.HomeActivity;
 import com.example.miyoideal.MainActivity;
-import com.example.miyoideal.widget.SQLiteDietaDB;
 
 public class DAO_Dieta {
 	

@@ -7,8 +7,8 @@ import shared.ui.actionscontentview.ActionsContentView;
 
 
 import com.dgmltn.shareeverywhere.ShareView;
-import com.example.miyoideal.widget.SQLiteUserDB;
-import com.example.miyoideal.widget.SideMenu;
+import com.example.DB.SQLiteUserDB;
+import com.example.miyoideal.extra.SideMenu;
 
 import android.R.menu;
 import android.support.v4.app.Fragment;
