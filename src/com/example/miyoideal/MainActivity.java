@@ -139,6 +139,7 @@ public class MainActivity extends ActionBarActivity implements SQLiteFactory{
 		values.put("id_dieta", "1");
 		values.put("dia", "1");
 		values.put("alimento", "Desayuno");
+		values.put("activo", "no");
 		values.put("descripcion", "Desayuno DIETA UNO Día 1 Alimento 1");
 		db.getWritableDatabase().insert("componente", null, values);
 		
@@ -148,6 +149,7 @@ public class MainActivity extends ActionBarActivity implements SQLiteFactory{
 		values.put("id_dieta", "1");
 		values.put("dia", "1");
 		values.put("alimento", "Desayuno");
+		values.put("activo", "no");
 		values.put("descripcion", "Desayuno DIETA UNO Día 1 Alimento 2");
 		db.getWritableDatabase().insert("componente", null, values);
 		
@@ -157,6 +159,7 @@ public class MainActivity extends ActionBarActivity implements SQLiteFactory{
 		values.put("id_dieta", "1");
 		values.put("dia", "1");
 		values.put("alimento", "Desayuno");
+		values.put("activo", "no");
 		values.put("descripcion", "Desayuno DIETA UNO Día 1 Alimento 3");
 		db.getWritableDatabase().insert("componente", null, values);
 		
@@ -166,6 +169,7 @@ public class MainActivity extends ActionBarActivity implements SQLiteFactory{
 		values.put("id_dieta", "1");
 		values.put("dia", "1");
 		values.put("alimento", "Colacion");
+		values.put("activo", "no");
 		values.put("descripcion", "Colacion DIETA UNO Día 1 Alimento 1");
 		db.getWritableDatabase().insert("componente", null, values);
 		
@@ -175,6 +179,7 @@ public class MainActivity extends ActionBarActivity implements SQLiteFactory{
 		values.put("id_dieta", "1");
 		values.put("dia", "1");
 		values.put("alimento", "Colacion");
+		values.put("activo", "no");
 		values.put("descripcion", "Colacion DIETA UNO Día 1 Alimento 2");
 		db.getWritableDatabase().insert("componente", null, values);
 		
@@ -184,6 +189,7 @@ public class MainActivity extends ActionBarActivity implements SQLiteFactory{
 		values.put("id_dieta", "1");
 		values.put("dia", "1");
 		values.put("alimento", "Colacion");
+		values.put("activo", "no");
 		values.put("descripcion", "Colacion DIETA UNO Día 1 Alimento 3");
 		db.getWritableDatabase().insert("componente", null, values);
 		

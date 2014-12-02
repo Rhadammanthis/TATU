@@ -7,7 +7,14 @@ public class DTO_Componente {
 	private String dia;
 	private String alimento;
 	private String descripcion;
+	private String activo;
 	
+	public String getActivo() {
+		return activo;
+	}
+	public void setActivo(String activo) {
+		this.activo = activo;
+	}
 	public String getId_componente() {
 		return id_componente;
 	}

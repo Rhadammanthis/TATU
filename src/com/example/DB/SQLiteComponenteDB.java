@@ -14,6 +14,7 @@ public class SQLiteComponenteDB extends SQLiteOpenHelper{
             "id_dieta" + " TEXT, " +
             "dia" + " TEXT, " +
             "alimento" + " TEXT, " +
+            "activo" + " TEXT, " +
             "descripcion" + " TEXT);";
 
 	public SQLiteComponenteDB(Context context) {
