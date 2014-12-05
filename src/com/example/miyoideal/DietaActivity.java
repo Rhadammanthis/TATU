@@ -2,6 +2,7 @@ package com.example.miyoideal;
 
 import java.sql.Date;
 import java.text.DateFormat.Field;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -39,16 +40,14 @@ import android.widget.*;
 public class DietaActivity extends ActionBarActivity {
 	
 	private LinearLayout mainLayout;
-	private ActionsContentView viewActionsContentView;
 	private ListView viewActionsList;
-	
+	private TextView currentDate;
 	private DietaChildFactory dietaChildFactory;
-	private EjercicioChildFactory ejercicioChildFactory;
 	private Context con;
-	private android.support.v7.app.ActionBar.Tab tab11;
 	private List<DietaChild> dietaChildList;
 	
 	private List<DTO_Componente> componentes;
+	private ImageButton nextDay;
 	
 	private boolean checkBoxInitialState[];
 
@@ -59,149 +58,63 @@ public class DietaActivity extends ActionBarActivity {
 		
 		con = this;
 		dietaChildList = new ArrayList<DietaChild>();
-		
-		viewActionsContentView = (ActionsContentView) findViewById(R.id.ejercicio_actionsContentView);
 		viewActionsList = (ListView) findViewById(R.id.actions);	
+		mainLayout = (LinearLayout) findViewById(R.id.dieta_linearLayout);
+		currentDate = (TextView) findViewById(R.id.fechaDieta);
+		dietaChildFactory = new DietaChildFactory();
+		nextDay = (ImageButton)findViewById(R.id.nextDay);
+		
 		setUpMenu();
 		
-		mainLayout = (LinearLayout) findViewById(R.id.dieta_linearLayout);
+		//if a "dieta" is currently set, the corresponding components are loaded
 		
-		dietaChildFactory = new DietaChildFactory();
-		ejercicioChildFactory = new EjercicioChildFactory();
-		
+		Calendar c = Calendar.getInstance();
+		SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yy");
+		java.util.Date initalDate = null;
+		String lol = new API(this).getDia();
+		try {
+			initalDate = df.parse(new API(this).getDia());
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		String todayDate = df.format(c.getTime());	
+		long distance = getDateDiffString(initalDate,c.getTime());
 		if(new API(this).IsDietaSet())
 		{
-			componentes = new DAO_Componente(this).getAllComponente(new API(this).getID_Dieta(), new API(this).getDia());
+			componentes = new DAO_Componente(this).getAllComponente(new API(this).getID_Dieta(), String.valueOf(distance+1));
 			initDietaLayout(componentes);
 		}
+		currentDate.setText(todayDate);
 		
-		
-		
-		/*ActionBar actionBar = getSupportActionBar();
-	    actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-	    actionBar.setDisplayShowTitleEnabled(false);
-
-	    android.support.v7.app.ActionBar.Tab tab = actionBar.newTab()
-	                       .setText("<-")
-	                       .setTabListener(new TabListener() {
-							
-							@Override
-							public void onTabUnselected(android.support.v7.app.ActionBar.Tab arg0,
-									FragmentTransaction arg1) {
-								// TODO Auto-generated method stub
-								
-							}
-							
-							@Override
-							public void onTabSelected(android.support.v7.app.ActionBar.Tab arg0,
-									FragmentTransaction arg1) {
-								// TODO Auto-generated method stub
-								DisplayMetrics metrics = getResources().getDisplayMetrics();
-								int densityDpi = (int)(metrics.density);
-								
-								mainLayout.addView(ejercicioChildFactory.GenerateChildEjercicio(con, "LOL", "w", densityDpi));
-								mainLayout.addView(ejercicioChildFactory.GenerateChildEjercicio(con, "ROFL", "w", densityDpi));
-								mainLayout.addView(ejercicioChildFactory.GenerateChildEjercicio(con, "LMFAO", "w", densityDpi));
-								
-							}
-							
-							@Override
-							public void onTabReselected(android.support.v7.app.ActionBar.Tab arg0,
-									FragmentTransaction arg1) {
-								// TODO Auto-generated method stub
-								
-							}
-						});
-	    actionBar.addTab(tab);
-
-	    tab11 = actionBar.newTab()
-                .setText("FECHA")
-                .setTabListener(new TabListener() {
-					
-					@Override
-					public void onTabUnselected(android.support.v7.app.ActionBar.Tab arg0,
-							FragmentTransaction arg1) {
-						// TODO Auto-generated method stub
-						
-					}
-					
-					@Override
-					public void onTabSelected(android.support.v7.app.ActionBar.Tab arg0,
-							FragmentTransaction arg1) {
-						// TODO Auto-generated method stub
-						String lol[] = new String[2];
-						lol[0] = "Huevo";
-						lol[1] = "Pollo";
-						
-						mainLayout.addView(dietaChildFactory.GenerateChild(con, "Desayuno", lol, "10 am"));
-						mainLayout.addView(dietaChildFactory.GenerateChild(con, "Comida", lol = new String[]{"Carne","Brocoli"}, "2 pm"));
-						mainLayout.addView(dietaChildFactory.GenerateChild(con, "Cena", lol = new String[]{"Cereal","Leche"}, "2 pm"));
-						mainLayout.addView(dietaChildFactory.GenerateChild(con, "Correr 5km", "8 am"));
-						mainLayout.addView(dietaChildFactory.GenerateChild(con, "Subir 100 escalones", "8 am"));
-						mainLayout.addView(dietaChildFactory.GenerateChild(con, "Desayuno", lol, "10 am"));
-						mainLayout.addView(dietaChildFactory.GenerateChild(con, "Comida", lol = new String[]{"Carne","Brocoli"}, "2 pm"));
-						mainLayout.addView(dietaChildFactory.GenerateChild(con, "Cena", lol = new String[]{"Cereal","Leche"}, "2 pm"));
-						mainLayout.addView(dietaChildFactory.GenerateChild(con, "Correr 5km", "8 am"));
-						mainLayout.addView(dietaChildFactory.GenerateChild(con, "Subir 100 escalones", "8 am"));
-						
-					}
-					
-					@Override
-					public void onTabReselected(android.support.v7.app.ActionBar.Tab arg0,
-							FragmentTransaction arg1) {
-						// TODO Auto-generated method stub
-						
-					}
-				});
-	    actionBar.addTab(tab11);
-	    
-	    android.support.v7.app.ActionBar.Tab tab2 = actionBar.newTab()
-                .setText("->")
-                .setTabListener(new TabListener() {
-					
-					@Override
-					public void onTabUnselected(android.support.v7.app.ActionBar.Tab arg0,
-							FragmentTransaction arg1) {
-						// TODO Auto-generated method stub
-					
-						
-					}
-					
-					@Override
-					public void onTabSelected(android.support.v7.app.ActionBar.Tab arg0,
-							FragmentTransaction arg1) {
-						// TODO Auto-generated method stub
-						DisplayMetrics metrics = getResources().getDisplayMetrics();
-						int densityDpi = (int)(metrics.density);
-						
-						
-					}
-					
-					@Override
-					public void onTabReselected(android.support.v7.app.ActionBar.Tab arg0,
-							FragmentTransaction arg1) {
-						// TODO Auto-generated method stub
-						
-					}
-				});
-	    actionBar.addTab(tab2);
-		
-		
-		*/
-		
-		
-		
-		/*mainLayout.addView(factory.GenerateChild(this, "Desayuno", lol, "10 am"));
-		mainLayout.addView(factory.GenerateChild(this, "Comida", lol = new String[]{"Carne","Brocoli"}, "2 pm"));
-		mainLayout.addView(factory.GenerateChild(this, "Cena", lol = new String[]{"Cereal","Leche"}, "2 pm"));
-		mainLayout.addView(factory.GenerateChild(this, "Correr 5km", "8 am"));
-		mainLayout.addView(factory.GenerateChild(this, "Subir 100 escalones", "8 am"));
-		mainLayout.addView(factory.GenerateChild(this, "Desayuno", lol, "10 am"));
-		mainLayout.addView(factory.GenerateChild(this, "Comida", lol = new String[]{"Carne","Brocoli"}, "2 pm"));
-		mainLayout.addView(factory.GenerateChild(this, "Cena", lol = new String[]{"Cereal","Leche"}, "2 pm"));
-		mainLayout.addView(factory.GenerateChild(this, "Correr 5km", "8 am"));
-		mainLayout.addView(factory.GenerateChild(this, "Subir 100 escalones", "8 am"));*/
-		
+		nextDay.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				//on a second call, the initial date is still the one set on the previous page.
+				mainLayout.removeAllViews();
+				Calendar c = Calendar.getInstance();
+				c.add(Calendar.DATE, 1);
+				SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yy");
+				java.util.Date initalDate = null;
+				String lol = new API(con).getDia();
+				try {
+					initalDate = df.parse(new API(con).getDia());
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				String todayDate = df.format(c.getTime());	
+				long distance = getDateDiffString(initalDate,c.getTime());
+				if(new API(con).IsDietaSet())
+				{
+					componentes = new DAO_Componente(con).getAllComponente(new API(con).getID_Dieta(), String.valueOf(distance+1));
+					initDietaLayout(componentes);
+				}
+				currentDate.setText(todayDate);
+			}
+		});
 		
 	}
 
@@ -304,10 +217,21 @@ public class DietaActivity extends ActionBarActivity {
 					
 					@Override
 					public void onClick(View v) {
-						// TODO Auto-generated method stub
-						//DTO_Componente temp = getModifiedChild().getDTO_Componente();
-						new DAO_Componente(con).updateComponenteSi(getModifiedChild().getDTO_Componente());
-		
+						//when the status of checkbox changes, its current state is saved in the DB
+						if(newChild.getCheckBox().isChecked())
+						{
+							new DAO_Componente(con).updateComponenteYes(getModifiedChild().getDTO_Componente());
+						}	
+						else
+						{
+							new DAO_Componente(con).updateComponenteNo(getModifiedChild().getDTO_Componente());
+						}		
+						
+						//update inital checkbox status's
+						for(int i=0;i< dietaChildList.size();i++)
+						{
+							checkBoxInitialState[i] = dietaChildList.get(i).getCheckBox().isChecked();
+						}
 					}
 				});
 				
@@ -339,13 +263,19 @@ public class DietaActivity extends ActionBarActivity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				if(!newChild.getCheckBox().isActivated())
+				if(newChild.getCheckBox().isChecked())
 				{
-					//DTO_Componente temp = getModifiedChild().getDTO_Componente();
-					new DAO_Componente(con).updateComponenteSi(getModifiedChild().getDTO_Componente());
-
-					//new DAO_Componente(con).updateComponenteSi(content.get(content.size()-1));
-				}		
+					new DAO_Componente(con).updateComponenteYes(getModifiedChild().getDTO_Componente());
+				}	
+				else
+				{
+					new DAO_Componente(con).updateComponenteNo(getModifiedChild().getDTO_Componente());
+				}
+				
+				for(int i=0;i< dietaChildList.size();i++)
+				{
+					checkBoxInitialState[i] = dietaChildList.get(i).getCheckBox().isChecked();
+				}
 			}
 		});
 		mainLayout.addView(newChild.getChild());
@@ -382,5 +312,15 @@ public class DietaActivity extends ActionBarActivity {
 		}
 		
 		return res;
+	}
+	
+	public long getDateDiffString(java.util.Date date, java.util.Date date2)
+	{
+	    long timeOne = date.getTime();
+	    long timeTwo = date2.getTime();
+	    long oneDay = 1000 * 60 * 60 * 24;
+	    long delta = (timeTwo - timeOne) / oneDay;
+
+	    return delta;
 	}
 }

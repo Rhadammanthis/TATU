@@ -52,13 +52,26 @@ public class DAO_Componente {
 		return list_dieta;
 	}
 	
-	public void updateComponenteSi(DTO_Componente temp)
+	public void updateComponenteYes(DTO_Componente temp)
 	{
 		SQLiteComponenteDB db = new SQLiteComponenteDB(con);
 		db.getReadableDatabase();
 		
 		ContentValues values=new ContentValues();
 		values.put("activo", "yes");
+		
+		int id = db.getWritableDatabase().update("componente", values, "id_componente =  \"" + temp.getId_componente() +"\"", null);
+		
+		db.close();
+	}
+	
+	public void updateComponenteNo(DTO_Componente temp)
+	{
+		SQLiteComponenteDB db = new SQLiteComponenteDB(con);
+		db.getReadableDatabase();
+		
+		ContentValues values=new ContentValues();
+		values.put("activo", "no");
 		
 		int id = db.getWritableDatabase().update("componente", values, "id_componente =  \"" + temp.getId_componente() +"\"", null);
 		

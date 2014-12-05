@@ -193,6 +193,49 @@ public class MainActivity extends ActionBarActivity implements SQLiteFactory{
 		values.put("descripcion", "Colacion DIETA UNO Día 1 Alimento 3");
 		db.getWritableDatabase().insert("componente", null, values);
 		
+		///////////////////////////////////////////////////////////////////////////////////////////////
+		//segundo dia
+		
+		//7
+		values = new ContentValues();
+		values.put("id_componente", "7");
+		values.put("id_dieta", "1");
+		values.put("dia", "2");
+		values.put("alimento", "Desayuno");
+		values.put("activo", "no");
+		values.put("descripcion", "Desayuno DIETA UNO Día 2 Alimento 3");
+		db.getWritableDatabase().insert("componente", null, values);
+		
+		//88
+		values = new ContentValues();
+		values.put("id_componente", "8");
+		values.put("id_dieta", "1");
+		values.put("dia", "2");
+		values.put("alimento", "Colacion");
+		values.put("activo", "no");
+		values.put("descripcion", "Colacion DIETA UNO Día 2 Alimento 1");
+		db.getWritableDatabase().insert("componente", null, values);
+		
+		//9
+		values = new ContentValues();
+		values.put("id_componente", "9");
+		values.put("id_dieta", "1");
+		values.put("dia", "2");
+		values.put("alimento", "Colacion");
+		values.put("activo", "no");
+		values.put("descripcion", "Colacion DIETA UNO Día 2 Alimento 2");
+		db.getWritableDatabase().insert("componente", null, values);
+		
+		//10
+		values = new ContentValues();
+		values.put("id_componente", "10");
+		values.put("id_dieta", "1");
+		values.put("dia", "2");
+		values.put("alimento", "Colacion");
+		values.put("activo", "no");
+		values.put("descripcion", "Colacion DIETA UNO Día 2 Alimento 3");
+		db.getWritableDatabase().insert("componente", null, values);
+		
 		db.close();
 	}
 

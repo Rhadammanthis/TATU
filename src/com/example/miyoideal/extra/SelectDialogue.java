@@ -1,5 +1,8 @@
 package com.example.miyoideal.extra;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
 import com.example.DB.SQLiteControl;
 
 import android.app.Activity;
@@ -33,9 +36,12 @@ public class SelectDialogue extends DialogFragment {
             builder.setMessage("¿Deseas tomar esta dieta?")
                    .setPositiveButton("Si", new DialogInterface.OnClickListener() {
                        public void onClick(DialogInterface dialog, int id) {
+                    	   Calendar c = Calendar.getInstance();
+                   			SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yy");
+                   			String todayDate = df.format(c.getTime());
                     	   ContentValues cv = new ContentValues();
                     	   cv.put("id_dieta", id_Dieta); //These Fields should be your String values of actual column names
-                    	   cv.put("dia","1");
+                    	   cv.put("dia",todayDate);
                     	   
                     	   SQLiteControl db = new SQLiteControl(con);
                     	   db.getWritableDatabase().update("control", cv, "id_control "+"="+1, null);
@@ -53,9 +59,12 @@ public class SelectDialogue extends DialogFragment {
             builder.setMessage("Ya tienes un programa de dieta ¿Deseas cambiar?")
                    .setPositiveButton("Si", new DialogInterface.OnClickListener() {
                        public void onClick(DialogInterface dialog, int id) {
+                    	   Calendar c = Calendar.getInstance();
+                    	   SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yy");
+                    	   String todayDate = df.format(c.getTime());
                     	   ContentValues cv = new ContentValues();
                     	   cv.put("id_dieta", id_Dieta); //These Fields should be your String values of actual column names
-                    	   cv.put("dia","1");
+                    	   cv.put("dia",todayDate);
                     	   
                     	   SQLiteControl db = new SQLiteControl(con);
                     	   db.getWritableDatabase().update("control", cv, "id_control "+"="+1, null);
