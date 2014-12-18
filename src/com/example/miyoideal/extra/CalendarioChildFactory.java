@@ -1,5 +1,9 @@
 package com.example.miyoideal.extra;
 
+import java.util.List;
+
+import com.example.DTO.DTO_Componente;
+
 import android.content.Context;
 import android.graphics.Color;
 import android.view.Gravity;
@@ -18,7 +22,7 @@ public class CalendarioChildFactory {
 		this.context = con;
 	}
 	
-	public RelativeLayout GenerateChildEjercicio(String title, String content)
+	public RelativeLayout GenerateChildEjercicio(String title, List<DTO_Componente> content)
 	{
 		//child parent layout
 		RelativeLayout childView = new RelativeLayout(this.context);
@@ -56,7 +60,12 @@ public class CalendarioChildFactory {
 		TextView tv_content = new TextView(this.context);
 		tv_content.setTextSize(22);
 		tv_content.setTextColor(Color.BLACK);
-		tv_content.setText(content);
+		for (int i = 0; i < content.size(); i++) {
+			if(i != content.size()-1)
+				tv_content.setText(tv_content.getText() + content.get(i).getDescripcion() + "\n");
+			else
+				tv_content.setText(tv_content.getText() + content.get(i).getDescripcion());
+		}
 		tv_content.setGravity(Gravity.CENTER_VERTICAL | Gravity.LEFT);
 				
 		//title and time added to header

@@ -1,14 +1,21 @@
 package com.example.miyoideal;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 import shared.ui.actionscontentview.ActionsContentView;
 
+import com.example.DAO.DAO_Componente;
+import com.example.DTO.*;
+import com.example.miyoideal.extra.API;
 import com.example.miyoideal.extra.CalendarioChildFactory;
+import com.example.miyoideal.extra.DietaChild;
 import com.example.miyoideal.extra.SideMenu;
 
 import android.support.v7.app.ActionBarActivity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Point;
@@ -24,6 +31,8 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.TableRow.LayoutParams;
 
@@ -34,9 +43,10 @@ public class CalendarioActivity extends ActionBarActivity {
 	private ActionsContentView viewActionsContentView;
 	private ListView viewActionsList;
 	private Button b;
-	private CalendarCardPager mCalendarCard;
+	private CalendarCard mCalendarCard;
 	private LinearLayout linearLayout;
 	private int width, height;
+	private Context ctx;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +57,8 @@ public class CalendarioActivity extends ActionBarActivity {
 		Point size = new Point();
 		display.getSize(size);
 		width = size.x;
-		height = size.y;		
+		height = size.y;	
+		ctx = this;
 		
 		viewActionsContentView = (ActionsContentView) findViewById(R.id.calendario_actionsContentView);
 		linearLayout = (LinearLayout) findViewById(R.id.calendarLinearLayout);		
@@ -55,19 +66,33 @@ public class CalendarioActivity extends ActionBarActivity {
 		viewActionsList = (ListView) findViewById(R.id.actions);
 		setUpMenu();
 		
-		mCalendarCard = (CalendarCardPager)findViewById(R.id.calendarCard6);
+		mCalendarCard = (CalendarCard)findViewById(R.id.calendarCard6);
 		mCalendarCard.getLayoutParams().height = height/2;
 		mCalendarCard.setOnCellItemClick(new OnCellItemClick() {
 			@Override
 			public void onCellClick(View v, CardGridItem item) {
-				//b.setText(getResources().getString(R.string.sel_date, new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(item.getDate().getTime())));
-				item.setEnabled(false);
+				((CheckableLayout)v).setChecked(true);
+				if(new API(ctx).IsDietaSet())
+				{
+					 List<DTO_Componente> componentes = new DAO_Componente(ctx).getAllComponente(
+							 new API(ctx).getID_Dieta(), String.valueOf((Math.abs(mCalendarCard.getFirstDay()-item.getDayOfMonth()) + 1)));
+					 int t = Math.abs(mCalendarCard.getFirstDay()-item.getDayOfMonth()) + 1;
+					 List<RelativeLayout> childrenLayout = initDietaComponents(componentes);
+					 linearLayout.removeAllViewsInLayout();
+					 for(RelativeLayout temp : childrenLayout)
+					 {
+						 //linearLayout.removeAllViews();
+						 //ScrollView sv = new ScrollView(ctx);
+						 //linearLayout.addView(sv);
+						 linearLayout.addView(temp);
+					 }
+				}
 			}
 		});
 		
 		CalendarioChildFactory factory = new CalendarioChildFactory(this);
 		
-		linearLayout.addView(factory.GenerateChildEjercicio("Uno 1", "asjhgdlgd ladjgajaldal bd lsjdblsbdlsnv dbasv dv sd"));
+		//linearLayout.addView(factory.GenerateChildEjercicio("Uno 1", "asjhgdlgd ladjgajaldal bd lsjdblsbdlsnv dbasv dv sd"));
 	}
 
 	@Override
@@ -127,5 +152,49 @@ public class CalendarioActivity extends ActionBarActivity {
 	      return;
 	    }
 
-	  }
+	}
+	
+	public List<RelativeLayout> initDietaComponents(List<DTO_Componente> lista)
+	{
+		List<RelativeLayout> children = new ArrayList<RelativeLayout>();
+		CalendarioChildFactory factory = new CalendarioChildFactory(ctx);
+		
+		//list to hold all same Comida entries in 'lista'
+		final List<DTO_Componente> content = new ArrayList<DTO_Componente>();
+		for(int i=1; i < lista.size(); i++)
+		{
+			//checks if the Alimento of a given insert in 'lista' is the same as the last one. If so, it is then added to 'content'
+			if(lista.get(i).getAlimento().equals(lista.get(i-1).getAlimento()))
+			{
+				content.add(lista.get(i-1));
+			}
+			else
+			{
+				//when a different Alimento occurs, the parameters to create the DietaChild are set up
+				String title = lista.get(i-1).getAlimento();
+				boolean activo = false;
+				
+				//the last checked insert in 'lista' is added to
+				content.add(lista.get(i-1));
+				
+				//use same function to generate children!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!				
+				children.add(factory.GenerateChildEjercicio(title, content));
+				
+				//the content list is cleared 
+				content.clear();
+			}
+			
+		}
+		
+		//same behavior as last, but this is handled when an Alimento only carries one insert in content and the last Alimento instance
+		String title = lista.get(lista.size()-1).getAlimento();
+		content.add(lista.get(lista.size()-1));
+
+		children.add(factory.GenerateChildEjercicio(title, content));
+
+		content.clear();
+		
+		return children;
+	}
+	
 }

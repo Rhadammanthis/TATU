@@ -1,5 +1,6 @@
 package com.wt.calendarcard;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -13,7 +14,10 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.example.DAO.DAO_Dieta;
+import com.example.DTO.DTO_Dieta;
 import com.example.miyoideal.*;
+import com.example.miyoideal.extra.API;
 
 public class CalendarCard extends RelativeLayout {
 	
@@ -25,6 +29,8 @@ public class CalendarCard extends RelativeLayout {
 	private Calendar dateDisplay;
 	private ArrayList<CheckableLayout> cells = new ArrayList<CheckableLayout>();
 	private LinearLayout cardGrid;
+	private int checkedDay;
+	private int firstDay;
 
 	public CalendarCard(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
@@ -41,7 +47,12 @@ public class CalendarCard extends RelativeLayout {
 		init(context);
 	}
 	
-	private void init(Context ctx) {
+	/**
+	 * 
+	 *Maybe here we can point out which cells to enable as checked from the beginning 
+	 */
+	
+	private void init(final Context ctx) {
 		if (isInEditMode()) return;
 		View layout = LayoutInflater.from(ctx).inflate(R.layout.card_view, null, false);
 		
@@ -50,6 +61,9 @@ public class CalendarCard extends RelativeLayout {
 		
 		cardTitle = (TextView)layout.findViewById(R.id.cardTitle);
 		cardGrid = (LinearLayout)layout.findViewById(R.id.cardGrid);
+		
+		checkedDay = Integer.parseInt(getDietaInitialDay(ctx));
+		firstDay = (checkedDay);
 		
 		cardTitle.setText(new SimpleDateFormat("MMM yyyy", Locale.getDefault()).format(dateDisplay.getTime()));
 		
@@ -77,9 +91,9 @@ public class CalendarCard extends RelativeLayout {
 				cell.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						for(CheckableLayout c : cells)
-							c.setChecked(false);
-						((CheckableLayout)v).setChecked(true);
+						//for(CheckableLayout c : cells)
+							//c.setChecked(false);
+						//((CheckableLayout)v).setChecked(true);
 						
 						if (getOnCellItemClick()!= null)
 							getOnCellItemClick().onCellClick(v, (CardGridItem)v.getTag()); // TODO create item
@@ -97,11 +111,42 @@ public class CalendarCard extends RelativeLayout {
 		mOnItemRenderDefault = new OnItemRender() {
 			@Override
 			public void onRender(CheckableLayout v, CardGridItem item) {
+
 				((TextView)v.getChildAt(0)).setText(item.getDayOfMonth().toString());
+				if(((TextView)v.getChildAt(0)).getText().equals(String.valueOf(checkedDay)))
+				{
+					((CheckableLayout)v).setChecked(true);
+					
+					if((Integer.parseInt(new DAO_Dieta(ctx).getDieta(new API(ctx).getID_Dieta()).getDuracion())
+							+ firstDay) - checkedDay > 1)
+					{
+						checkedDay++;
+					}
+				}
 			}
 		};
 		
 		updateCells();
+	}
+	
+	public int getFirstDay()
+	{
+		return firstDay;
+	}
+	
+	private String getDietaInitialDay(Context con)
+	{
+		SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yy");
+		java.util.Date initalDate = null;
+		try {
+			initalDate = df.parse(new API(con).getDia());
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		int t = Integer.parseInt((String)android.text.format.DateFormat.format("dd", initalDate));
+		return String.valueOf(t);
 	}
 	
 	private int getDaySpacing(int dayOfWeek) {
@@ -191,6 +236,7 @@ public class CalendarCard extends RelativeLayout {
 			int size = (r - l) / 7;
 			for(CheckableLayout cell : cells) {
 				cell.getLayoutParams().height = size;
+				
 			}
 		}
 	}

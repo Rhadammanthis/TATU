@@ -22,6 +22,27 @@ public class DAO_Dieta {
 		con = context;
 	}
 	
+	public DTO_Dieta getDieta(String id)
+	{
+		DTO_Dieta dieta = new DTO_Dieta();
+		
+		SQLiteDietaDB db = new SQLiteDietaDB(con);
+		db.getReadableDatabase();
+		
+		String query = "SELECT * FROM " + "dieta WHERE " + "id_dieta" + " =  \"" + id + "\"";		
+		Cursor cursor = db.getReadableDatabase().rawQuery(query, null);
+		
+		if(cursor.moveToFirst())
+		{
+			dieta.setId_dieta(cursor.getString(0));
+			dieta.setNombre(cursor.getString(1));
+			dieta.setTipo(cursor.getString(2));
+			dieta.setDuracion(cursor.getString(3));			
+		}
+		
+		return dieta;
+	}
+	
 	public List<DTO_Dieta> getAllDieta()
 	{
 		List<DTO_Dieta> list_dieta = new ArrayList<DTO_Dieta>();

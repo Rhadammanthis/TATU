@@ -321,6 +321,7 @@ public class DietaActivity extends ActionBarActivity {
 	    long oneDay = 1000 * 60 * 60 * 24;
 	    long delta = (timeTwo - timeOne) / oneDay;
 
+	    String lol = String.valueOf(timeOne/oneDay);
 	    return delta;
 	}
 }
