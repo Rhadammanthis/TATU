@@ -58,6 +58,13 @@
             android:name=".SelecDieta"
             android:label="@string/title_activity_selec_dieta" >
         </activity>
+        <service
+            android:name=".extra.MyService" >
+            </service>
+            <receiver android:name="messageReceiver">
+                
+            </receiver>
+            
     </application>
 
 </manifest>

@@ -8,6 +8,8 @@ import shared.ui.actionscontentview.ActionsContentView;
 
 import com.dgmltn.shareeverywhere.ShareView;
 import com.example.DB.SQLiteUserDB;
+import com.example.miyoideal.extra.API;
+import com.example.miyoideal.extra.MyService;
 import com.example.miyoideal.extra.SideMenu;
 
 import android.R.menu;
@@ -25,6 +27,9 @@ import android.graphics.Point;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
+import android.os.Messenger;
 import android.provider.MediaStore;
 import android.view.Display;
 import android.view.Menu;
@@ -74,7 +79,7 @@ public class HomeActivity extends ActionBarActivity {
 		setContentView(R.layout.baseline4);
 		
 		cont = this;
-		
+				
 		mediaFile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "Temp1.jpg");
 		filePath = mediaFile.getAbsolutePath();
 		
@@ -106,7 +111,8 @@ public class HomeActivity extends ActionBarActivity {
                 
                 save.setOnClickListener(new View.OnClickListener(){
                     public void onClick(View v) {
-                    	// Camera exists? Then proceed... 
+                    	new API(getBaseContext()).clearDieta();
+                    	/*// Camera exists? Then proceed... 
                     	Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE); 
                     	// Ensure that there's a camera activity to handle the intent 
                     	activity = new CameraActivity();
@@ -130,7 +136,7 @@ public class HomeActivity extends ActionBarActivity {
                     			activity.setCurrentPhotoPath(fileUri.getPath()); 
                     			//takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, activity.getCapturedImageURI()); 
                     			startActivityForResult(takePictureIntent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE); 
-                    			} 
+                    			} */
                     		}
                     		
                 
@@ -169,6 +175,22 @@ public class HomeActivity extends ActionBarActivity {
 			this.setTitle(cursor.getString(1));
 		}
 		
+		//checks if the final dieta day has arrived
+		
+		/*Handler handler = new Handler() {
+		    @Override
+		    public void handleMessage(Message msg) {
+		            Bundle reply = msg.getData();
+		            reply.putInt("dia", 2);
+		                            // do whatever with the bundle here
+		            }
+		};*/
+		
+		/*Intent intent = new Intent(this, MyService.class);
+		intent.putExtra("messenger", new Messenger(handler));
+		startService(intent);*/
+		
+		//stopService(intent);
 
 		
 	}

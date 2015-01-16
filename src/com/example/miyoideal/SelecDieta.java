@@ -6,6 +6,7 @@ import java.util.List;
 import com.example.DAO.DAO_Dieta;
 import com.example.DB.SQLiteControl;
 import com.example.DTO.DTO_Dieta;
+import com.example.miyoideal.extra.API;
 import com.example.miyoideal.extra.SelectDialogue;
 
 import android.R.bool;
@@ -100,7 +101,7 @@ public class SelecDieta extends Activity {
 	            		
 	            		SelectDialogue temp1;
 	            		//Checks whether dieta is available
-	            		if(IsControlAvailable())
+	            		if(!new API(con).IsDietaSet())
 	            		{
 	            			//If it is, prompts a dialogue to ask whether the user would like to select this one
 	            			temp1 = new SelectDialogue(con, dieta.getId_dieta(), true);
@@ -130,6 +131,7 @@ public class SelecDieta extends Activity {
 		{
 			if(cursor.moveToFirst())
 			{
+				//When the id_dieta value in the Control db is set to 0, it means that no dieta is currently set.
 				if(cursor.getString(1).equals("0"))
 				{
 					return true;

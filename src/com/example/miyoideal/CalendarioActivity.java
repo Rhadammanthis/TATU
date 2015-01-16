@@ -81,9 +81,6 @@ public class CalendarioActivity extends ActionBarActivity {
 					 linearLayout.removeAllViewsInLayout();
 					 for(RelativeLayout temp : childrenLayout)
 					 {
-						 //linearLayout.removeAllViews();
-						 //ScrollView sv = new ScrollView(ctx);
-						 //linearLayout.addView(sv);
 						 linearLayout.addView(temp);
 					 }
 				}

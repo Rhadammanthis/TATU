@@ -1,5 +1,6 @@
 package com.example.miyoideal.extra;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 
@@ -17,6 +18,17 @@ public class API {
 		db = new SQLiteControl(con);
 		String query = "Select * FROM " + "control" + " WHERE " + "id_control" + " =  \"" + "1" + "\"";
 		cursor = db.getReadableDatabase().rawQuery(query, null);
+	}
+	
+	public void clearDieta()
+	{
+		ContentValues cv = new ContentValues();
+		cv.put("id_dieta", 0); //These Fields should be your String values of actual column names
+		cv.put("dia","");
+ 	   
+		SQLiteControl db = new SQLiteControl(con);
+		db.getWritableDatabase().update("control", cv, "id_control "+"="+1, null);
+		db.close();
 	}
 	
 	public boolean IsDietaSet()
