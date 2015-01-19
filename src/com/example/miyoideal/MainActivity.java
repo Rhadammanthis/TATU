@@ -11,6 +11,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Point;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -52,8 +53,10 @@ public class MainActivity extends ActionBarActivity implements SQLiteFactory{
 		String query = "Select * FROM " + "usuario" + " WHERE " + "id_usuario" + " =  \"" + "1" + "\"";
 		values = new ContentValues();
 		Cursor cursor = userDB.getReadableDatabase().rawQuery(query, null);
+		
 		if(cursor.moveToFirst())
 		{
+			Log.d("main", "entre");
 			
 			Intent intent = new Intent(MainActivity.this, HomeActivity.class);
 			startActivity(intent);

@@ -523,8 +523,8 @@ int string title_activity_ejercicio 0x7f070016
 int string title_activity_home 0x7f070014
 int string title_activity_mi_perfil 0x7f070015
 int string title_activity_selec_dieta 0x7f07001e
-int style AppBaseTheme 0x7f08009a
-int style AppTheme 0x7f08009b
+int style AppBaseTheme 0x7f08009b
+int style AppTheme 0x7f08009a
 int style CalendarCard 0x7f080093
 int style CalendarCard_Cell 0x7f080099
 int style CalendarCard_Day 0x7f080095

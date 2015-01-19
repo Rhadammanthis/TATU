@@ -47,18 +47,18 @@ public class MyService extends Service{
 	          // For our sample, we just sleep for 5 seconds.
 	    	  if(shouldLog)
 	    	  {
-	    		  //new API(con).clearDieta();
+	    		  new API(con).clearDieta();
 	    		  
 	    		  Log.d("service", String.valueOf(msg.arg1));
-	    		  //intent.putExtra("exit", String.valueOf(1));
-		    		//intent.setAction("com.example.miyoideal.extra");
-		    		//sendBroadcast(intent);
+	    		  intent.putExtra("exit", String.valueOf(1));
+		    		intent.setAction("com.example.miyoideal.extra");
+		    		sendBroadcast(intent);
 		    		
 		    		
-		    		//stopSelf();
+		    		stopSelf();
 		    		
 		    		
-	    		  //Log.d("service-1", String.valueOf(duracion));
+	    		  Log.d("service-1", String.valueOf(duracion));
 	    	  
 		    	  //generates date object with the date the dieta was originally set
 		    	  Calendar c = Calendar.getInstance();
@@ -90,7 +90,7 @@ public class MyService extends Service{
 	    	  }
 	          // Stop the service using the startId, so that we don't stop
 	          // the service in the middle of handling another job
-	          stopSelf(msg.arg1);
+	    	  stopSelf(msg.arg1);
 	      }
 	  }
 

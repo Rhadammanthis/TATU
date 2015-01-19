@@ -83,7 +83,7 @@ public class SelectDialogue extends DialogFragment {
                     	   //con.startService(intent);
                     	   
                     	   // schedule for every 5 hours
-                    	   alarm.setRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), 18000*1000, pintent); 
+                    	   alarm.setRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), 5*1000, pintent); 
                     	   
                     	   
                        }
@@ -153,22 +153,21 @@ public class SelectDialogue extends DialogFragment {
             		Toast.makeText(con, "should stop", Toast.LENGTH_SHORT).show();
             		alarm.cancel(pintent);
             		con.stopService(intent);
-            		Intent inte = new Intent(con, MyService.class); 
+            		//Intent inte = new Intent(con, MyService.class); 
             		Log.d("tag", "exit");
-            		PendingIntent pintent = PendingIntent.getBroadcast(con, 1234, inte, 0);
 
-             	   	AlarmManager alarmManagerStop = (AlarmManager) con.getSystemService(Context.ALARM_SERVICE);
-             	   	
-             	   alarmManagerStop.cancel(pintent);
              	   
-             	  Dialog dialog = new Dialog(con);
-
-                  dialog.setContentView(R.layout.baseline_share);
-                  dialog.setTitle("Compartir");
-
-                  Button save=(Button)dialog.findViewById(R.id.buttonGuardar);
-                  dialog.show();
-             	  Log.d("tag", "exit2");
+	             	Dialog dialog = new Dialog(con);
+	
+	                dialog.setContentView(R.layout.baseline_share);
+	                dialog.setTitle("Compartir");
+	
+	                Button save=(Button)dialog.findViewById(R.id.buttonGuardar);
+	                dialog.show();
+	                
+	                intent = null;
+	                pintent = null;
+	             	Log.d("tag", "exit2");
             	}
         	}
         	
