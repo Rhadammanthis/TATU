@@ -6,7 +6,6 @@ import java.io.IOException;
 import shared.ui.actionscontentview.ActionsContentView;
 
 
-import com.dgmltn.shareeverywhere.ShareView;
 import com.example.DB.SQLiteUserDB;
 import com.example.miyoideal.extra.API;
 import com.example.miyoideal.extra.MyService;
@@ -367,5 +366,10 @@ public class HomeActivity extends ActionBarActivity {
 		intent.putExtra(Intent.EXTRA_SUBJECT, subject);
 		intent.putExtra(Intent.EXTRA_TEXT, body);
 		return intent;
+	}
+	//When the user clicks on the back-key 
+	@Override
+	public void onBackPressed(){
+		moveTaskToBack(true);
 	}
 }
