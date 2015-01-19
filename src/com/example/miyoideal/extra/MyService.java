@@ -49,13 +49,13 @@ public class MyService extends Service{
 	    	  {
 	    		  new API(con).clearDieta();
 	    		  
-	    		  Log.d("service", String.valueOf(msg.arg1));
+	    		 /* Log.d("service", String.valueOf(msg.arg1));
 	    		  intent.putExtra("exit", String.valueOf(1));
 		    		intent.setAction("com.example.miyoideal.extra");
-		    		sendBroadcast(intent);
+		    		sendBroadcast(intent);*/
 		    		
 		    		
-		    		stopSelf();
+		    		//stopSelf();
 		    		
 		    		
 	    		  Log.d("service-1", String.valueOf(duracion));
@@ -84,6 +84,7 @@ public class MyService extends Service{
 			    		
 			    		sendBroadcast(intent);
 			  					  			
+			    		stopSelf();
 			  		}
 			  	  }
 

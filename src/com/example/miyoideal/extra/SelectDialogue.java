@@ -83,7 +83,7 @@ public class SelectDialogue extends DialogFragment {
                     	   //con.startService(intent);
                     	   
                     	   // schedule for every 5 hours
-                    	   alarm.setRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), 5*1000, pintent); 
+                    	   alarm.setRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), 18000*1000, pintent); 
                     	   
                     	   
                        }
