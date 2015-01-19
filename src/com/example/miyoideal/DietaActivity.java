@@ -31,6 +31,7 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -50,6 +51,8 @@ public class DietaActivity extends ActionBarActivity {
 	private ImageButton nextDay;
 	
 	private boolean checkBoxInitialState[];
+	
+	private Calendar c;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +71,7 @@ public class DietaActivity extends ActionBarActivity {
 		
 		//if a "dieta" is currently set, the corresponding components are loaded
 		
-		Calendar c = Calendar.getInstance();
+		c = Calendar.getInstance();
 		SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yy");
 		java.util.Date initalDate = null;
 		String lol = new API(this).getDia();
@@ -93,8 +96,8 @@ public class DietaActivity extends ActionBarActivity {
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				//on a second call, the initial date is still the one set on the previous page.
+				Log.d("dieta", "nextDay");
 				mainLayout.removeAllViews();
-				Calendar c = Calendar.getInstance();
 				c.add(Calendar.DATE, 1);
 				SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yy");
 				java.util.Date initalDate = null;
@@ -110,17 +113,11 @@ public class DietaActivity extends ActionBarActivity {
 				if(new API(con).IsDietaSet())
 				{
 					componentes = new DAO_Componente(con).getAllComponente(new API(con).getID_Dieta(), String.valueOf(distance+1));
-					initDietaLayout(componentes);
+					if(componentes.size()>0)
+						initDietaLayout(componentes);
+					else
+						Toast.makeText(con, "nada", Toast.LENGTH_SHORT).show();
 				}
-				
-				nextDay.setOnClickListener(new View.OnClickListener() {
-					
-					@Override
-					public void onClick(View v) {
-						// TODO Auto-generated method stub
-						Toast.makeText(con, "service starting", Toast.LENGTH_SHORT).show();
-					}
-				});
 				
 				currentDate.setText(todayDate);
 			}
