@@ -112,6 +112,16 @@ public class DietaActivity extends ActionBarActivity {
 					componentes = new DAO_Componente(con).getAllComponente(new API(con).getID_Dieta(), String.valueOf(distance+1));
 					initDietaLayout(componentes);
 				}
+				
+				nextDay.setOnClickListener(new View.OnClickListener() {
+					
+					@Override
+					public void onClick(View v) {
+						// TODO Auto-generated method stub
+						Toast.makeText(con, "service starting", Toast.LENGTH_SHORT).show();
+					}
+				});
+				
 				currentDate.setText(todayDate);
 			}
 		});

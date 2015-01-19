@@ -81,12 +81,6 @@
                 android:layout_weight="1"
                 android:text="Button" />
         </LinearLayout>
-        
-        <com.dgmltn.shareeverywhere.ShareView
-                android:id="@+id/share_view"
-                style="@style/Widget.ShareView.Light"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
 
         
     </RelativeLayout>

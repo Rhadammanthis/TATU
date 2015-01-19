@@ -162,8 +162,6 @@ public class HomeActivity extends ActionBarActivity {
 		setUpMenu();	
 		
 		Intent[] mSharedIntents = new Intent[]{getEmailIntent()};
-		ShareView shareView = (ShareView) findViewById(R.id.share_view);
-		shareView.setShareIntent(mSharedIntents);
 		
 		SQLiteUserDB dbUser = new SQLiteUserDB(this);
 		dbUser.getReadableDatabase();
