@@ -47,7 +47,7 @@ public class MyService extends Service{
 	          // For our sample, we just sleep for 5 seconds.
 	    	  if(shouldLog)
 	    	  {
-	    		  new API(con).clearDieta();
+	    		  //new API(con).clearDieta();
 	    		  
 	    		 /* Log.d("service", String.valueOf(msg.arg1));
 	    		  intent.putExtra("exit", String.valueOf(1));
