@@ -32,6 +32,7 @@ import android.os.Messenger;
 import android.provider.MediaStore;
 import android.view.Display;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -276,15 +277,17 @@ public class HomeActivity extends ActionBarActivity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.main, menu);
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.home, menu);
+		return super.onCreateOptionsMenu(menu);
 		
-/*		MenuItem item = menu.findItem(R.id.action_share);
+		/*
+		MenuItem item = menu.findItem(R.id.action_share);
         ActionProvider shareActionProvider = (ActionProvider) item.getActionProvider();
         //    = (ShareActionProvider) item.getActionProvider();
 		Intent t = new Intent(HomeActivity.this,EjercicioActivity.class);
         ((ShareActionProvider) shareActionProvider).setShareIntent(t);
 		*/
-		return true;
 	}
 
 	@Override
