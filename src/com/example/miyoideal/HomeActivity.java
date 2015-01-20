@@ -16,6 +16,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.ActionProvider;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.ShareActionProvider;
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -32,6 +33,7 @@ import android.os.Messenger;
 import android.provider.MediaStore;
 import android.view.Display;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -43,7 +45,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
-public class HomeActivity extends ActionBarActivity {
+public class HomeActivity extends Activity {
 	
 	//global variables;
 	private int width;
@@ -275,16 +277,10 @@ public class HomeActivity extends ActionBarActivity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.main, menu);
-		
-/*		MenuItem item = menu.findItem(R.id.action_share);
-        ActionProvider shareActionProvider = (ActionProvider) item.getActionProvider();
-        //    = (ShareActionProvider) item.getActionProvider();
-		Intent t = new Intent(HomeActivity.this,EjercicioActivity.class);
-        ((ShareActionProvider) shareActionProvider).setShareIntent(t);
-		*/
-		return true;
+		//Add the menu layout to the action bar
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.base_action_bar, menu);
+		return super.onCreateOptionsMenu(menu);
 	}
 
 	@Override

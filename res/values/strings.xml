@@ -8,6 +8,7 @@
     <string name="swipe">SWIPE</string>
     <string name="title_activity_home">Home</string>
     <string name="title_activity_mi_perfil">MiPerfilActivity</string>
+    <string name="action_home">Go to home</string>
 
     <string-array name="nivel_array">
         <item>Bajo</item>
