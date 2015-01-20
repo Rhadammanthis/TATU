@@ -150,7 +150,7 @@ public class DietaChild {
 		TextView text = new TextView(context);
 		text.setTextSize(35);
 		text.setTextColor(Color.BLACK);
-		text.setText("No hay datos para este día");
+		text.setText("No hay datos para este día.");
 		text.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
 		
 		defaultLayout.addView(text);
