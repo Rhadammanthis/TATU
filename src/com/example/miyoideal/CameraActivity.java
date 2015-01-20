@@ -1,8 +1,10 @@
 package com.example.miyoideal;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import android.net.Uri;
@@ -20,7 +22,7 @@ import android.support.v7.app.ActionBarActivity;
  * <p/>
  * Created by Rex St. John (on behalf of AirPair.com) on 3/4/14.
  */
-public class CameraActivity extends ActionBarActivity {
+public class CameraActivity extends Activity {
 
     // Storage for camera image URI components
     private final static String CAPTURED_PHOTO_PATH_KEY = "mCurrentPhotoPath";
@@ -71,4 +73,19 @@ public class CameraActivity extends ActionBarActivity {
     public void setCapturedImageURI(Uri mCapturedImageURI) {
         this.mCapturedImageURI = mCapturedImageURI;
     }
+    @Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		//Add the menu layout to the action bar
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.base_action_bar, menu);
+		return super.onCreateOptionsMenu(menu);
+	}
+    @Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		//If the Logo clicked
+		Intent intent = new Intent(this, HomeActivity.class);
+		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		startActivity(intent);
+		return super.onOptionsItemSelected(item);
+	}
 }
