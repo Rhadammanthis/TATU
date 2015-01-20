@@ -112,7 +112,7 @@ public class HomeActivity extends Activity {
                 
                 save.setOnClickListener(new View.OnClickListener(){
                     public void onClick(View v) {
-                    	new API(getBaseContext()).clearDieta();
+                    	
                     	/*// Camera exists? Then proceed... 
                     	Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE); 
                     	// Ensure that there's a camera activity to handle the intent 

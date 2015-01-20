@@ -50,6 +50,7 @@ public class DietaActivity extends Activity {
 	
 	private List<DTO_Componente> componentes;
 	private ImageButton nextDay;
+	private ImageButton previousDay;
 	
 	private boolean checkBoxInitialState[];
 	
@@ -67,6 +68,7 @@ public class DietaActivity extends Activity {
 		currentDate = (TextView) findViewById(R.id.fechaDieta);
 		dietaChildFactory = new DietaChildFactory();
 		nextDay = (ImageButton)findViewById(R.id.nextDay);
+		previousDay = (ImageButton)findViewById(R.id.previousDay);
 		
 		setUpMenu();
 		
@@ -86,8 +88,11 @@ public class DietaActivity extends Activity {
 		long distance = getDateDiffString(initalDate,c.getTime());
 		if(new API(this).IsDietaSet())
 		{
-			componentes = new DAO_Componente(this).getAllComponente(new API(this).getID_Dieta(), String.valueOf(distance+1));
-			initDietaLayout(componentes);
+			componentes = new DAO_Componente(con).getAllComponente(new API(con).getID_Dieta(), String.valueOf(distance+1));
+			if(componentes.size()>0)
+				initDietaLayout(componentes);
+			else
+				mainLayout.addView(new DietaChild(con).getDefaultLayout());
 		}
 		currentDate.setText(todayDate);
 		
@@ -117,7 +122,40 @@ public class DietaActivity extends Activity {
 					if(componentes.size()>0)
 						initDietaLayout(componentes);
 					else
-						Toast.makeText(con, "nada", Toast.LENGTH_SHORT).show();
+						mainLayout.addView(new DietaChild(con).getDefaultLayout());
+				}
+				
+				currentDate.setText(todayDate);
+			}
+		});
+		
+		previousDay.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				//on a second call, the initial date is still the one set on the previous page.
+				Log.d("dieta", "previousDay");
+				mainLayout.removeAllViews();
+				c.add(Calendar.DATE, -1);
+				SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yy");
+				java.util.Date initalDate = null;
+				String lol = new API(con).getDia();
+				try {
+					initalDate = df.parse(new API(con).getDia());
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				String todayDate = df.format(c.getTime());	
+				long distance = getDateDiffString(initalDate,c.getTime());
+				if(new API(con).IsDietaSet())
+				{
+					componentes = new DAO_Componente(con).getAllComponente(new API(con).getID_Dieta(), String.valueOf(distance+1));
+					if(componentes.size()>0)
+						initDietaLayout(componentes);
+					else
+						mainLayout.addView(new DietaChild(con).getDefaultLayout());
 				}
 				
 				currentDate.setText(todayDate);
@@ -252,7 +290,7 @@ public class DietaActivity extends Activity {
 			}
 		}
 		
-		//same behavior as last, but this is handled when an Alimento only carries one insert in content and the last Alimento instance
+		//same behavior as last, but this handles when an Alimento only carries one insert in the content list and is the last Alimento instance
 		String title = lista.get(lista.size()-1).getAlimento();
 		boolean activo = false;
 		content.add(lista.get(lista.size()-1));
@@ -299,7 +337,7 @@ public class DietaActivity extends Activity {
 	
 	public DietaChild getModifiedChild()
 	{
-		DietaChild res = new DietaChild();
+		DietaChild res = new DietaChild(con);
 		
 		boolean checkBoxActualState[] = new boolean[dietaChildList.size()];
 		int size = dietaChildList.size();
@@ -320,14 +358,21 @@ public class DietaActivity extends Activity {
 		return res;
 	}
 	
+	@SuppressWarnings("deprecation")
 	public long getDateDiffString(java.util.Date date, java.util.Date date2)
 	{
 	    long timeOne = date.getTime();
 	    long timeTwo = date2.getTime();
 	    long oneDay = 1000 * 60 * 60 * 24;
 	    long delta = (timeTwo - timeOne) / oneDay;
+	    
+	    int dia_Date1 = Integer.valueOf((String)android.text.format.DateFormat.format("dd", date)), 
+	    		dia_Date2 = Integer.valueOf((String)android.text.format.DateFormat.format("dd", date2));
 
 	    String lol = String.valueOf(timeOne/oneDay);
-	    return delta;
+	    if(dia_Date2 < dia_Date1)
+	    	return -1;
+	    else
+	    	return delta;
 	}
 }
