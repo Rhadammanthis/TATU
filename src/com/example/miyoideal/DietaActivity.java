@@ -33,12 +33,13 @@ import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 
-public class DietaActivity extends ActionBarActivity {
+public class DietaActivity extends Activity {
 	
 	private LinearLayout mainLayout;
 	private ListView viewActionsList;
@@ -165,20 +166,18 @@ public class DietaActivity extends ActionBarActivity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.dieta, menu);
-		return true;
+		//Add the menu layout to the action bar
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.base_action_bar, menu);
+		return super.onCreateOptionsMenu(menu);
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle action bar item clicks here. The action bar will
-		// automatically handle clicks on the Home/Up button, so long
-		// as you specify a parent activity in AndroidManifest.xml.
-		int id = item.getItemId();
-		if (id == R.id.action_settings) {
-			return true;
-		}
+		//If the Logo clicked
+		Intent intent = new Intent(this, HomeActivity.class);
+		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		startActivity(intent);
 		return super.onOptionsItemSelected(item);
 	}
 	

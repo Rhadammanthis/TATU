@@ -2,17 +2,20 @@ package com.example.miyoideal;
 
 import shared.ui.actionscontentview.ActionsContentView;
 import android.support.v7.app.ActionBarActivity;
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.Toast;
 
-public class MiPerfilActivity extends ActionBarActivity {
+public class MiPerfilActivity extends Activity {
 	
 	//layout components
 	private Spinner spinnerNivel;
@@ -40,20 +43,18 @@ public class MiPerfilActivity extends ActionBarActivity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.mi_perfil, menu);
-		return true;
+		//Add the menu layout to the action bar
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.base_action_bar, menu);
+		return super.onCreateOptionsMenu(menu);
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle action bar item clicks here. The action bar will
-		// automatically handle clicks on the Home/Up button, so long
-		// as you specify a parent activity in AndroidManifest.xml.
-		int id = item.getItemId();
-		if (id == R.id.action_settings) {
-			return true;
-		}
+		//If the Logo clicked
+		Intent intent = new Intent(this, HomeActivity.class);
+		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		startActivity(intent);
 		return super.onOptionsItemSelected(item);
 	}
 	
