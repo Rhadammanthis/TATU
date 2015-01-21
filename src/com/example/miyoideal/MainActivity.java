@@ -82,10 +82,7 @@ public class MainActivity extends Activity implements SQLiteFactory{
 				Intent intent = new Intent(MainActivity.this, HomeActivity.class);
 				startActivity(intent);
 			}
-		});
-        
-        
-		
+		});	
     }
 
 
