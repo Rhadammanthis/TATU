@@ -17,6 +17,15 @@ import android.widget.TableRow.LayoutParams;
 public class DietaChild {
 	
 	private RelativeLayout child;
+	private FrameLayout defaultLayout;
+	public FrameLayout getDefaultLayout() {
+		return defaultLayout;
+	}
+
+	public void setDefaultLayout(FrameLayout defaultLayout) {
+		this.defaultLayout = defaultLayout;
+	}
+
 	private CheckBox checkBox;
 	private DTO_Componente componente;
 	
@@ -126,8 +135,25 @@ public class DietaChild {
 		componente = content.get(0);
 	}
 
-	public DietaChild() {
+	public DietaChild(Context context) {
 		// TODO Auto-generated constructor stub
+		//generate default layout
+		genDefaultLayout(context);
+	}
+	
+	private void genDefaultLayout(Context context)
+	{
+		defaultLayout =  new FrameLayout(context);
+		defaultLayout.setLayoutParams(new FrameLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
+		
+		//Set default text
+		TextView text = new TextView(context);
+		text.setTextSize(35);
+		text.setTextColor(Color.BLACK);
+		text.setText("No hay datos para este día.");
+		text.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
+		
+		defaultLayout.addView(text);
 	}
 
 }

@@ -101,7 +101,7 @@ public class HomeActivity extends Activity implements View.OnClickListener{
 		linearLayout1.getLayoutParams().width = (width/2);
 		button_MiPerfil = (Button) findViewById(R.id.buttonHome);
 		button_MiPerfil.setOnClickListener(this);
-	}
+}
     
     @Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
