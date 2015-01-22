@@ -3,6 +3,7 @@ package com.example.miyoideal;
 import java.util.HashMap;
 
 import com.example.DB.*;
+import com.example.miyoideal.extra.DialyNotificationReceiver;
 
 import android.support.v7.app.ActionBarActivity;
 import android.app.Activity;
@@ -83,10 +84,7 @@ public class MainActivity extends Activity implements SQLiteFactory{
 				Intent intent = new Intent(MainActivity.this, HomeActivity.class);
 				startActivity(intent);
 			}
-		});
-        
-        
-		
+		});	
     }
 
 
@@ -258,6 +256,10 @@ public class MainActivity extends Activity implements SQLiteFactory{
 		values.put("id_dieta", "0");
 		values.put("dia", "0");
 		db.getWritableDatabase().insert("control", null, values);
+
+		//Set the notification receiver 
+		DialyNotificationReceiver dialyNotification = new DialyNotificationReceiver();
+		dialyNotification.setAlarm(this);
 		
 		db.close();
 	}
@@ -297,6 +299,6 @@ public class MainActivity extends Activity implements SQLiteFactory{
 		db.getWritableDatabase().insert("programa", null, values);				
 	
 		
-	}
-
+	}		
+	
 }
