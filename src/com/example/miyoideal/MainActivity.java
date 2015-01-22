@@ -72,6 +72,7 @@ public class MainActivity extends Activity implements SQLiteFactory{
 				initComponenteDB();
 				initDietaDB();
 				initControlDB();
+				initProgramaDB();
 				
 				userDB.getWritableDatabase();
 				values.put("id_usuario", "1");
@@ -258,7 +259,44 @@ public class MainActivity extends Activity implements SQLiteFactory{
 		values.put("dia", "0");
 		db.getWritableDatabase().insert("control", null, values);
 		
+		db.close();
 	}
 
+
+	@Override
+	public void initProgramaDB() {
+		// TODO Auto-generated method stub
+		SQLiteProgramaDB db = new SQLiteProgramaDB(this);
+		db.getWritableDatabase();
+		
+		//bajo
+		ContentValues values = new ContentValues();
+		values.put("id_programa", "1");
+		values.put("nivel", "bajo");
+		values.put("titulo", "Lagartijas");
+		values.put("descripcion", "Hacer 1 series de 8 repeticiones");
+		values.put("hora", "10 am");
+		db.getWritableDatabase().insert("programa", null, values);
+		
+		//medio
+		values = new ContentValues();
+		values.put("id_programa", "2");
+		values.put("nivel", "medio");
+		values.put("titulo", "Abdominales");
+		values.put("descripcion", "Hacer 3 series de 8 repeticiones");
+		values.put("hora", "3 pm");
+		db.getWritableDatabase().insert("programa", null, values);
+		
+		//alto
+		new ContentValues();
+		values.put("id_programa", "3");
+		values.put("nivel", "alto");
+		values.put("titulo", "Carrera");
+		values.put("descripcion", "Correr 5 km a un ritmo medio");
+		values.put("hora", "7 pm");
+		db.getWritableDatabase().insert("programa", null, values);				
+	
+		
+	}
 
 }

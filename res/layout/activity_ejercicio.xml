@@ -14,16 +14,53 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/content"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@android:color/white" >
-
-    <Button
-        android:id="@+id/button1"
-        android:layout_width="wrap_content"
+    android:orientation="vertical" 
+    android:layout_height="match_parent" 
+    android:background="@android:color/white">
+    <RelativeLayout 
+        android:background="#ab4366"
+        android:id="@+id/ejercicioTopBar"
         android:layout_height="wrap_content"
-        android:text="Ejercicio" />
+        android:layout_width="match_parent">
 
-</FrameLayout>
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="10dip"
+            android:paddingBottom="10dip"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="15dp"
+            android:text="Actividad Física Realizada Hoy"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <CheckBox
+            android:id="@+id/ejercicio_checkB"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="15dp"
+            android:text="" />
+        
+    </RelativeLayout>
+    
+	<ScrollView
+    android:id="@+id/scrollView1"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" 
+    android:background="@android:color/white">
+
+	    <LinearLayout
+	     	android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:orientation="vertical" 
+	        android:id="@+id/ejercicio_linearLayout" 
+>
+	    </LinearLayout>
+    </ScrollView>
+</LinearLayout>
+

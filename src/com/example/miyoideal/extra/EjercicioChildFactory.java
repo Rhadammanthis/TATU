@@ -17,7 +17,7 @@ public class EjercicioChildFactory {
 	private String time;
 	private Context context;
 	
-	public RelativeLayout GenerateChildEjercicio(Context context, String title, String time, int scale)
+	public RelativeLayout GenerateChildEjercicio(Context context, String title, String content, String time)
 	{
 		this.title = title;
 		this.time = time;
@@ -81,10 +81,11 @@ public class EjercicioChildFactory {
 		tv_content.setPadding(16, 16, 0, 16);
 		tv_content.setTextSize(20);
 		tv_content.setTextColor(Color.BLACK);
-		for (int i = 0; i < lol.length; i++) {
-			tv_content.setText(tv_content.getText() + lol[i] + "\n");
-		}
-		tv_content.setMaxLines(lol.length);
+		//for (int i = 0; i < lol.length; i++) {
+			//tv_content.setText(tv_content.getText() + lol[i] + "\n");
+		//}
+		//tv_content.setMaxLines(lol.length);
+		tv_content.setText(content);
 		tv_content.setGravity(Gravity.LEFT);
 		
 		body.addView(tv_content);

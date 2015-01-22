@@ -3,15 +3,11 @@ package com.example.DAO;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.content.ContentValues;
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 
 import com.example.DB.SQLiteDietaDB;
 import com.example.DTO.*;
-import com.example.miyoideal.HomeActivity;
-import com.example.miyoideal.MainActivity;
 
 public class DAO_Dieta {
 	

@@ -9,4 +9,7 @@ public interface SQLiteFactory {
 	public void initComponenteDB();
 	
 	public void initControlDB();
+	
+	public void initProgramaDB();
+	
 }

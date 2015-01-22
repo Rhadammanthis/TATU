@@ -5,8 +5,11 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 import com.example.DAO.DAO_Dieta;
+import com.example.DAO.DAO_Ejercicio;
 import com.example.DB.SQLiteControl;
+import com.example.DB.SQLiteEjercicioDB;
 import com.example.DTO.DTO_Dieta;
+import com.example.DTO.DTO_Ejercicio;
 import com.example.miyoideal.R;
 
 import android.app.Activity;
@@ -21,6 +24,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
@@ -35,6 +39,7 @@ public class SelectDialogue extends DialogFragment {
 	private AlarmManager alarm;
 	private Intent intent;
 	private PendingIntent pintent;
+	private String todaysDate;
 	
 	public SelectDialogue(Context con, String id_Dieta, boolean acc)
 	{
@@ -55,16 +60,31 @@ public class SelectDialogue extends DialogFragment {
             builder.setMessage("¿Deseas tomar esta dieta?")
                    .setPositiveButton("Si", new DialogInterface.OnClickListener() {
                        public void onClick(DialogInterface dialog, int id) {
+                    	   
+                    	   //Update Control DB (so we can know a dieta has been selected)
                     	   Calendar c = Calendar.getInstance();
                    			SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yy");
-                   			String todayDate = df.format(c.getTime());
+                   			todaysDate = df.format(c.getTime());
                     	   ContentValues cv = new ContentValues();
                     	   cv.put("id_dieta", id_Dieta); //These Fields should be your String values of actual column names
-                    	   cv.put("dia",todayDate);
+                    	   cv.put("dia",todaysDate);
                     	   
                     	   SQLiteControl db = new SQLiteControl(con);
                     	   db.getWritableDatabase().update("control", cv, "id_control "+"="+1, null);
+                    	   db.close();
                     	   
+                    	   DTO_Dieta dieta = new DAO_Dieta(con).getDieta(new API(con).getID_Dieta());
+                    	   
+                    	   String actividad = "";
+                    	   for(int i = 0; i < Integer.parseInt(dieta.getDuracion()); i++)
+                    		   actividad += "0";
+                    	   
+                    	   /*Add new insert to DB Ejercicio. This helps us keep track of the days in
+                    	    *which physical activity was performed when undertaking the diet program*/
+                    	   DTO_Ejercicio ejercicio = new DTO_Ejercicio(id_Dieta, todaysDate, actividad);
+                    	   new DAO_Ejercicio(con).newEjercicio(ejercicio);                  	   
+                    	   
+                    	   //service
                     	   Calendar cal = Calendar.getInstance();
                     	   
                     	   String tex = new API(con).getDia();
@@ -72,18 +92,16 @@ public class SelectDialogue extends DialogFragment {
                     	   intent = new Intent(con, MyService.class);
                     	   intent.putExtra("dia_inicial", tex);
                     	   
-                    	   DTO_Dieta dieta = new DAO_Dieta(con).getDieta(new API(con).getID_Dieta());
+                    	   
                     	   intent.putExtra("duracion", dieta.getDuracion());
                     	   
                     	   
                     	   pintent = PendingIntent.getService(con, 1234, intent, 0);
 
-                    	   alarm = (AlarmManager) con.getSystemService(Context.ALARM_SERVICE);
-                    	   
-                    	   //con.startService(intent);
+                    	   alarm = (AlarmManager) con.getSystemService(Context.ALARM_SERVICE);                   	   
                     	   
                     	   // schedule for every 5 hours
-                    	   alarm.setRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), 18000*1000, pintent); 
+                    	   alarm.setRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), 20*1000, pintent); 
                     	   
                     	   
                        }
@@ -101,13 +119,19 @@ public class SelectDialogue extends DialogFragment {
                        public void onClick(DialogInterface dialog, int id) {
                     	   Calendar c = Calendar.getInstance();
                     	   SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yy");
-                    	   String todayDate = df.format(c.getTime());
+                    	   todaysDate = df.format(c.getTime());
                     	   ContentValues cv = new ContentValues();
                     	   cv.put("id_dieta", id_Dieta); //These Fields should be your String values of actual column names
-                    	   cv.put("dia",todayDate);
+                    	   cv.put("dia",todaysDate);
                     	   
                     	   SQLiteControl db = new SQLiteControl(con);
                     	   db.getWritableDatabase().update("control", cv, "id_control "+"="+1, null);
+                    	   db.close();
+                    	   
+                    	   /*Add new insert to DB Ejercicio. This helps us keep track of the days in
+                    	    *which physical activity was performed when undertaking the diet program*/
+                    	   DTO_Ejercicio ejercicio = new DTO_Ejercicio(id_Dieta, todaysDate, "0");
+                    	   new DAO_Ejercicio(con).newEjercicio(ejercicio);
                     	   
                     	   //To get the time reference when the script is initially run
                     	   Calendar cal = Calendar.getInstance();
@@ -145,11 +169,15 @@ public class SelectDialogue extends DialogFragment {
         @Override
         public void onReceive(Context context, Intent inten) {
         	//do something
+        	
+        	Log.d("service", "stopping...");
+        	
         	if(intent!= null && context!=null)
         	{
         		String exit = inten.getStringExtra("exit"); 
             	if(exit.equals("1"))
             	{
+            		Log.d("service", "stopping...");
             		Toast.makeText(con, "should stop", Toast.LENGTH_SHORT).show();
             		alarm.cancel(pintent);
             		con.stopService(intent);
@@ -173,6 +201,11 @@ public class SelectDialogue extends DialogFragment {
         	
         }
     }; 
+    
+    private void initEjercicioDB()
+    {
+    	
+    }
     
    /* public interface SelectDialogueListener
     {
