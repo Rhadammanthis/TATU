@@ -358,7 +358,6 @@ public class DietaActivity extends Activity {
 		return res;
 	}
 	
-	@SuppressWarnings("deprecation")
 	public long getDateDiffString(java.util.Date date, java.util.Date date2)
 	{
 	    long timeOne = date.getTime();

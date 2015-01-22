@@ -47,13 +47,14 @@ public class MyService extends Service{
 	          // For our sample, we just sleep for 5 seconds.
 	    	  if(shouldLog)
 	    	  {
-	    		  //new API(con).clearDieta();
 	    		  
-	    		 /* Log.d("service", String.valueOf(msg.arg1));
+	    		 // new API(con).clearDieta();
+	    		  
+	    		/* Log.d("service", String.valueOf(msg.arg1));
 	    		  intent.putExtra("exit", String.valueOf(1));
 		    		intent.setAction("com.example.miyoideal.extra");
-		    		sendBroadcast(intent);*/
-		    		
+		    		sendBroadcast(intent);
+		    		*/
 		    		
 		    		//stopSelf();
 		    		
@@ -66,14 +67,16 @@ public class MyService extends Service{
 			  	
 			  	  int dia_inicial = parseDay(init_day);
 			  	  int dia_actual = Integer.parseInt((String) android.text.format.DateFormat.format("dd", c.getTime()));
+
 			  
-			  	 // Log.d("dif", String.valueOf(dia_actual - dia_inicial));			  	  
+			  	  Log.d("service", "checking if should terminate");			  	  
 			  	  
-			  	  if((dia_actual - dia_inicial) == (duracion - 1))
+			  	  if((dia_actual - dia_inicial) >= (duracion - 1))
 			  	  {
 			  		int hour = c.get(Calendar.HOUR_OF_DAY);
 			  		if(hour >= 9)
 			  		{
+			  			Log.d("service", "should terminate");
 
 			  			//clean set dieta information
 			  			new API(con).clearDieta();

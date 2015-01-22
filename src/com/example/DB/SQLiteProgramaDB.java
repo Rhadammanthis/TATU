@@ -11,8 +11,10 @@ public class SQLiteProgramaDB extends SQLiteOpenHelper{
 	private static final String TABLE_CREATE =
             "CREATE TABLE " + TABLE_NAME + " (" +
             "id_programa" + " TEXT, " +
-            "duracion" + " TEXT, " +
-            "nivel" + " TEXT);";
+            "nivel" + " TEXT, " +
+            "titulo" + " TEXT, " +
+            "descripcion" + " TEXT, " +
+            "hora" + " TEXT);";
 
 	public SQLiteProgramaDB(Context context) {
 		super(context, TABLE_NAME, null, DATABASE_VERSION);

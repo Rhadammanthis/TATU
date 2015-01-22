@@ -11,9 +11,9 @@ public class SQLiteEjercicioDB extends SQLiteOpenHelper{
 	private static final String TABLE_CREATE =
             "CREATE TABLE " + TABLE_NAME + " (" +
             "id_ejercicio" + " TEXT, " +
-            "id_programa" + " TEXT, " +
-            "dia" + " TEXT, " +
-            "descripcion" + " TEXT);";
+            "id_dieta" + " TEXT, " +
+            "fecha" + " TEXT, " +
+            "diasActividad" + " TEXT);";
 
 	public SQLiteEjercicioDB(Context context) {
 		super(context, TABLE_NAME, null, DATABASE_VERSION);
