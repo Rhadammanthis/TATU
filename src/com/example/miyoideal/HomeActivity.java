@@ -10,6 +10,7 @@ import shared.ui.actionscontentview.ActionsContentView;
 
 import com.example.DB.SQLiteUserDB;
 import com.example.miyoideal.extra.API;
+import com.example.miyoideal.extra.DialyNotificationReceiver;
 import com.example.miyoideal.extra.MyService;
 import com.example.miyoideal.extra.SideMenu;
 
@@ -21,6 +22,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.ShareActionProvider;
 import android.app.Activity;
 import android.app.Dialog;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -91,6 +93,9 @@ public class HomeActivity extends Activity implements View.OnClickListener{
 		setContentView(R.layout.baseline4);
 		cont = this;
 		
+		//Clear the notification
+		cancelNotification(this, 001);
+				
 		//Adapt the layout depends screen
     	Display display = getWindowManager().getDefaultDisplay();
 		Point size = new Point();
@@ -101,6 +106,21 @@ public class HomeActivity extends Activity implements View.OnClickListener{
 		linearLayout1.getLayoutParams().width = (width/2);
 		button_MiPerfil = (Button) findViewById(R.id.buttonHome);
 		button_MiPerfil.setOnClickListener(this);
+		
+		//
+		viewActionsContentView = (ActionsContentView) findViewById(R.id.home_actionsContentView);
+		viewActionsList = (ListView) findViewById(R.id.actions);
+		setUpMenu();	
+		Intent[] mSharedIntents = new Intent[]{getEmailIntent()};
+		
+		SQLiteUserDB dbUser = new SQLiteUserDB(this);
+		dbUser.getReadableDatabase();
+		String query = "Select * FROM " + "usuario" + " WHERE " + "id_usuario" + " =  \"" + "1" + "\"";
+		Cursor cursor = dbUser.getReadableDatabase().rawQuery(query, null);
+		if(cursor.moveToFirst()){
+			cursor.moveToFirst();
+			this.setTitle(cursor.getString(1));
+		}
 }
     
     @Override
@@ -297,4 +317,11 @@ public class HomeActivity extends Activity implements View.OnClickListener{
 	    mCurrentPhotoPath = "file:" + image.getAbsolutePath();
 	    return image;
 	}
+	
+	//Clear the Notification
+	private void cancelNotification(Context context, int notifyId) {
+	    String notificationService = Context.NOTIFICATION_SERVICE;
+	    NotificationManager mNotificationManager = (NotificationManager) context.getSystemService(notificationService);
+	    mNotificationManager.cancel(notifyId);
+	} 
 }

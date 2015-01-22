@@ -3,6 +3,7 @@ package com.example.miyoideal;
 import java.util.HashMap;
 
 import com.example.DB.*;
+import com.example.miyoideal.extra.DialyNotificationReceiver;
 
 import android.support.v7.app.ActionBarActivity;
 import android.app.Activity;
@@ -255,7 +256,8 @@ public class MainActivity extends Activity implements SQLiteFactory{
 		values.put("dia", "0");
 		db.getWritableDatabase().insert("control", null, values);
 		
+		//Set the notification receiver 
+		DialyNotificationReceiver dialyNotification = new DialyNotificationReceiver();
+		dialyNotification.setAlarm(this);		
 	}
-
-
 }
