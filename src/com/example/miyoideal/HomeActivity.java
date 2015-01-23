@@ -3,6 +3,7 @@ package com.example.miyoideal;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 import shared.ui.actionscontentview.ActionsContentView;
@@ -13,6 +14,17 @@ import com.example.miyoideal.extra.API;
 import com.example.miyoideal.extra.DialyNotificationReceiver;
 import com.example.miyoideal.extra.MyService;
 import com.example.miyoideal.extra.SideMenu;
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.charts.BarLineChartBase.BorderPosition;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.interfaces.OnChartValueSelectedListener;
+import com.github.mikephil.charting.utils.ColorTemplate;
+import com.github.mikephil.charting.utils.Legend;
+import com.github.mikephil.charting.utils.XLabels;
+import com.github.mikephil.charting.utils.YLabels;
+import com.github.mikephil.charting.utils.Legend.LegendForm;
 
 import android.R.menu;
 import android.support.v4.app.Fragment;
@@ -28,7 +40,9 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.Point;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -42,6 +56,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -51,7 +66,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
-public class HomeActivity extends Activity implements View.OnClickListener{
+public class HomeActivity extends Activity implements View.OnClickListener, OnChartValueSelectedListener{
 	
 	//global variables;
 	private int width;
@@ -63,6 +78,8 @@ public class HomeActivity extends Activity implements View.OnClickListener{
 	private Button button_MiEjercicio;
 	private Button button_Calendario;
 	private ActionsContentView viewActionsContentView;
+	
+	private LineChart mChart;
 	
 	private Uri fileUri;
 	private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 100;
@@ -87,9 +104,10 @@ public class HomeActivity extends Activity implements View.OnClickListener{
 
 	
     @Override
-	protected void onCreate(Bundle savedInstanceState) {
-		
+	protected void onCreate(Bundle savedInstanceState) {		
     	super.onCreate(savedInstanceState);
+    	getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		setContentView(R.layout.baseline4);
 		cont = this;
 		
@@ -121,6 +139,72 @@ public class HomeActivity extends Activity implements View.OnClickListener{
 			cursor.moveToFirst();
 			this.setTitle(cursor.getString(1));
 		}
+		
+		//Graphs
+		mChart = (LineChart) findViewById(R.id.chart1);
+        mChart.setOnChartValueSelectedListener(this);
+        mChart.setValueTextColor(Color.WHITE);
+
+        mChart.setUnit(" KG");
+        mChart.setDrawUnitsInChart(true);
+
+        // if enabled, the chart will always start at zero on the y-axis
+        mChart.setStartAtZero(false);
+
+        // disable the drawing of values into the chart
+        mChart.setDrawYValues(true);
+
+        mChart.setDrawBorder(true);
+        mChart.setBorderPositions(new BorderPosition[] {
+                BorderPosition.BOTTOM
+        });
+
+        // no description text
+        mChart.setDescription("");
+        mChart.setNoDataTextDescription("You need to provide data for the chart.");
+
+        // enable value highlighting
+        mChart.setHighlightEnabled(false);
+
+        // enable touch gestures
+        mChart.setTouchEnabled(true);
+
+        // enable scaling and dragging
+        mChart.setDragEnabled(true);
+        mChart.setScaleEnabled(true);
+        mChart.setDrawGridBackground(false);
+        mChart.setDrawVerticalGrid(false);
+        mChart.setDrawHorizontalGrid(false);
+
+        // if disabled, scaling can be done on x- and y-axis separately
+        mChart.setPinchZoom(true);
+
+        // set an alternative background color
+        mChart.setBackgroundColor(Color.GRAY);
+
+        // add data
+        setData(10, 80);
+
+        mChart.animateX(2500);
+
+        Typeface tf = Typeface.createFromAsset(getAssets(), "OpenSans-Regular.ttf");
+
+        // get the legend (only possible after setting data)
+        Legend l = mChart.getLegend();
+
+        // modify the legend ...
+        // l.setPosition(LegendPosition.LEFT_OF_CHART);
+        l.setForm(LegendForm.LINE);
+        l.setTypeface(tf);
+        l.setTextColor(Color.WHITE);
+
+        XLabels xl = mChart.getXLabels();
+        xl.setTypeface(tf);
+        xl.setTextColor(Color.WHITE);
+
+        YLabels yl = mChart.getYLabels();
+        yl.setTypeface(tf);
+        yl.setTextColor(Color.WHITE);
 }
     
     @Override
@@ -323,5 +407,56 @@ public class HomeActivity extends Activity implements View.OnClickListener{
 	    String notificationService = Context.NOTIFICATION_SERVICE;
 	    NotificationManager mNotificationManager = (NotificationManager) context.getSystemService(notificationService);
 	    mNotificationManager.cancel(notifyId);
+	}
+	
+	//Sets Graph data
+    private void setData(int count, float range) {
+
+        ArrayList<String> xVals = new ArrayList<String>();
+        for (int i = 0; i < count; i++) {
+            xVals.add("EA ");
+        }
+
+        ArrayList<Entry> yVals = new ArrayList<Entry>();
+
+        for (int i = 0; i < count; i++) {
+            float mult = (range + 1);
+            float val = (float) (Math.random() * mult) + 3;// + (float)
+                                                           // ((mult *
+                                                           // 0.1) / 10);
+            yVals.add(new Entry(val, i));
+        }
+
+        // create a dataset and give it a type
+        LineDataSet set1 = new LineDataSet(yVals, "Peso");
+        set1.setColor(ColorTemplate.getHoloBlue());
+        set1.setCircleColor(ColorTemplate.getHoloBlue());
+        set1.setLineWidth(2f);
+        set1.setCircleSize(4f);
+        set1.setFillAlpha(65);
+        set1.setFillColor(ColorTemplate.getHoloBlue());
+        set1.setHighLightColor(Color.rgb(244, 117, 117));
+
+        ArrayList<LineDataSet> dataSets = new ArrayList<LineDataSet>();
+        set1.setDrawFilled(true);
+        dataSets.add(set1); // add the datasets
+
+        // create a data object with the datasets
+        LineData data = new LineData(xVals, dataSets);
+
+        // set data
+        mChart.setData(data);
+    }
+
+	@Override
+	public void onValueSelected(Entry e, int dataSetIndex) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onNothingSelected() {
+		// TODO Auto-generated method stub
+		
 	} 
 }
