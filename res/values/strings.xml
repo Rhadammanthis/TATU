@@ -25,5 +25,6 @@
     <string name="sel_date">Selected date: %s</string>
     <string name="title_activity_camera">CameraActivity</string>
     <string name="title_activity_selec_dieta">SelecDieta</string>
+    <string name="title_activity_disclaimer">DisclaimerActivity</string>
 
 </resources>

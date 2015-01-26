@@ -2,6 +2,8 @@ package com.example.miyoideal;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -89,7 +91,23 @@ public class CalendarioActivity extends Activity {
 			}
 		});
 		
-		CalendarioChildFactory factory = new CalendarioChildFactory(this);
+		Calendar c = Calendar.getInstance();
+		int today = Integer.valueOf((String)android.text.format.DateFormat.format("dd", c.getTime()));
+		
+		if(new API(ctx).IsDietaSet())
+		{
+			 List<DTO_Componente> componentes = new DAO_Componente(ctx).getAllComponente(
+					 new API(ctx).getID_Dieta(), String.valueOf(mCalendarCard.getFirstDay() - today + 1));
+
+			 List<RelativeLayout> childrenLayout = initDietaComponents(componentes);
+			 linearLayout.removeAllViewsInLayout();
+			 for(RelativeLayout temp : childrenLayout)
+			 {
+				 linearLayout.addView(temp);
+			 }
+		}
+		
+		//CalendarioChildFactory factory = new CalendarioChildFactory(this);
 		
 		//linearLayout.addView(factory.GenerateChildEjercicio("Uno 1", "asjhgdlgd ladjgajaldal bd lsjdblsbdlsnv dbasv dv sd"));
 	}

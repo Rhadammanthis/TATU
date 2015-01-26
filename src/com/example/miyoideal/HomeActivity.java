@@ -60,10 +60,12 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout.LayoutParams;
 import android.widget.Toast;
 
 public class HomeActivity extends Activity implements View.OnClickListener, OnChartValueSelectedListener{
@@ -95,7 +97,7 @@ public class HomeActivity extends Activity implements View.OnClickListener, OnCh
     private String filePath;
     public static final int MEDIA_TYPE_IMAGE = 1;
     private File mediaFile;
-    private CameraActivity activity;
+    //private ShareActivity activity;
     
     //REQUEST IMAGE CODE
     static final int REQUEST_IMAGE_CAPTURE = 1;
@@ -129,7 +131,6 @@ public class HomeActivity extends Activity implements View.OnClickListener, OnCh
 		viewActionsContentView = (ActionsContentView) findViewById(R.id.home_actionsContentView);
 		viewActionsList = (ListView) findViewById(R.id.actions);
 		setUpMenu();	
-		Intent[] mSharedIntents = new Intent[]{getEmailIntent()};
 		
 		SQLiteUserDB dbUser = new SQLiteUserDB(this);
 		dbUser.getReadableDatabase();
@@ -281,7 +282,7 @@ public class HomeActivity extends Activity implements View.OnClickListener, OnCh
 	{
 		final String[] values = new String[] { "Mi Perfil", "Mi Dieta", "Mi Ejercicio", 
 	    		"Mas Dietas", "Calendario", "Estadisticas", "Preguntanos",
-	    		"Comparte", "Tips y Sujerencias", "Recordatorios", "Seleccionar Dieta"};
+	    		"Comparte", "Tips y Sujerencias", "Seleccionar Dieta", "Disclaimer"};
 	    final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
 	        android.R.layout.simple_list_item_1, android.R.id.text1, values);
 
@@ -294,6 +295,12 @@ public class HomeActivity extends Activity implements View.OnClickListener, OnCh
 		
 		      }
 	    });
+	    
+	    CheckBox notification = new CheckBox(this);
+	    notification.setText("Notificaciones");
+	    notification.setChecked(false);
+	    
+	    //menuLinearLayout.addView(notification);
 	}
 	
 	private void showActivity(int position) 
@@ -320,8 +327,18 @@ public class HomeActivity extends Activity implements View.OnClickListener, OnCh
 		    	intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 				startActivity(intent);
 		      break;
-		    case 10:
+		    case 7:
+		    	intent = new Intent(HomeActivity.this, ShareActivity.class);
+		    	intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+				startActivity(intent);
+		      break;
+		    case 9:
 		    	intent = new Intent(HomeActivity.this, SelecDieta.class);
+		    	intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+				startActivity(intent);
+		      break;
+		    case 10:
+		    	intent = new Intent(HomeActivity.this, DisclaimerActivity.class);
 		    	intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 				startActivity(intent);
 		      break;
@@ -331,20 +348,6 @@ public class HomeActivity extends Activity implements View.OnClickListener, OnCh
 	    }
 	}
 
-	private Intent getEmailIntent() {
-		
-		String to = "foo@bar.com";
-		String subject = "yo dude";
-		String body = "Here's an email body";
-	
-		final Intent intent = new Intent(Intent.ACTION_SEND);
-		intent.setType("message/rfc822");
-		String[] toArr = new String[] { to };
-		intent.putExtra(Intent.EXTRA_EMAIL, toArr);
-		intent.putExtra(Intent.EXTRA_SUBJECT, subject);
-		intent.putExtra(Intent.EXTRA_TEXT, body);
-		return intent;
-	}
 	
 	//When the user clicks on the back-key 
 	@Override
