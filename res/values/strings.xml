@@ -9,6 +9,7 @@
     <string name="title_activity_home">Home</string>
     <string name="title_activity_mi_perfil">MiPerfilActivity</string>
     <string name="action_home">Go to home</string>
+    <string name="facebook_app_id">1597893253758886</string>
 
     <string-array name="nivel_array">
         <item>Bajo</item>
@@ -25,5 +26,6 @@
     <string name="sel_date">Selected date: %s</string>
     <string name="title_activity_camera">CameraActivity</string>
     <string name="title_activity_selec_dieta">SelecDieta</string>
+    <string name="com.facebook.sdk.ApplicationId">@string/facebook_app_id</string>
 
 </resources>
