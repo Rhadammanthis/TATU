@@ -197,6 +197,7 @@ public class EjercicioActivity extends Activity {
 
 	}
 	
+	//returns distance between days of  two Date objects
 	public long getDateDiffString(java.util.Date date, java.util.Date date2)
 	{
 	    long timeOne = date.getTime();
