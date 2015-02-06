@@ -10,6 +10,7 @@
     <string name="title_activity_mi_perfil">MiPerfilActivity</string>
     <string name="action_home">Go to home</string>
     <string name="facebook_app_id">1597893253758886</string>
+    <string name="error_image">No image available</string>
 
     <string-array name="nivel_array">
         <item>Bajo</item>
@@ -27,6 +28,7 @@
     <string name="title_activity_camera">CameraActivity</string>
     <string name="select_picture">Select Picture</string>
     <string name="title_activity_selec_dieta">SelecDieta</string>
+    <string name="title_activity_comparative">Comparacion</string>
     <string name="action_photo_camera">Take Photo</string>
     <string name="action_photo_gallery">Choose Existing</string>
 

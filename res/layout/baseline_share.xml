@@ -4,65 +4,92 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/textView1"
+        android:id="@+id/shareText1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:paddingTop="6dip"
-        android:text="Resumen de Dieta"
+        android:text="FELICIDADES"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
-    <ImageView
-        android:id="@+id/foto"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_below="@+id/textView1"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="26dp"
-      	android:clickable="true"
-        android:src="@drawable/abc_ab_stacked_transparent_light_holo" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/shareText2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/imageView1"
+        android:layout_below="@+id/shareText1"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="30dp"
-        android:text="Tipo de Dieta"
+        android:gravity="center"
+        android:paddingTop="6dip"
+        android:paddingBottom="16dip"
+        android:text="Haz completado la dieta XXX. Ahora actualiza tus datos"
         android:textAppearance="?android:attr/textAppearanceMedium" />
+    
+    <View 
+        android:id="@+id/shareView1"
+        android:layout_below="@+id/shareText2"
+        android:layout_width="match_parent"
+        android:layout_height="2dip"
+        android:background="#9f9f9f"
+        android:paddingLeft="10dip"
+        android:paddingRight="10dip"/>
+    
+    <TextView
+        android:id="@+id/shareText3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/shareView1"
+        android:paddingTop="15dip"
+        android:text="PESO"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <EditText
-        android:id="@+id/editText2"
+        android:id="@+id/pesoEditText_Share"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:inputType="numberDecimal"
+        android:paddingLeft="2dip"
+        android:paddingRight="2dip"
+        android:layout_marginLeft="5dip"
+        android:layout_below="@+id/shareText3"
+        android:layout_centerHorizontal="true"
+        android:hint="Peso" />
+    
+    <TextView
+        android:id="@+id/shareText4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/editText1"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="14dp"
-        android:hint="Peso"
-        android:ems="10" />
+        android:layout_below="@+id/pesoEditText_Share"
+        android:paddingTop="6dip"
+        android:text="TALLA"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <EditText
+        android:id="@+id/tallaEditText_Share"
+        android:inputType="numberDecimal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="2dip"
+        android:paddingRight="2dip"
+        android:layout_marginLeft="5dip"
+        android:layout_below="@+id/shareText4"
+        android:layout_centerHorizontal="true"
+        android:hint="Talla" />
 
     <Button
-        android:id="@+id/buttonGuardar"
-        android:layout_width="wrap_content"
+        android:id="@+id/buttonGuardar_share"
+        android:layout_width="120dip"
+        android:layout_marginTop="10dip"
+        android:layout_marginBottom="5dip"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/editText2"
-        android:layout_alignRight="@+id/editText2"
-        android:layout_below="@+id/editText2"
-        android:layout_marginTop="16dp"
+        android:layout_below="@+id/tallaEditText_Share"
         android:paddingEnd="16dip"
+        android:layout_centerHorizontal="true"
         android:text="Guardar" />
 
-    <EditText
-        android:id="@+id/editText1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/buttonGuardar"
-        android:layout_below="@+id/foto"
-        android:layout_marginTop="16dp"
-        android:ems="10"
-        android:hint="Talla" />
 
 </RelativeLayout>
 

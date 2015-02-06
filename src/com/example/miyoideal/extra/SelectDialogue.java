@@ -190,7 +190,7 @@ public class SelectDialogue extends DialogFragment {
 	                dialog.setContentView(R.layout.baseline_share);
 	                dialog.setTitle("Compartir");
 	
-	                Button save=(Button)dialog.findViewById(R.id.buttonGuardar);
+	                Button save=(Button)dialog.findViewById(R.id.buttonGuardar_share);
 	                dialog.show();
 	                
 	                intent = null;

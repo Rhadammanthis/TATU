@@ -77,9 +77,6 @@ public class MyService extends Service{
 			  		if(hour >= 9)
 			  		{
 			  			Log.d("service", "should terminate");
-
-			  			//clean set dieta information
-			  			new API(con).clearDieta();
 			  			
 			  			//prompt "share" dialog
 			  			intent.putExtra("exit", String.valueOf(1));

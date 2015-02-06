@@ -58,6 +58,10 @@
             android:name=".SelecDieta"
             android:label="@string/title_activity_selec_dieta" >
         </activity>
+        <activity
+            android:name=".ComparativeActivity"
+            android:label="@string/title_activity_comparative" >
+        </activity>
 
         <service android:name=".extra.MyService" >
         </service>

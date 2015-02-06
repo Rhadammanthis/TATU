@@ -5,13 +5,17 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import shared.ui.actionscontentview.ActionsContentView;
 
 
+import com.example.DAO.DAO_DietaCompletada;
 import com.example.DB.SQLiteUserDB;
+import com.example.DTO.*;
 import com.example.miyoideal.extra.API;
 import com.example.miyoideal.extra.DialyNotificationReceiver;
+import com.example.miyoideal.extra.DietaCompletedDialog;
 import com.example.miyoideal.extra.MyService;
 import com.example.miyoideal.extra.SideMenu;
 import com.github.mikephil.charting.charts.LineChart;
@@ -64,6 +68,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -106,6 +111,9 @@ public class HomeActivity extends Activity implements View.OnClickListener, OnCh
     ImageView imageThumbnail;
     private String mCurrentPhotoPath;
 
+    //graph related global variables
+    private List<DTO_DietaCompletada> lista;
+    private LineDataSet set1;
 	
     @Override
 	protected void onCreate(Bundle savedInstanceState) {		
@@ -127,7 +135,6 @@ public class HomeActivity extends Activity implements View.OnClickListener, OnCh
 		linearLayout1 = (LinearLayout) findViewById(R.id.linearLayout1);
 		linearLayout1.getLayoutParams().width = (width/2);
 		button_MiPerfil = (Button) findViewById(R.id.buttonHome);
-		button_MiPerfil.setOnClickListener(this);
 		
 		//
 		viewActionsContentView = (ActionsContentView) findViewById(R.id.home_actionsContentView);
@@ -142,6 +149,10 @@ public class HomeActivity extends Activity implements View.OnClickListener, OnCh
 			cursor.moveToFirst();
 			this.setTitle(cursor.getString(1));
 		}
+		
+		lista = new DAO_DietaCompletada(cont).getLastFiveDietaCompleta();
+		
+		Log.d("grafica", "Ya tenemos lista lista... lol");
 		
 		//Graphs
 		mChart = (LineChart) findViewById(R.id.chart1);
@@ -186,9 +197,9 @@ public class HomeActivity extends Activity implements View.OnClickListener, OnCh
         mChart.setBackgroundColor(Color.GRAY);
 
         // add data
-        setData(10, 80);
+        setData(lista.size(), 80, lista);
 
-        mChart.animateX(2500);
+        mChart.animateX(lista.size() * 250);
 
         Typeface tf = Typeface.createFromAsset(getAssets(), "OpenSans-Regular.ttf");
 
@@ -208,6 +219,29 @@ public class HomeActivity extends Activity implements View.OnClickListener, OnCh
         YLabels yl = mChart.getYLabels();
         yl.setTypeface(tf);
         yl.setTextColor(Color.WHITE);
+        
+		button_MiPerfil.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				DietaCompletedDialog dialog = new DietaCompletedDialog(cont);
+                dialog.show();
+                dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+					
+					@Override
+					public void onDismiss(DialogInterface dialog) {
+						// TODO Auto-generated method stub
+						List<DTO_DietaCompletada> lista = new DAO_DietaCompletada(cont).getLastFiveDietaCompleta();
+						Entry e = new Entry(Float.valueOf(lista.get(lista.size()-1).getPeso()), lista.size()-1);
+						set1.addEntry(e);
+						setData(lista.size(), 80, lista);
+						mChart.invalidate();
+						mChart.animateX(lista.size() * 250);
+					}
+				});
+			}
+		});
 }
     
     @Override
@@ -287,7 +321,7 @@ public class HomeActivity extends Activity implements View.OnClickListener, OnCh
 	{
 		final String[] values = new String[] { "Mi Perfil", "Mi Dieta", "Mi Ejercicio", 
 	    		"Mas Dietas", "Calendario", "Estadisticas", "Preguntanos",
-	    		"Comparte", "Tips y Sujerencias", "Seleccionar Dieta", "Disclaimer"};
+	    		"Comparte", "Tips y Sujerencias", "Seleccionar Dieta", "Comparativa", "Disclaimer"};
 	    final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
 	        android.R.layout.simple_list_item_1, android.R.id.text1, values);
 
@@ -343,6 +377,11 @@ public class HomeActivity extends Activity implements View.OnClickListener, OnCh
 				startActivity(intent);
 		      break;
 		    case 10:
+		    	intent = new Intent(HomeActivity.this, ComparativeActivity.class);
+		    	intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+				startActivity(intent);
+		      break;
+		    case 11:
 		    	intent = new Intent(HomeActivity.this, DisclaimerActivity.class);
 		    	intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 				startActivity(intent);
@@ -366,8 +405,48 @@ public class HomeActivity extends Activity implements View.OnClickListener, OnCh
         dialog.setContentView(R.layout.baseline_share);
         dialog.setTitle("Compartir");
 
-        Button save = (Button)dialog.findViewById(R.id.buttonGuardar);
+        Button save = (Button)dialog.findViewById(R.id.buttonGuardar_share);
         dialog.show();
+
+        //imageThumbnail = (ImageView) dialog.findViewById(R.id.foto);
+        save.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v) {
+            	// Camera exists? Then proceed... 
+            	Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            	if(takePictureIntent.resolveActivity(getPackageManager()) != null){
+            		File photoFile = null;
+            		try{
+            			//Create the Image File
+            			photoFile = createImageFile();
+            		}catch(IOException e){
+            			e.printStackTrace();
+            		}
+            		//Continue only when the ImageFile was created
+            		if(photoFile != null){
+            			takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
+            			startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+            		}
+            	}
+            }
+        });
+	}
+	
+	private File createImageFile() throws IOException{
+		 // Create an image file name 
+	    String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+	    String imageFileName = "JPEG_" + timeStamp + "_";
+	    File storageDir = Environment.getExternalStoragePublicDirectory(
+	            Environment.DIRECTORY_PICTURES);
+	    File image = File.createTempFile(
+	        imageFileName,  /* prefix */
+	        ".jpg",         /* suffix */ 
+	        storageDir      /* directory */
+	    ); 
+	 
+	    // Save a file: path for use with ACTION_VIEW intents 
+	    mCurrentPhotoPath = "file:" + image.getAbsolutePath();
+	    return image;
+
 	}
 	
 	//Clear the Notification
@@ -378,11 +457,14 @@ public class HomeActivity extends Activity implements View.OnClickListener, OnCh
 	}
 	
 	//Sets Graph data
-    private void setData(int count, float range) {
-
+    private void setData(int count, float range, List<DTO_DietaCompletada> list) {
+    	
         ArrayList<String> xVals = new ArrayList<String>();
-        for (int i = 0; i < count; i++) {
-            xVals.add("EA ");
+        for (int i = 0; i < list.size(); i++) {
+            if(i==0)
+            	xVals.add(" ");
+            else
+            	xVals.add(list.get(i).getId_dieta());
         }
 
         ArrayList<Entry> yVals = new ArrayList<Entry>();
@@ -392,11 +474,12 @@ public class HomeActivity extends Activity implements View.OnClickListener, OnCh
             float val = (float) (Math.random() * mult) + 3;// + (float)
                                                            // ((mult *
                                                            // 0.1) / 10);
-            yVals.add(new Entry(val, i));
+            //yVals.add(new Entry(val, i));
+            yVals.add(new Entry(Float.valueOf(list.get(i).getPeso()), i));
         }
 
         // create a dataset and give it a type
-        LineDataSet set1 = new LineDataSet(yVals, "Peso");
+        set1 = new LineDataSet(yVals, "Peso");
         set1.setColor(ColorTemplate.getHoloBlue());
         set1.setCircleColor(ColorTemplate.getHoloBlue());
         set1.setLineWidth(2f);

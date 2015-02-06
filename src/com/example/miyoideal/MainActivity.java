@@ -78,10 +78,13 @@ public class MainActivity extends Activity implements SQLiteFactory{
 				userDB.getWritableDatabase();
 				values.put("id_usuario", "1");
 				values.put("nombre", "Hugo");
-				values.put("peso", "85 kg");
+				values.put("peso", "85");
+				values.put("talla", "1.74");
+				values.put("nivel", "medio");
 				userDB.getWritableDatabase().insert("usuario", null, values);
 				userDB.close();
 				Intent intent = new Intent(MainActivity.this, HomeActivity.class);
+				Log.d("grafica", "ya hay usuario");
 				startActivity(intent);
 			}
 		});	

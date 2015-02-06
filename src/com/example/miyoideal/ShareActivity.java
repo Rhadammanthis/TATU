@@ -10,12 +10,15 @@ import java.util.Date;
 
 import com.example.miyoideal.extra.PhotoManager;
 import com.example.miyoideal.extra.ShareContentManager;
+import com.facebook.Session;
+import com.facebook.SessionState;
 import com.facebook.UiLifecycleHelper;
 import com.facebook.model.GraphObject;
 import com.facebook.model.OpenGraphAction;
 import com.facebook.model.OpenGraphObject;
 import com.facebook.scrumptious.ScrumptiousApplication;
 import com.facebook.widget.FacebookDialog;
+import com.facebook.widget.FacebookDialog.OpenGraphActionDialogBuilder;
 
 //import com.facebook.scrumptious.R;
 
@@ -52,12 +55,18 @@ public class ShareActivity extends Activity implements View.OnClickListener {
     
     private Button facebookButton;
     private Uri tempUri;
+    private Session.StatusCallback callback = new Session.StatusCallback() {
+        @Override
+        public void call(Session session, SessionState state, Exception exception) {
+            Log.d("ShareActivity", "Callback");
+        }
+    };
     
     @Override
     public void onCreate(Bundle savedInstanceState){
     	super.onCreate(savedInstanceState);
     	setContentView(R.layout.activity_share);
-    	uiHelper = new UiLifecycleHelper(this, null);
+    	uiHelper = new UiLifecycleHelper(this, callback);
         uiHelper.onCreate(savedInstanceState);
 		facebookButton = (Button) findViewById(R.id.shareFacebook);
 		facebookButton.setOnClickListener(this);
@@ -66,44 +75,27 @@ public class ShareActivity extends Activity implements View.OnClickListener {
     }
     
     @Override
-	public void onClick(View v) {
-    	AlertDialog.Builder builder = new AlertDialog.Builder(ShareActivity.this);
-        CharSequence camera = getResources().getString(R.string.action_photo_camera);
-        CharSequence gallery = getResources().getString(R.string.action_photo_gallery);
-        builder.setCancelable(true).
-                setItems(new CharSequence[] {camera, gallery}, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        if (i == CAMERA) {
-                            try {
-								startCamera();
-							} catch (IOException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-                        } else if (i == GALLERY) {
-                        	startGallery();
-                        } 
-                    }
-                });
-        builder.show();	
-	}
+    public void onPause() {
+        super.onPause();
+        uiHelper.onPause();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        uiHelper.onDestroy();
+    }
     
     @Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		//Add the menu layout to the action bar
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.base_action_bar, menu);
-		return super.onCreateOptionsMenu(menu);
-	}
+    public void onResume() {
+        super.onResume();
+    }
+    
     @Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		//If the Logo clicked
-		Intent intent = new Intent(this, HomeActivity.class);
-		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		startActivity(intent);
-		return super.onOptionsItemSelected(item);
-	}
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        uiHelper.onSaveInstanceState(outState);
+    }
     
     @Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -112,11 +104,11 @@ public class ShareActivity extends Activity implements View.OnClickListener {
 	    		uiHelper.onActivityResult(requestCode, resultCode, data, new FacebookDialog.Callback() {
 	    	        @Override
 	    	        public void onError(FacebookDialog.PendingCall pendingCall, Exception error, Bundle data) {
-	    	            Log.e("Activity", String.format("Error: %s", error.toString()));
+	    	            Log.d("Activity", String.format("Error: %s", error.toString()));
 	    	        }
 	    	        @Override
 	    	        public void onComplete(FacebookDialog.PendingCall pendingCall, Bundle data) {
-	    	            Log.i("Activity", "Success!");
+	    	            Log.d("Activity", "Success!");
 	    	        }
 	    	    });
 	    		ShareContentManager shareContentManager = new ShareContentManager(data.getData());
@@ -158,35 +150,71 @@ public class ShareActivity extends Activity implements View.OnClickListener {
     	}
 	}
     
+    @Override
+	public void onClick(View v) {
+    	AlertDialog.Builder builder = new AlertDialog.Builder(ShareActivity.this);
+        CharSequence camera = getResources().getString(R.string.action_photo_camera);
+        CharSequence gallery = getResources().getString(R.string.action_photo_gallery);
+        builder.setCancelable(true).
+                setItems(new CharSequence[] {camera, gallery}, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        if (i == CAMERA) {
+                            try {
+								startCamera();
+							} catch (IOException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+                        } else if (i == GALLERY) {
+                        	startGallery();
+                        } 
+                    }
+                });
+        builder.show();	
+	}
+    
+    @Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		//Add the menu layout to the action bar
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.base_action_bar, menu);
+		return super.onCreateOptionsMenu(menu);
+	}
+    @Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		//If the Logo clicked
+		Intent intent = new Intent(this, HomeActivity.class);
+		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		startActivity(intent);
+		return super.onOptionsItemSelected(item);
+	}
+    
+    
+    
     public void createFacebookDialog(ShareContentManager shareContentManager){
-    	OpenGraphObject diet = shareContentManager.loadContent(); 
-		OpenGraphAction action = GraphObject.Factory.create(OpenGraphAction.class);
-		action.setProperty("diet", diet);
-		FacebookDialog shareDialog = new FacebookDialog.OpenGraphActionDialogBuilder(this, action, "yo-ideal:diet", "diet").build();
-		uiHelper.trackPendingDialogCall(shareDialog.present());
+    	/*if (FacebookDialog.canPresentOpenGraphActionDialog(this,FacebookDialog.OpenGraphActionDialogFeature.OG_ACTION_DIALOG)){
+		    OpenGraphObject diet = shareContentManager.loadContent(); 
+			OpenGraphAction action = GraphObject.Factory.create(OpenGraphAction.class);
+			action.setProperty("diet", diet);
+			action.setType("yo-ideal:diet");
+			FacebookDialog.OpenGraphActionDialogBuilder shareDialog = new FacebookDialog.OpenGraphActionDialogBuilder(this, action, "diet");
+			shareDialog.build().present();
+			//uiHelper.trackPendingDialogCall(shareDialog.present());
+    	}else { 
+            Toast.makeText(this, "Facebook not available", Toast.LENGTH_SHORT).show();
+        }
+        */
+    	FacebookDialog.ShareDialogBuilder builder = new FacebookDialog.ShareDialogBuilder(this)
+        .setLink("http://facebook.com")
+        .setName("Yo Ideal")
+        .setPicture(shareContentManager.getUri());
+    	
+        if (builder.canPresent()) {
+                builder.build().present();
+            }
     }
-    
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
-    
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        uiHelper.onSaveInstanceState(outState);
-    }
-    
-    @Override
-    public void onPause() {
-        super.onPause();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-    }
-    
+        
     //Set the extras for ShareActivity and start the camera
   	public void startCamera() throws IOException{
   		photoManager = new PhotoManager();

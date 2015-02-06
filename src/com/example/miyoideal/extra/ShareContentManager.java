@@ -19,4 +19,8 @@ public class ShareContentManager {
 		diet.setProperty("description", "Mi dieta esta funcionando estupendamente");
 		return diet;
 	}
+	
+	public String getUri(){
+		return photoUri.toString();
+	}
 }

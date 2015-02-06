@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 import android.net.Uri;
 import android.os.Environment;
@@ -15,15 +16,11 @@ public class PhotoManager{
 	
 	public File createFile() throws IOException{
 		//Create an image file name 
-		String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-		String imageFileName = "JPEG_" + timeStamp + "_";
+		String timeStamp = new SimpleDateFormat("yyyy-MM-dd_HH-mm", Locale.US).format(new Date());
 		File storageDir = Environment.getExternalStoragePublicDirectory(
-	          Environment.DIRECTORY_PICTURES);
-		File image = File.createTempFile(
-				imageFileName,  /* prefix */
-				".jpg",         /* suffix */ 
-				storageDir      /* directory */
-		);
+	          Environment.DIRECTORY_PICTURES+"/YoIdeal");
+		storageDir.mkdirs();
+		File image = new File(storageDir, timeStamp + ".jpg");
 		photoUri = Uri.fromFile(image);
 		return image;
 	}

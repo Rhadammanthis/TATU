@@ -48,19 +48,23 @@
             android:layout_alignTop="@+id/textView"
             android:orientation="vertical" >
 
-            <Button
+            <ImageButton
                 android:id="@+id/button2"
+                android:src="@drawable/ic_action_camera"
+                android:contentDescription="Camera Button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Button" />
+                 />
 
-            <Button
+            <ImageButton
                 android:id="@+id/button3"
+                android:src="@drawable/ic_action_time"
+                android:contentDescription="Calendar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Button" />
+                />
         </LinearLayout>
         
         <LinearLayout
@@ -73,19 +77,23 @@
             android:layout_toRightOf="@+id/linearLayout1"
             android:orientation="vertical" >
 
-            <Button
+            <ImageButton
                 android:id="@+id/Button02"
+                android:src="@drawable/ic_action_event"
+                android:contentDescription="My diets"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Button" />
+                />
 
-            <Button
+            <ImageButton
                 android:id="@+id/bottomRight"
+                android:src="@drawable/ic_action_help"
+                android:contentDescription="Help"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Button" />
+                />
         </LinearLayout>
 
         
