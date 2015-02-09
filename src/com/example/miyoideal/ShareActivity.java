@@ -1,12 +1,7 @@
 package com.example.miyoideal;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import com.example.miyoideal.extra.PhotoManager;
 import com.example.miyoideal.extra.ShareContentManager;
@@ -47,7 +42,9 @@ public class ShareActivity extends Activity implements View.OnClickListener {
 	
     private static final int CAMERA = 0;
     private static final int GALLERY = 1;
-    private static final int REQUEST_IMAGE_CAPTURE = 1;
+    private final int PHOTO_TAKED = 1;
+    private final int GALLERY_OPEN = 2;
+    
     private File photoFile;
     
     //Facebook callback variable
@@ -70,7 +67,6 @@ public class ShareActivity extends Activity implements View.OnClickListener {
         uiHelper.onCreate(savedInstanceState);
 		facebookButton = (Button) findViewById(R.id.shareFacebook);
 		facebookButton.setOnClickListener(this);
-		
     	//Uri uri = (Uri) bundle.get("URI");
     }
     
@@ -99,7 +95,7 @@ public class ShareActivity extends Activity implements View.OnClickListener {
     
     @Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-    	if(requestCode == 1){
+    	if(requestCode == GALLERY_OPEN){
 	    	if(data != null){
 	    		uiHelper.onActivityResult(requestCode, resultCode, data, new FacebookDialog.Callback() {
 	    	        @Override
@@ -111,6 +107,7 @@ public class ShareActivity extends Activity implements View.OnClickListener {
 	    	            Log.d("Activity", "Success!");
 	    	        }
 	    	    });
+	    		//Instance the object with the picture
 	    		ShareContentManager shareContentManager = new ShareContentManager(data.getData());
 	    		createFacebookDialog(shareContentManager);
 	    	}
@@ -118,30 +115,22 @@ public class ShareActivity extends Activity implements View.OnClickListener {
 	    		Toast.makeText(this, "Se produjo un error al cargar la imagen", Toast.LENGTH_LONG).show();
 	    	}
     	}
-    	else if(requestCode == 2){
-    		if(requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-	    		Log.d("OnActivityResult", photoManager.getUri().toString());
-	    		 /*Bitmap bmp = (Bitmap)data.getExtras().get("data");
-	    	        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-	    	 
-	    	         bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
-	    	         byte[] byteArray = stream.toByteArray(); // convert camera photo to byte array
-	    	 
-	    	         // save it in your external storage. 
-	    	        FileOutputStream fo;
-					try {
-						fo = new FileOutputStream(photoFile);
-						fo.write(byteArray);
-		    	        fo.flush();
-		    	        fo.close();
-					} catch (FileNotFoundException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}*/
-	    		Toast.makeText(this, "Foto Almacenada en la galeria", Toast.LENGTH_SHORT).show();
+    	else if(requestCode == PHOTO_TAKED){
+    		if(resultCode == RESULT_OK) {
+	    		uiHelper.onActivityResult(requestCode, resultCode, data, new FacebookDialog.Callback() {
+	    	        @Override
+	    	        public void onError(FacebookDialog.PendingCall pendingCall, Exception error, Bundle data) {
+	    	            Log.d("Activity", String.format("Error: %s", error.toString()));
+	    	        }
+	    	        @Override
+	    	        public void onComplete(FacebookDialog.PendingCall pendingCall, Bundle data) {
+	    	            Log.d("Activity", "Success!");
+	    	        }
+	    	    });
+	    		//Instance the object with the picture
+	    		ShareContentManager shareContentManager = new ShareContentManager(photoManager.getUri());
+	    		createFacebookDialog(shareContentManager);
+	    		//Toast.makeText(this, "Foto Almacenada en la galeria", Toast.LENGTH_SHORT).show();
 			} 
 			else { 
 				Toast.makeText(this, "No se logro almacenar la imagen", Toast.LENGTH_SHORT).show(); 
@@ -224,7 +213,7 @@ public class ShareActivity extends Activity implements View.OnClickListener {
 			//photoFile = createImageFile();
 			takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoManager.getUri());
 	    	//Save the image uri for later use
-	  		startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+	  		startActivityForResult(takePictureIntent, PHOTO_TAKED);
 	    }	
   	}
   	
@@ -234,6 +223,6 @@ public class ShareActivity extends Activity implements View.OnClickListener {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("image/*");
         String selectPicture = getResources().getString(R.string.select_picture);
-        startActivityForResult(Intent.createChooser(intent, selectPicture), 1);
+        startActivityForResult(Intent.createChooser(intent, selectPicture), GALLERY_OPEN);
   	}	
 }

@@ -19,7 +19,9 @@ public class PhotoManager{
 		String timeStamp = new SimpleDateFormat("yyyy-MM-dd_HH-mm", Locale.US).format(new Date());
 		File storageDir = Environment.getExternalStoragePublicDirectory(
 	          Environment.DIRECTORY_PICTURES+"/YoIdeal");
-		storageDir.mkdirs();
+		if(!storageDir.exists()){
+			storageDir.mkdirs();
+		}
 		File image = new File(storageDir, timeStamp + ".jpg");
 		photoUri = Uri.fromFile(image);
 		return image;
