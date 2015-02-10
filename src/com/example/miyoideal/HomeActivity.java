@@ -75,9 +75,7 @@ public class HomeActivity extends Activity implements View.OnClickListener, OnCh
 	private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 100;
 	private static final int CAPTURE_VIDEO_ACTIVITY_REQUEST_CODE = 200;
 	private Context cont;
-	
-	
-	
+		
 	private ListView viewActionsList;
 	
 	private Uri mImageCaptureUri; // This needs to be initialized.
@@ -85,6 +83,8 @@ public class HomeActivity extends Activity implements View.OnClickListener, OnCh
     private String filePath;
     public static final int MEDIA_TYPE_IMAGE = 1;
     private File mediaFile;
+    private static final int CAMERA = 0;
+    private static final int GALLERY = 1;
     //private ShareActivity activity;
     
     //REQUEST IMAGE CODE
@@ -227,18 +227,21 @@ public class HomeActivity extends Activity implements View.OnClickListener, OnCh
     
     @Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		
-    	super.onActivityResult(requestCode, resultCode, data);
+    	Log.d("OnActivityResult", "OnActivityResult");
+    	//super.onActivityResult(requestCode, resultCode, data);
+    	Bundle extras = data.getExtras();
+    	
 		if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-			Bundle extras = data.getExtras();
-			Bitmap imageBitmap = (Bitmap) extras.get("data");
-			if(imageBitmap != null){
-				//Set the image thumbnail on the Dialog
-				//imageThumbnail.setImageBitmap(imageBitmap);
-			}
+			Intent intent = new Intent(HomeActivity.this, ShareActivity.class);
+			Toast.makeText(this, "Foto Almacenada en la galeria", Toast.LENGTH_SHORT).show();
+			//Uri photouri = Uri.fromFile((File) extraPhoto.get("data"));
+			//intent.putExtra("URI", Uri.fromFile((File) extraPhoto.get("data")));
+			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			Log.d("OnActivityResult", mCurrentPhotoPath);
+	        startActivity(intent);
 		} 
 		else { 
-			Toast.makeText(this, "Image Capture Failed", Toast.LENGTH_SHORT) .show(); 
+			Toast.makeText(this, "No se logro almacenar la imagen", Toast.LENGTH_SHORT).show(); 
 		}
 		Log.d("HomeActivity", "Termino");
 	}
@@ -264,7 +267,7 @@ public class HomeActivity extends Activity implements View.OnClickListener, OnCh
         final int height = options.outHeight;
         final int width = options.outWidth;
         int inSampleSize = 1;
-
+        
         if (height > reqHeight || width > reqWidth) {
             if (width > height) {
                 inSampleSize = Math.round((float)height / (float)reqHeight);
@@ -299,8 +302,10 @@ public class HomeActivity extends Activity implements View.OnClickListener, OnCh
 	{
 		final String[] values = new String[] { "Mi Perfil", "Mi Dieta", "Mi Ejercicio", 
 	    		"Mas Dietas", "Calendario", "Estadisticas", "Preguntanos",
-	    		"Comparte", "Tips y Sujerencias", "Seleccionar Dieta", "Disclaimer"
+
+	    		"Comparte", "Tips y Sujerencias", "Seleccionar Dieta", "Comparativa", "Disclaimer"
 	    		,"Tutorial"};
+
 	    final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
 	        android.R.layout.simple_list_item_1, android.R.id.text1, values);
 
@@ -356,21 +361,27 @@ public class HomeActivity extends Activity implements View.OnClickListener, OnCh
 				startActivity(intent);
 		      break;
 		    case 10:
-		    	intent = new Intent(HomeActivity.this, DisclaimerActivity.class);
+		    	intent = new Intent(HomeActivity.this, ComparativeActivity.class);
 		    	intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 				startActivity(intent);
 		      break;
 		    case 11:
+		    	intent = new Intent(HomeActivity.this, DisclaimerActivity.class);
+		    	intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+				startActivity(intent);
+		      break;
+
+		    case 12:
 		    	intent = new Intent(HomeActivity.this, TutorialActivity.class);
 		    	intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 				startActivity(intent);
 		      break;
 		
+
 		    default:
 		      return;
 	    }
 	}
-
 	
 	//When the user clicks on the back-key 
 	@Override
@@ -388,6 +399,7 @@ public class HomeActivity extends Activity implements View.OnClickListener, OnCh
 
         Button save = (Button)dialog.findViewById(R.id.buttonGuardar_share);
         dialog.show();
+
         //imageThumbnail = (ImageView) dialog.findViewById(R.id.foto);
         save.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v) {
@@ -426,6 +438,7 @@ public class HomeActivity extends Activity implements View.OnClickListener, OnCh
 	    // Save a file: path for use with ACTION_VIEW intents 
 	    mCurrentPhotoPath = "file:" + image.getAbsolutePath();
 	    return image;
+
 	}
 	
 	//Clear the Notification
