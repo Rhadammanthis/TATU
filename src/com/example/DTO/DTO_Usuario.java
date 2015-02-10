@@ -7,14 +7,18 @@ public class DTO_Usuario {
     private String peso;
     private String talla;
     private String nivel;
-	
+    private String sexo;
+    private String edad;
+
 	public DTO_Usuario(String id_usuario, String nombre, String peso,
-			String talla, String nivel) {
+			String talla, String nivel, String sexo, String edad) {
 		this.id_usuario = id_usuario;
 		this.nombre = nombre;
 		this.peso = peso;
 		this.talla = talla;
 		this.nivel = nivel;
+		this.sexo = sexo;
+		this.edad = edad;
 	}
     
     public String getId_usuario() {
@@ -47,6 +51,20 @@ public class DTO_Usuario {
 	public void setNivel(String nivel) {
 		this.nivel = nivel;
 	}
+	
+	public String getSexo() {
+		return sexo;
+	}
 
+	public void setSexo(String sexo) {
+		this.sexo = sexo;
+	}
+	
+	public String getEdad() {
+		return edad;
+	}
 
+	public void setEdad(String edad) {
+		this.edad = edad;
+	}
 }

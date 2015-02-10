@@ -3,19 +3,18 @@ package com.example.miyoideal.extra;
 import java.util.Calendar;
 import java.util.Random;
 
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.TaskStackBuilder;
-
-import com.example.miyoideal.MainActivity;
-import com.example.miyoideal.R;
-
 import android.app.AlarmManager;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
+
+import com.example.miyoideal.MainActivity;
+import com.example.miyoideal.R;
 
 public class DialyNotificationReceiver extends BroadcastReceiver {
 

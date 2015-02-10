@@ -1,18 +1,8 @@
 package com.example.miyoideal.extra;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-import com.example.DAO.DAO_Dieta;
-import com.example.DAO.DAO_Ejercicio;
-import com.example.DB.SQLiteControl;
-import com.example.DB.SQLiteEjercicioDB;
-import com.example.DTO.DTO_Dieta;
-import com.example.DTO.DTO_Ejercicio;
-import com.example.miyoideal.R;
-
-import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -24,11 +14,17 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.Toast;
+
+import com.example.DAO.DAO_Dieta;
+import com.example.DAO.DAO_Ejercicio;
+import com.example.DB.SQLiteControl;
+import com.example.DTO.DTO_Dieta;
+import com.example.DTO.DTO_Ejercicio;
+import com.example.miyoideal.R;
 
 public class SelectDialogue extends DialogFragment {
 	

@@ -8,36 +8,7 @@ import java.util.Date;
 import java.util.List;
 
 import shared.ui.actionscontentview.ActionsContentView;
-
-
-import com.example.DAO.DAO_DietaCompletada;
-import com.example.DB.SQLiteUserDB;
-import com.example.DTO.*;
-import com.example.miyoideal.extra.API;
-import com.example.miyoideal.extra.DialyNotificationReceiver;
-import com.example.miyoideal.extra.DietaCompletedDialog;
-import com.example.miyoideal.extra.MyService;
-import com.example.miyoideal.extra.SideMenu;
-import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.charts.BarLineChartBase.BorderPosition;
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.data.LineData;
-import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.interfaces.OnChartValueSelectedListener;
-import com.github.mikephil.charting.utils.ColorTemplate;
-import com.github.mikephil.charting.utils.Legend;
-import com.github.mikephil.charting.utils.XLabels;
-import com.github.mikephil.charting.utils.YLabels;
-import com.github.mikephil.charting.utils.Legend.LegendForm;
-
-import android.R.menu;
-import android.support.v4.app.Fragment;
-import android.support.v4.view.ActionProvider;
-import android.support.v4.widget.SimpleCursorAdapter.ViewBinder;
-import android.support.v7.app.ActionBarActivity;
-import android.support.v7.widget.ShareActionProvider;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.NotificationManager;
 import android.content.Context;
@@ -52,9 +23,6 @@ import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
-import android.os.Message;
-import android.os.Messenger;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Display;
@@ -67,13 +35,26 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RelativeLayout.LayoutParams;
 import android.widget.Toast;
+
+import com.example.DAO.DAO_DietaCompletada;
+import com.example.DB.SQLiteUserDB;
+import com.example.DTO.DTO_DietaCompletada;
+import com.example.miyoideal.extra.DietaCompletedDialog;
+import com.github.mikephil.charting.charts.BarLineChartBase.BorderPosition;
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.interfaces.OnChartValueSelectedListener;
+import com.github.mikephil.charting.utils.ColorTemplate;
+import com.github.mikephil.charting.utils.Legend;
+import com.github.mikephil.charting.utils.Legend.LegendForm;
+import com.github.mikephil.charting.utils.XLabels;
+import com.github.mikephil.charting.utils.YLabels;
 
 public class HomeActivity extends Activity implements View.OnClickListener, OnChartValueSelectedListener{
 	
@@ -318,7 +299,8 @@ public class HomeActivity extends Activity implements View.OnClickListener, OnCh
 	{
 		final String[] values = new String[] { "Mi Perfil", "Mi Dieta", "Mi Ejercicio", 
 	    		"Mas Dietas", "Calendario", "Estadisticas", "Preguntanos",
-	    		"Comparte", "Tips y Sujerencias", "Seleccionar Dieta", "Disclaimer"};
+	    		"Comparte", "Tips y Sujerencias", "Seleccionar Dieta", "Disclaimer"
+	    		,"Tutorial"};
 	    final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
 	        android.R.layout.simple_list_item_1, android.R.id.text1, values);
 
@@ -375,6 +357,11 @@ public class HomeActivity extends Activity implements View.OnClickListener, OnCh
 		      break;
 		    case 10:
 		    	intent = new Intent(HomeActivity.this, DisclaimerActivity.class);
+		    	intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+				startActivity(intent);
+		      break;
+		    case 11:
+		    	intent = new Intent(HomeActivity.this, TutorialActivity.class);
 		    	intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 				startActivity(intent);
 		      break;

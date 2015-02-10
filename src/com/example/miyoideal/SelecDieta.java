@@ -1,17 +1,8 @@
 package com.example.miyoideal;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import com.example.DAO.DAO_Dieta;
-import com.example.DB.SQLiteControl;
-import com.example.DTO.DTO_Dieta;
-import com.example.miyoideal.extra.API;
-import com.example.miyoideal.extra.SelectDialogue;
-
-import android.R.bool;
 import android.app.Activity;
-import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -25,8 +16,14 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.TableRow.LayoutParams;
+import android.widget.TextView;
+
+import com.example.DAO.DAO_Dieta;
+import com.example.DB.SQLiteControl;
+import com.example.DTO.DTO_Dieta;
+import com.example.miyoideal.extra.API;
+import com.example.miyoideal.extra.SelectDialogue;
 
 public class SelecDieta extends Activity {
 	

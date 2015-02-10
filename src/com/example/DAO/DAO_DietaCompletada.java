@@ -3,17 +3,14 @@ package com.example.DAO;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.example.DB.SQLiteDietaCompletadaDB;
-import com.example.DB.SQLiteEjercicioDB;
-import com.example.DB.SQLiteProgramaDB;
-import com.example.DTO.DTO_DietaCompletada;
-import com.example.DTO.DTO_Programa;
-import com.example.DTO.DTO_Usuario;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.util.Log;
+
+import com.example.DB.SQLiteDietaCompletadaDB;
+import com.example.DTO.DTO_DietaCompletada;
+import com.example.DTO.DTO_Usuario;
 
 public class DAO_DietaCompletada {
 	

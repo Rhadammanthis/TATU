@@ -3,6 +3,7 @@ package com.example.miyoideal.extra;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.util.Log;
 
 import com.example.DB.SQLiteControl;
 
@@ -88,6 +89,31 @@ public class API {
 			{
 				cursor.moveToFirst();
 				return cursor.getString(2);
+			}
+			else
+			{
+				return null;
+			}
+		}
+		catch(Exception ex)
+		{
+			db.close();
+			return null;
+		}
+	}
+	
+	public String getPesoIdeal()
+	{
+		try
+		{
+			if(cursor.moveToFirst())
+			{
+				cursor.moveToFirst();
+				Log.d("chino", "0 " + cursor.getString(0));
+				Log.d("chino", "1 " + cursor.getString(1));
+				Log.d("chino", "2 " + cursor.getString(2));
+				Log.d("chino", "3 " + cursor.getString(3));
+				return cursor.getString(3);
 			}
 			else
 			{

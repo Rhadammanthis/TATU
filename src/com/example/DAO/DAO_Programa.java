@@ -6,8 +6,8 @@ import java.util.List;
 import android.content.Context;
 import android.database.Cursor;
 
-import com.example.DB.*;
-import com.example.DTO.*;
+import com.example.DB.SQLiteProgramaDB;
+import com.example.DTO.DTO_Programa;
 
 public class DAO_Programa {
 	

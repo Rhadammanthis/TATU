@@ -1,17 +1,11 @@
 package com.example.DAO;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.example.DB.SQLiteComponenteDB;
-import com.example.DB.SQLiteControl;
-import com.example.DB.SQLiteEjercicioDB;
-import com.example.DTO.DTO_Componente;
-import com.example.DTO.DTO_Ejercicio;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+
+import com.example.DB.SQLiteEjercicioDB;
+import com.example.DTO.DTO_Ejercicio;
 
 public class DAO_Ejercicio {
 	

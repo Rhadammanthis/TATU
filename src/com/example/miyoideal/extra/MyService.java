@@ -1,26 +1,17 @@
 package com.example.miyoideal.extra;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-import com.example.DAO.DAO_Dieta;
-import com.example.DB.SQLiteControl;
-
-import android.app.IntentService;
 import android.app.Service;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.IBinder;
 import android.os.Looper;
-import android.os.Process;
 import android.os.Message;
-import android.os.Messenger;
-import android.os.RemoteException;
+import android.os.Process;
 import android.util.Log;
 import android.widget.Toast;
 

@@ -6,15 +6,6 @@ import java.util.Calendar;
 import java.util.List;
 
 import shared.ui.actionscontentview.ActionsContentView;
-
-import com.example.DAO.DAO_Ejercicio;
-import com.example.DAO.DAO_Programa;
-import com.example.DTO.*;
-import com.example.miyoideal.R;
-import com.example.miyoideal.extra.API;
-import com.example.miyoideal.extra.EjercicioChildFactory;
-
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -30,6 +21,13 @@ import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+
+import com.example.DAO.DAO_Ejercicio;
+import com.example.DAO.DAO_Programa;
+import com.example.DTO.DTO_Ejercicio;
+import com.example.DTO.DTO_Programa;
+import com.example.miyoideal.extra.API;
+import com.example.miyoideal.extra.EjercicioChildFactory;
 
 public class EjercicioActivity extends Activity {
 	

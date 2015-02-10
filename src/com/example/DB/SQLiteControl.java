@@ -12,7 +12,8 @@ public class SQLiteControl extends SQLiteOpenHelper{
             "CREATE TABLE " + TABLE_NAME + " (" +
             "id_control" + " TEXT, " +
             "id_dieta" + " TEXT, " +
-            "dia" + " TEXT);";
+            "dia" + " TEXT, " +
+            "peso_ideal" + " TEXT);";
 
 	public SQLiteControl(Context context) {
 		super(context, TABLE_NAME, null, DATABASE_VERSION);

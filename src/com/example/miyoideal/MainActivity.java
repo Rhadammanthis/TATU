@@ -1,16 +1,12 @@
 package com.example.miyoideal;
 
-import java.util.HashMap;
-
-import com.example.DB.*;
-import com.example.miyoideal.extra.DialyNotificationReceiver;
-
-import android.support.v7.app.ActionBarActivity;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.ContentValues;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.util.Log;
@@ -19,79 +15,150 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.Spinner;
+import android.widget.TextView;
+
+import com.example.DB.SQLiteComponenteDB;
+import com.example.DB.SQLiteControl;
+import com.example.DB.SQLiteDietaDB;
+import com.example.DB.SQLiteFactory;
+import com.example.DB.SQLiteProgramaDB;
+import com.example.DB.SQLiteUserDB;
+import com.example.miyoideal.extra.DialyNotificationReceiver;
 
 
 public class MainActivity extends Activity implements SQLiteFactory{
-	
+
 	//layout components
 	private Button button;
-	
+	private Spinner spinnerNivel;
+	private Spinner spinnerSexo;
+
 	//global variables;
 	private int width;
 	private int height;
-	
+	private Context con;
+
 	//database
 	private SQLiteUserDB userDB;
 	private ContentValues values;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        this.setTitle("Diagnostico");
-        
-        //Calculates Screen size
-    	Display display = getWindowManager().getDefaultDisplay();
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_main);
+		this.setTitle("Diagnostico");
+		con = this;
+
+		//Calculates Screen size
+		Display display = getWindowManager().getDefaultDisplay();
 		Point size = new Point();
 		display.getSize(size);
 		width = size.x;
 		height = size.y;	
-        
-        button = (Button) findViewById(R.id.button1);
-        
-        userDB = new SQLiteUserDB(this);
-		
+
+		button = (Button) findViewById(R.id.button1);
+
+		spinnerNivel = (Spinner) findViewById(R.id.spinnerMain);
+		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+				R.array.nivel_array, android.R.layout.simple_spinner_item);
+		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		spinnerNivel.setAdapter(adapter);
+
+		spinnerSexo = (Spinner) findViewById(R.id.spinnerSexo);
+		ArrayAdapter<CharSequence> adapterSexo = ArrayAdapter.createFromResource(this,
+				R.array.perfil_sexo, android.R.layout.simple_spinner_item);
+		adapterSexo.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		spinnerSexo.setAdapter(adapterSexo);
+
+		userDB = new SQLiteUserDB(this);
+
 		userDB.getReadableDatabase();
 		String query = "Select * FROM " + "usuario" + " WHERE " + "id_usuario" + " =  \"" + "1" + "\"";
 		values = new ContentValues();
 		Cursor cursor = userDB.getReadableDatabase().rawQuery(query, null);
-		
+
 		if(cursor.moveToFirst())
 		{
 			Log.d("main", "entre");
-			
+
 			Intent intent = new Intent(MainActivity.this, HomeActivity.class);
 			startActivity(intent);
 		}
-        
-        button.setOnClickListener(new View.OnClickListener() {
-			
+
+		button.setOnClickListener(new View.OnClickListener() {
+
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				initComponenteDB();
-				initDietaDB();
-				initControlDB();
-				initProgramaDB();
-				
-				userDB.getWritableDatabase();
-				values.put("id_usuario", "1");
-				values.put("nombre", "Hugo");
-				values.put("peso", "85");
-				values.put("talla", "1.74");
-				values.put("nivel", "medio");
-				userDB.getWritableDatabase().insert("usuario", null, values);
-				userDB.close();
-				Intent intent = new Intent(MainActivity.this, HomeActivity.class);
-				Log.d("grafica", "ya hay usuario");
-				startActivity(intent);
+				LinearLayout main = (LinearLayout) findViewById(R.id.mainLinerLayout);
+				boolean allFiledsComplete = true;
+				for(int i = 0; i < main.getChildCount(); i++)
+				{
+					if(main.getChildAt(i).getClass() == EditText.class)
+					{
+						TextView text = (TextView) main.getChildAt(i);
+						String t = text.getText().toString();
+						if(text.getText().toString().equals("") || text.getText().toString().equals(null))
+							allFiledsComplete = false;
+					}
+				}
+
+				if (allFiledsComplete) 
+				{				
+					initComponenteDB();
+					initDietaDB();
+					initControlDB();
+					initProgramaDB();
+					
+					Spinner sexo = (Spinner) main.getChildAt(1);
+					EditText edad = (EditText) main.getChildAt(2);
+					EditText talla = (EditText) main.getChildAt(3);
+					EditText peso = (EditText) main.getChildAt(4);
+					Spinner nivel = (Spinner) main.getChildAt(1);
+
+					userDB.getWritableDatabase();
+					values.put("id_usuario", "1");
+					values.put("nombre", "Hugo");
+					values.put("peso", peso.getText().toString());
+					values.put("talla", talla.getText().toString());
+					values.put("nivel", nivel.getSelectedItem().toString());
+					values.put("sexo", sexo.getSelectedItem().toString());
+					values.put("edad", edad.getText().toString());
+					
+					
+					
+					userDB.getWritableDatabase().insert("usuario", null, values);
+					userDB.close();
+					Intent intent = new Intent(MainActivity.this, HomeActivity.class);
+					Log.d("grafica", "ya hay usuario");
+					startActivity(intent);
+				}
+				else
+				{
+					AlertDialog.Builder builder = new AlertDialog.Builder(con);
+					builder.setMessage("No se han llenado todos los campos")
+					.setCancelable(false)
+					.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int id) {
+							//do things
+						}
+					});
+					AlertDialog alert = builder.create();
+					alert.show();
+				}
+
+
 			}
 		});	
-    }
+	}
 
 
-    @Override
+	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		//Add the menu layout to the action bar
 		MenuInflater inflater = getMenuInflater();
@@ -99,9 +166,9 @@ public class MainActivity extends Activity implements SQLiteFactory{
 		return super.onCreateOptionsMenu(menu);
 	}
 
-    @Override
+	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-    	// Handle action bar item clicks here. The action bar will
+		// Handle action bar item clicks here. The action bar will
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
@@ -117,14 +184,14 @@ public class MainActivity extends Activity implements SQLiteFactory{
 		// TODO Auto-generated method stub
 		SQLiteDietaDB db = new SQLiteDietaDB(this);
 		db.getWritableDatabase();
-		
+
 		ContentValues values = new ContentValues();
 		values.put("id_dieta", "1");
 		values.put("nombre", "Dieta 1");
 		values.put("tipo", "Perdida de Peso");
 		values.put("duracion", "7");
 		db.getWritableDatabase().insert("dieta", null, values);
-		
+
 		values = new ContentValues();
 		values.put("id_dieta", "2");
 		values.put("nombre", "Dieta 2");
@@ -132,7 +199,7 @@ public class MainActivity extends Activity implements SQLiteFactory{
 		values.put("duracion", "3");
 		db.getWritableDatabase().insert("dieta", null, values);
 		db.close();
-		
+
 	}
 
 	@Override
@@ -140,7 +207,7 @@ public class MainActivity extends Activity implements SQLiteFactory{
 		// TODO Auto-generated method stub
 		SQLiteComponenteDB db = new SQLiteComponenteDB(this);
 		db.getWritableDatabase();
-		
+
 		//1
 		ContentValues values = new ContentValues();
 		values.put("id_componente", "1");
@@ -150,7 +217,7 @@ public class MainActivity extends Activity implements SQLiteFactory{
 		values.put("activo", "no");
 		values.put("descripcion", "Desayuno DIETA UNO Día 1 Alimento 1");
 		db.getWritableDatabase().insert("componente", null, values);
-		
+
 		//2
 		values = new ContentValues();
 		values.put("id_componente", "2");
@@ -160,7 +227,7 @@ public class MainActivity extends Activity implements SQLiteFactory{
 		values.put("activo", "no");
 		values.put("descripcion", "Desayuno DIETA UNO Día 1 Alimento 2");
 		db.getWritableDatabase().insert("componente", null, values);
-		
+
 		//3
 		values = new ContentValues();
 		values.put("id_componente", "3");
@@ -170,7 +237,7 @@ public class MainActivity extends Activity implements SQLiteFactory{
 		values.put("activo", "no");
 		values.put("descripcion", "Desayuno DIETA UNO Día 1 Alimento 3");
 		db.getWritableDatabase().insert("componente", null, values);
-		
+
 		//4
 		values = new ContentValues();
 		values.put("id_componente", "4");
@@ -180,7 +247,7 @@ public class MainActivity extends Activity implements SQLiteFactory{
 		values.put("activo", "no");
 		values.put("descripcion", "Colacion DIETA UNO Día 1 Alimento 1");
 		db.getWritableDatabase().insert("componente", null, values);
-		
+
 		//5
 		values = new ContentValues();
 		values.put("id_componente", "5");
@@ -190,7 +257,7 @@ public class MainActivity extends Activity implements SQLiteFactory{
 		values.put("activo", "no");
 		values.put("descripcion", "Colacion DIETA UNO Día 1 Alimento 2");
 		db.getWritableDatabase().insert("componente", null, values);
-		
+
 		//6
 		values = new ContentValues();
 		values.put("id_componente", "6");
@@ -200,10 +267,10 @@ public class MainActivity extends Activity implements SQLiteFactory{
 		values.put("activo", "no");
 		values.put("descripcion", "Colacion DIETA UNO Día 1 Alimento 3");
 		db.getWritableDatabase().insert("componente", null, values);
-		
+
 		///////////////////////////////////////////////////////////////////////////////////////////////
 		//segundo dia
-		
+
 		//7
 		values = new ContentValues();
 		values.put("id_componente", "7");
@@ -213,7 +280,7 @@ public class MainActivity extends Activity implements SQLiteFactory{
 		values.put("activo", "no");
 		values.put("descripcion", "Desayuno DIETA UNO Día 2 Alimento 3");
 		db.getWritableDatabase().insert("componente", null, values);
-		
+
 		//88
 		values = new ContentValues();
 		values.put("id_componente", "8");
@@ -223,7 +290,7 @@ public class MainActivity extends Activity implements SQLiteFactory{
 		values.put("activo", "no");
 		values.put("descripcion", "Colacion DIETA UNO Día 2 Alimento 1");
 		db.getWritableDatabase().insert("componente", null, values);
-		
+
 		//9
 		values = new ContentValues();
 		values.put("id_componente", "9");
@@ -233,7 +300,7 @@ public class MainActivity extends Activity implements SQLiteFactory{
 		values.put("activo", "no");
 		values.put("descripcion", "Colacion DIETA UNO Día 2 Alimento 2");
 		db.getWritableDatabase().insert("componente", null, values);
-		
+
 		//10
 		values = new ContentValues();
 		values.put("id_componente", "10");
@@ -243,7 +310,7 @@ public class MainActivity extends Activity implements SQLiteFactory{
 		values.put("activo", "no");
 		values.put("descripcion", "Colacion DIETA UNO Día 2 Alimento 3");
 		db.getWritableDatabase().insert("componente", null, values);
-		
+
 		db.close();
 	}
 
@@ -253,17 +320,18 @@ public class MainActivity extends Activity implements SQLiteFactory{
 		// TODO Auto-generated method stub
 		SQLiteControl db = new SQLiteControl(this);
 		db.getWritableDatabase();
-		
+
 		ContentValues values = new ContentValues();
 		values.put("id_control", "1");
 		values.put("id_dieta", "0");
 		values.put("dia", "0");
+		values.put("peso_ideal", "0");
 		db.getWritableDatabase().insert("control", null, values);
 
 		//Set the notification receiver 
 		DialyNotificationReceiver dialyNotification = new DialyNotificationReceiver();
 		dialyNotification.setAlarm(this);
-		
+
 		db.close();
 	}
 
@@ -273,7 +341,7 @@ public class MainActivity extends Activity implements SQLiteFactory{
 		// TODO Auto-generated method stub
 		SQLiteProgramaDB db = new SQLiteProgramaDB(this);
 		db.getWritableDatabase();
-		
+
 		//bajo
 		ContentValues values = new ContentValues();
 		values.put("id_programa", "1");
@@ -282,7 +350,7 @@ public class MainActivity extends Activity implements SQLiteFactory{
 		values.put("descripcion", "Hacer 1 series de 8 repeticiones");
 		values.put("hora", "10 am");
 		db.getWritableDatabase().insert("programa", null, values);
-		
+
 		//medio
 		values = new ContentValues();
 		values.put("id_programa", "2");
@@ -291,7 +359,7 @@ public class MainActivity extends Activity implements SQLiteFactory{
 		values.put("descripcion", "Hacer 3 series de 8 repeticiones");
 		values.put("hora", "3 pm");
 		db.getWritableDatabase().insert("programa", null, values);
-		
+
 		//alto
 		new ContentValues();
 		values.put("id_programa", "3");
@@ -300,8 +368,8 @@ public class MainActivity extends Activity implements SQLiteFactory{
 		values.put("descripcion", "Correr 5 km a un ritmo medio");
 		values.put("hora", "7 pm");
 		db.getWritableDatabase().insert("programa", null, values);				
-	
-		
+
+
 	}		
-	
+
 }

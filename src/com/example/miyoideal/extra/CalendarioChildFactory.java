@@ -2,16 +2,16 @@ package com.example.miyoideal.extra;
 
 import java.util.List;
 
-import com.example.DTO.DTO_Componente;
-
 import android.content.Context;
 import android.graphics.Color;
 import android.view.Gravity;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.TableRow.LayoutParams;
+import android.widget.TextView;
+
+import com.example.DTO.DTO_Componente;
 
 public class CalendarioChildFactory {
 	

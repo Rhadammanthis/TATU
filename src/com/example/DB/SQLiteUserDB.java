@@ -2,7 +2,6 @@ package com.example.DB;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
 
 public class SQLiteUserDB extends SQLiteOpenHelper{
@@ -15,7 +14,9 @@ public class SQLiteUserDB extends SQLiteOpenHelper{
             "nombre" + " TEXT, " +
             "peso" + " TEXT, " +
             "talla" + " TEXT, " +
-            "nivel" + " TEXT);";
+            "nivel" + " TEXT, " +
+            "sexo" + " TEXT, " +
+            "edad" + " TEXT);";
 
 	public SQLiteUserDB(Context context) {
 		super(context, USER_TABLE_NAME, null, DATABASE_VERSION);

@@ -15,6 +15,11 @@
         <item>Medio</item>
         <item>Alto</item>
     </string-array>
+    
+	<string-array name="perfil_sexo">
+        <item>Masculino</item>
+        <item>Femenino</item>
+    </string-array>
 
     <string name="title_activity_ejercicio">EjercicioActivity</string>
     <string name="title_activity_calendario">CalendarioActivity</string>
@@ -26,5 +31,6 @@
     <string name="title_activity_camera">CameraActivity</string>
     <string name="title_activity_selec_dieta">SelecDieta</string>
     <string name="title_activity_disclaimer">DisclaimerActivity</string>
+    <string name="title_activity_tutorial">TutorialActivity</string>
 
 </resources>

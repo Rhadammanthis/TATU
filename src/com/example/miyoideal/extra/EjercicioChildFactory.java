@@ -7,8 +7,8 @@ import android.widget.CheckBox;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.TableRow.LayoutParams;
+import android.widget.TextView;
 
 public class EjercicioChildFactory {
 	

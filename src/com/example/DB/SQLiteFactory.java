@@ -1,6 +1,5 @@
 package com.example.DB;
 
-import android.database.Cursor;
 
 public interface SQLiteFactory {
 	

@@ -7,7 +7,7 @@ import android.content.Context;
 import android.database.Cursor;
 
 import com.example.DB.SQLiteDietaDB;
-import com.example.DTO.*;
+import com.example.DTO.DTO_Dieta;
 
 public class DAO_Dieta {
 	

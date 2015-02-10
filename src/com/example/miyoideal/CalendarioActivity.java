@@ -1,30 +1,16 @@
 package com.example.miyoideal;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import shared.ui.actionscontentview.ActionsContentView;
-
-import com.example.DAO.DAO_Componente;
-import com.example.DTO.*;
-import com.example.miyoideal.extra.API;
-import com.example.miyoideal.extra.CalendarioChildFactory;
-import com.example.miyoideal.extra.DietaChild;
-import com.example.miyoideal.extra.SideMenu;
-
-import android.support.v7.app.ActionBarActivity;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.view.Display;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -32,15 +18,19 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
-import android.widget.TextView;
-import android.widget.TableRow.LayoutParams;
 
-import com.wt.calendarcard.*;
+import com.example.DAO.DAO_Componente;
+import com.example.DTO.DTO_Componente;
+import com.example.miyoideal.extra.API;
+import com.example.miyoideal.extra.CalendarioChildFactory;
+import com.wt.calendarcard.CalendarCard;
+import com.wt.calendarcard.CardGridItem;
+import com.wt.calendarcard.CheckableLayout;
+import com.wt.calendarcard.OnCellItemClick;
+///import android.support.v7.app.ActionBarActivity;
 
 public class CalendarioActivity extends Activity {
 	

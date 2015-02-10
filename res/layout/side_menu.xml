@@ -13,11 +13,99 @@
   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   See the License for the specific language governing permissions and
   limitations under the License.
+  
+      <ListView
+        android:id="@+id/actions"
+        android:layout_width="match_parent"
+        android:layout_height="337dp"
+        android:background="@android:color/darker_gray"
+        android:cacheColorHint="@android:color/darker_gray"
+        android:divider="@null" />
 -->
-<ListView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/actions"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@android:color/darker_gray"
-    android:cacheColorHint="@android:color/darker_gray"
-    android:divider="@null" />
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+android:layout_width="fill_parent"
+android:layout_height="fill_parent"
+android:background="@android:color/darker_gray" >
+
+	<TextView
+	    android:id="@+id/tvLOL"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_alignParentLeft="true"
+	    android:text="Menu"
+	    android:textSize="35sp" />
+	
+	<LinearLayout
+	    android:id="@+id/homeLinearLayout"
+	    android:layout_width="fill_parent"
+	    android:layout_height="match_parent"
+	    android:layout_below="@id/tvLOL"
+		android:layout_above="@+id/bNyVare"
+	    android:orientation="vertical" >
+	
+	      <ListView
+	        android:id="@+id/actions"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:background="@android:color/darker_gray"
+	        android:cacheColorHint="@android:color/darker_gray"
+	        android:divider="@null" />
+	</LinearLayout>
+	
+	<RelativeLayout
+	    android:id="@+id/bNyVare"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+		android:layout_alignParentBottom="true">
+	      
+	    <TextView
+	        android:layout_height="wrap_content"
+	        android:layout_width="wrap_content"
+	        android:padding="3dip"
+	        android:text="Color"
+	        android:textSize="20sp"
+	        android:layout_centerVertical="true"
+	        android:layout_alignParentLeft="true">
+	        
+	    </TextView>
+	    
+	    <View
+	        android:layout_centerVertical="true"
+	        android:layout_alignParentRight="true"
+	        android:layout_width="22dip"
+	        android:layout_height="22dip"
+	        android:gravity="right"
+	        android:paddingLeft="2dip"
+	        android:paddingRight="30dip"
+	        android:layout_marginRight="5dp"
+	        android:background="#ff80ff">	        
+	    </View>
+
+	    <View
+	        android:layout_centerVertical="true"
+	        android:id="@+id/col3"
+	        android:layout_width="22dip"
+	        android:layout_height="22dip"
+	        android:layout_alignParentRight="true"
+	        android:layout_alignParentTop="true"
+	        android:layout_marginRight="50dp"
+	        android:background="#64b6e6"
+	        android:paddingLeft="10dip"
+	        android:paddingRight="10dip" />
+
+	    <View
+	        android:layout_centerVertical="true"
+	        android:id="@+id/col2"
+	        android:layout_width="22dip"
+	        android:layout_height="22dip"
+	        android:layout_alignParentTop="true"
+	        android:layout_marginRight="25dp"
+	        android:layout_toLeftOf="@+id/col3"
+	        android:background="#bbaaee"
+	        android:paddingLeft="10dip"
+	        android:paddingRight="20dip" />
+	    
+	</RelativeLayout>
+
+
+</RelativeLayout>

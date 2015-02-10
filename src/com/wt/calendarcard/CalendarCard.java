@@ -15,8 +15,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.DAO.DAO_Dieta;
-import com.example.DTO.DTO_Dieta;
-import com.example.miyoideal.*;
+import com.example.miyoideal.R;
 import com.example.miyoideal.extra.API;
 
 public class CalendarCard extends RelativeLayout {

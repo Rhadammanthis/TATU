@@ -1,13 +1,6 @@
 package com.example.miyoideal.extra;
 
-import com.example.miyoideal.HomeActivity;
-import com.example.miyoideal.MainActivity;
-import com.example.miyoideal.R;
-
-
 import android.content.Context;
-import android.content.Intent;
-import android.support.v4.app.Fragment;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;

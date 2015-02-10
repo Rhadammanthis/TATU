@@ -1,43 +1,32 @@
 package com.example.miyoideal;
 
-import java.sql.Date;
-import java.text.DateFormat.Field;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.Locale;
 
-import shared.ui.actionscontentview.ActionsContentView;
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.TextView;
 
 import com.example.DAO.DAO_Componente;
 import com.example.DTO.DTO_Componente;
 import com.example.miyoideal.extra.API;
 import com.example.miyoideal.extra.DietaChild;
 import com.example.miyoideal.extra.DietaChildFactory;
-import com.example.miyoideal.extra.EjercicioChildFactory;
-
-import android.R.bool;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.ActionBar.TabListener;
-import android.app.ActionBar.Tab;
-import android.app.Activity;
-import android.app.Fragment;
-import android.content.Context;
-import android.content.Intent;
-import android.graphics.drawable.Drawable;
-import android.os.Bundle;
-import android.util.DisplayMetrics;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.*;
 
 public class DietaActivity extends Activity {
 	

@@ -76,6 +76,10 @@
             android:name=".DisclaimerActivity"
             android:label="@string/title_activity_disclaimer" >
         </activity>
+        <activity
+            android:name=".TutorialActivity"
+            android:label="@string/title_activity_tutorial" >
+        </activity>
     </application>
 
 </manifest>
