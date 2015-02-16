@@ -44,19 +44,20 @@ import com.example.DAO.DAO_DietaCompletada;
 import com.example.DB.SQLiteUserDB;
 import com.example.DTO.DTO_DietaCompletada;
 import com.example.miyoideal.extra.DietaCompletedDialog;
+import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.BarLineChartBase.BorderPosition;
-import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.data.LineData;
-import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.interfaces.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.github.mikephil.charting.utils.Legend;
 import com.github.mikephil.charting.utils.Legend.LegendForm;
 import com.github.mikephil.charting.utils.XLabels;
+import com.github.mikephil.charting.utils.XLabels.XLabelPosition;
 import com.github.mikephil.charting.utils.YLabels;
 
-public class HomeActivity extends Activity implements View.OnClickListener, OnChartValueSelectedListener{
+public class HomeActivity extends Activity implements View.OnClickListener{
 	
 	//global variables;
 	private int width;
@@ -69,7 +70,7 @@ public class HomeActivity extends Activity implements View.OnClickListener, OnCh
 	private Button button_Calendario;
 	private ActionsContentView viewActionsContentView;
 	
-	private LineChart mChart;
+	private BarChart mChart;
 	
 	private Uri fileUri;
 	private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 100;
@@ -94,7 +95,8 @@ public class HomeActivity extends Activity implements View.OnClickListener, OnCh
 
     //graph related global variables
     private List<DTO_DietaCompletada> lista;
-    private LineDataSet set1;
+    private BarDataSet set1;
+    private int textColor, barColor, barShadow, backgroundColor;
 	
     @Override
 	protected void onCreate(Bundle savedInstanceState) {		
@@ -133,74 +135,11 @@ public class HomeActivity extends Activity implements View.OnClickListener, OnCh
 		
 		lista = new DAO_DietaCompletada(cont).getLastFiveDietaCompleta();
 		
-		Log.d("grafica", "Ya tenemos lista lista... lol");
-		
-		//Graphs
-		mChart = (LineChart) findViewById(R.id.chart1);
-        mChart.setOnChartValueSelectedListener(this);
-        mChart.setValueTextColor(Color.WHITE);
-
-        mChart.setUnit(" KG");
-        mChart.setDrawUnitsInChart(true);
-
-        // if enabled, the chart will always start at zero on the y-axis
-        mChart.setStartAtZero(false);
-
-        // disable the drawing of values into the chart
-        mChart.setDrawYValues(true);
-
-        mChart.setDrawBorder(true);
-        mChart.setBorderPositions(new BorderPosition[] {
-                BorderPosition.BOTTOM
-        });
-
-        // no description text
-        mChart.setDescription("");
-        mChart.setNoDataTextDescription("You need to provide data for the chart.");
-
-        // enable value highlighting
-        mChart.setHighlightEnabled(false);
-
-        // enable touch gestures
-        mChart.setTouchEnabled(true);
-
-        // enable scaling and dragging
-        mChart.setDragEnabled(true);
-        mChart.setScaleEnabled(true);
-        mChart.setDrawGridBackground(false);
-        mChart.setDrawVerticalGrid(false);
-        mChart.setDrawHorizontalGrid(false);
-
-        // if disabled, scaling can be done on x- and y-axis separately
-        mChart.setPinchZoom(true);
-
-        // set an alternative background color
-        mChart.setBackgroundColor(Color.GRAY);
-
-        // add data
-        setData(lista.size(), 80, lista);
-
-        mChart.animateX(lista.size() * 250);
-
-        Typeface tf = Typeface.createFromAsset(getAssets(), "OpenSans-Regular.ttf");
-
-        // get the legend (only possible after setting data)
-        Legend l = mChart.getLegend();
-
-        // modify the legend ...
-        // l.setPosition(LegendPosition.LEFT_OF_CHART);
-        l.setForm(LegendForm.LINE);
-        l.setTypeface(tf);
-        l.setTextColor(Color.WHITE);
-
-        XLabels xl = mChart.getXLabels();
-        xl.setTypeface(tf);
-        xl.setTextColor(Color.WHITE);
-
-        YLabels yl = mChart.getYLabels();
-        yl.setTypeface(tf);
-        yl.setTextColor(Color.WHITE);
-        
+		//Initialize the Graph
+		setColors(Color.WHITE, Color.BLUE, Color.argb(0, 255, 255, 255), Color.GRAY);
+		initGraph();
+		setGraphLabels();
+		        
 		button_MiPerfil.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
@@ -214,16 +153,17 @@ public class HomeActivity extends Activity implements View.OnClickListener, OnCh
 					public void onDismiss(DialogInterface dialog) {
 						// TODO Auto-generated method stub
 						List<DTO_DietaCompletada> lista = new DAO_DietaCompletada(cont).getLastFiveDietaCompleta();
-						Entry e = new Entry(Float.valueOf(lista.get(lista.size()-1).getPeso()), lista.size()-1);
+						BarEntry e = new BarEntry(Float.valueOf(lista.get(lista.size()-1).getPeso()), lista.size()-1);
 						set1.addEntry(e);
-						setData(lista.size(), 80, lista);
+						setData(lista.size(), 80, lista );
 						mChart.invalidate();
 						mChart.animateX(lista.size() * 250);
 					}
 				});
 			}
 		});
-}
+    }
+    
     
     @Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -459,7 +399,7 @@ public class HomeActivity extends Activity implements View.OnClickListener, OnCh
             	xVals.add(list.get(i).getId_dieta());
         }
 
-        ArrayList<Entry> yVals = new ArrayList<Entry>();
+        ArrayList<BarEntry> yVals = new ArrayList<BarEntry>();
 
         for (int i = 0; i < count; i++) {
             float mult = (range + 1);
@@ -467,39 +407,97 @@ public class HomeActivity extends Activity implements View.OnClickListener, OnCh
                                                            // ((mult *
                                                            // 0.1) / 10);
             //yVals.add(new Entry(val, i));
-            yVals.add(new Entry(Float.valueOf(list.get(i).getPeso()), i));
+            yVals.add(new BarEntry(Float.valueOf(list.get(i).getPeso()), i));
         }
 
         // create a dataset and give it a type
-        set1 = new LineDataSet(yVals, "Peso");
-        set1.setColor(ColorTemplate.getHoloBlue());
-        set1.setCircleColor(ColorTemplate.getHoloBlue());
-        set1.setLineWidth(2f);
-        set1.setCircleSize(4f);
-        set1.setFillAlpha(65);
-        set1.setFillColor(ColorTemplate.getHoloBlue());
-        set1.setHighLightColor(Color.rgb(244, 117, 117));
-
-        ArrayList<LineDataSet> dataSets = new ArrayList<LineDataSet>();
-        set1.setDrawFilled(true);
+        set1 = new BarDataSet(yVals, "Peso");
+        
+        //Set the graphics to the graph
+        //setColorGraph(Color.rgb(00, 00, 00), Color.rgb(255,255,255));
+        set1.setBarShadowColor(barShadow);
+        set1.setColor(barColor);
+                
+        ArrayList<BarDataSet> dataSets = new ArrayList<BarDataSet>();
         dataSets.add(set1); // add the datasets
 
         // create a data object with the datasets
-        LineData data = new LineData(xVals, dataSets);
+        BarData data = new BarData(xVals, dataSets);
 
         // set data
         mChart.setData(data);
+        mChart.invalidate();
     }
+    
+    private void setGraphLabels(){
+    	Typeface tf = Typeface.createFromAsset(getAssets(), "OpenSans-Regular.ttf");
+		XLabels xLabels = mChart.getXLabels();
+        xLabels.setPosition(XLabelPosition.BOTTOM);
+        xLabels.setCenterXLabelText(true);
+        xLabels.setTypeface(tf);
+        xLabels.setTextColor(textColor);
+        xLabels.setSpaceBetweenLabels(0);
 
-	@Override
-	public void onValueSelected(Entry e, int dataSetIndex) {
-		// TODO Auto-generated method stub
-		
-	}
+        // add data & color
+        setData(lista.size(), 80, lista);
 
-	@Override
-	public void onNothingSelected() {
-		// TODO Auto-generated method stub
-		
-	} 
+        // get the legend (only possible after setting data)
+        Legend l = mChart.getLegend();
+
+        // modify the legend ...
+        // l.setPosition(LegendPosition.LEFT_OF_CHART);
+        l.setForm(LegendForm.LINE);
+        l.setTypeface(tf);
+        l.setTextColor(textColor);
+  
+        YLabels yl = mChart.getYLabels();
+        yl.setTypeface(tf);
+        yl.setTextColor(textColor);
+    }
+    
+    public void setColors(int textColor, int barColor, int barShadow, int backgroundColor){
+    	this.textColor = textColor;
+    	this.barColor = barColor;
+    	this.barShadow = barShadow;
+    	this.backgroundColor = backgroundColor;
+    }
+    public void initGraph(){
+    	//Graphs
+		mChart = (BarChart) findViewById(R.id.chart1);
+        mChart.setValueTextColor(textColor);
+        //Max number of bars	
+        mChart.setMaxVisibleValueCount(5);
+        mChart.set3DEnabled(false);
+        mChart.setUnit(" KG");
+        mChart.setDrawUnitsInChart(true);
+        // if enabled, the chart will always start at zero on the y-axis
+        mChart.setStartAtZero(false);
+        // disable the drawing of values into the chart
+        mChart.setDrawYValues(true);
+        mChart.setDrawBorder(true);
+        mChart.setBorderPositions(new BorderPosition[] {
+                BorderPosition.BOTTOM
+        });
+
+        // no description text
+        mChart.setDescription("");
+        mChart.setNoDataTextDescription("You need to provide data for the chart.");
+        // enable value highlighting
+        mChart.setHighlightEnabled(false);
+        // enable touch gestures
+        mChart.setTouchEnabled(true);
+        // enable scaling and dragging
+        mChart.setDragEnabled(true);
+        mChart.setScaleEnabled(true);
+        mChart.setDrawGridBackground(false);
+        mChart.setDrawVerticalGrid(true);
+        mChart.setDrawHorizontalGrid(true);
+        // if disabled, scaling can be done on x- and y-axis separately
+        mChart.setPinchZoom(false);
+        // set an alternative background color
+        mChart.setBackgroundColor(backgroundColor);
+        mChart.animateY(2000);
+    }
+    
+    
 }
