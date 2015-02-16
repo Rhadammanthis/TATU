@@ -198,6 +198,13 @@ public class MainActivity extends Activity implements SQLiteFactory{
 		values.put("tipo", "Perdida de Peso");
 		values.put("duracion", "3");
 		db.getWritableDatabase().insert("dieta", null, values);
+		
+		values = new ContentValues();
+		values.put("id_dieta", "3");
+		values.put("nombre", "Dieta 3");
+		values.put("tipo", "Perdida de Peso");
+		values.put("duracion", "2");
+		db.getWritableDatabase().insert("dieta", null, values);
 		db.close();
 
 	}

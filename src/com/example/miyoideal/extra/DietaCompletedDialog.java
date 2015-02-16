@@ -70,7 +70,7 @@ public class DietaCompletedDialog extends Dialog{
 
 
 							//clear control information
-							//new API(con).clearDieta();
+							new API(con).clearDieta();
 
 							d.dismiss();
 						}

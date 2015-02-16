@@ -68,6 +68,8 @@
 
         <receiver android:name=".messageReceiver" >
         </receiver>
+        <receiver android:name=".extra.SelectDialogue$broadcastReceiver" >
+        </receiver>
         <receiver android:name=".extra.BootReceiver" >
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" >
@@ -76,8 +78,13 @@
         </receiver>
         <receiver android:name=".extra.DialyNotificationReceiver" >
         </receiver>
-		<meta-data android:name="com.facebook.sdk.ApplicationId"
-   		    android:value="@string/facebook_app_id"/>
+        <receiver android:name=".extra.DietaCompleteNotification" >
+        </receiver>
+
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id" />
+
         <activity
             android:name=".DisclaimerActivity"
             android:label="@string/title_activity_disclaimer" >

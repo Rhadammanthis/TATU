@@ -17,10 +17,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.DAO.DAO_Componente;
 import com.example.DTO.DTO_Componente;
@@ -29,27 +31,29 @@ import com.example.miyoideal.extra.DietaChild;
 import com.example.miyoideal.extra.DietaChildFactory;
 
 public class DietaActivity extends Activity {
-	
+
 	private LinearLayout mainLayout;
 	private ListView viewActionsList;
 	private TextView currentDate;
 	private DietaChildFactory dietaChildFactory;
 	private Context con;
 	private List<DietaChild> dietaChildList;
-	
+
 	private List<DTO_Componente> componentes;
 	private ImageButton nextDay;
 	private ImageButton previousDay;
-	
+
+	private Button cancelButton;
+
 	private boolean checkBoxInitialState[];
-	
+
 	private Calendar c;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);	
 		setContentView(R.layout.baseline_dieta);
-		
+
 		con = this;
 		dietaChildList = new ArrayList<DietaChild>();
 		viewActionsList = (ListView) findViewById(R.id.actions);	
@@ -58,11 +62,36 @@ public class DietaActivity extends Activity {
 		dietaChildFactory = new DietaChildFactory();
 		nextDay = (ImageButton)findViewById(R.id.nextDay);
 		previousDay = (ImageButton)findViewById(R.id.previousDay);
-		
+		cancelButton = (Button) findViewById(R.id.cancelButtonMiDieta);
+
 		setUpMenu();
-		
+
 		//if a "dieta" is currently set, the corresponding components are loaded
-		
+
+		if(!new API(con).IsDietaSet())
+		{
+			Toast.makeText(con, "Selecciona una dieta!", Toast.LENGTH_LONG).show();
+		}
+		else 
+		{
+			//loads data to main Linear Layout and binds buttons with respective behaviour
+			populateDietaView();
+		}
+
+
+
+		/*check if Cancelar Dieta button should be displayed
+		 * button is active by default
+		 */
+		if(!new API(con).IsDietaSet())
+		{			
+			cancelButton.setVisibility(View.GONE);
+		}
+
+	}
+
+	private void populateDietaView() {
+		// TODO Auto-generated method stub
 		c = Calendar.getInstance();
 		SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yy");
 		java.util.Date initalDate = null;
@@ -84,9 +113,9 @@ public class DietaActivity extends Activity {
 				mainLayout.addView(new DietaChild(con).getDefaultLayout());
 		}
 		currentDate.setText(todayDate);
-		
+
 		nextDay.setOnClickListener(new View.OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
@@ -109,17 +138,23 @@ public class DietaActivity extends Activity {
 				{
 					componentes = new DAO_Componente(con).getAllComponente(new API(con).getID_Dieta(), String.valueOf(distance+1));
 					if(componentes.size()>0)
+					{
 						initDietaLayout(componentes);
+						cancelButton.setVisibility(View.VISIBLE);
+					}
 					else
+					{
 						mainLayout.addView(new DietaChild(con).getDefaultLayout());
+						cancelButton.setVisibility(View.INVISIBLE);
+					}
 				}
-				
+
 				currentDate.setText(todayDate);
 			}
 		});
-		
+
 		previousDay.setOnClickListener(new View.OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
@@ -142,15 +177,20 @@ public class DietaActivity extends Activity {
 				{
 					componentes = new DAO_Componente(con).getAllComponente(new API(con).getID_Dieta(), String.valueOf(distance+1));
 					if(componentes.size()>0)
+					{
 						initDietaLayout(componentes);
+						cancelButton.setVisibility(View.VISIBLE);
+					}
 					else
+					{
 						mainLayout.addView(new DietaChild(con).getDefaultLayout());
+						cancelButton.setVisibility(View.INVISIBLE);
+					}
 				}
-				
+
 				currentDate.setText(todayDate);
 			}
 		});
-		
 	}
 
 	@Override
@@ -169,52 +209,52 @@ public class DietaActivity extends Activity {
 		startActivity(intent);
 		return super.onOptionsItemSelected(item);
 	}
-	
+
 	private void setUpMenu()
 	{
 		final String[] values = new String[] { "Mi Perfil", "Mi Dieta", "Mi Ejercicio", 
-	    		"Mas Dietas", "Calendario", "Estadisticas", "Preguntanos",
-	    		"Comparte", "Tips y Sujerencias", "Recordatorios"};
-	    final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-	        android.R.layout.simple_list_item_1, android.R.id.text1, values);
+				"Mas Dietas", "Calendario", "Estadisticas", "Preguntanos",
+				"Comparte", "Tips y Sujerencias", "Recordatorios"};
+		final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+				android.R.layout.simple_list_item_1, android.R.id.text1, values);
 
-	    viewActionsList.setAdapter(adapter);
-	    viewActionsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-	      @Override
-	      public void onItemClick(AdapterView<?> adapter, View v, int position,
-	          long flags) {
-	    	  showActivity(position);
+		viewActionsList.setAdapter(adapter);
+		viewActionsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> adapter, View v, int position,
+					long flags) {
+				showActivity(position);
 
-	      }
-	    });
+			}
+		});
 	}
-	
+
 	private void showActivity(int position) 
 	{
-	    final Intent intent;
-	    switch (position) {
-	    case 0:
-	    	intent = new Intent(DietaActivity.this, MiPerfilActivity.class);
-	    	intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		final Intent intent;
+		switch (position) {
+		case 0:
+			intent = new Intent(DietaActivity.this, MiPerfilActivity.class);
+			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(intent);
-	      break;
-	    case 2:
-	    	intent = new Intent(DietaActivity.this, EjercicioActivity.class);
-	    	intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			break;
+		case 2:
+			intent = new Intent(DietaActivity.this, EjercicioActivity.class);
+			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(intent);
-	      break;
-	    case 4:
-	    	intent = new Intent(DietaActivity.this, CalendarioActivity.class);
-	    	intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			break;
+		case 4:
+			intent = new Intent(DietaActivity.this, CalendarioActivity.class);
+			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(intent);
-	      break;
+			break;
 
-	    default:
-	      return;
-	    }
+		default:
+			return;
+		}
 
-	  }
-	
+	}
+
 	public void initDietaLayout(List<DTO_Componente> lista)
 	{
 		//list to hold all same Comida entries in 'lista'
@@ -231,23 +271,23 @@ public class DietaActivity extends Activity {
 				//when a different Alimento occurs, the parameters to create the DietaChild are set up
 				String title = lista.get(i-1).getAlimento();
 				boolean activo = false;
-				
+
 				//the last checked insert in 'lista' is added to
 				content.add(lista.get(i-1));
-				
+
 				//Cheks wheter one of the inserts has a negative value in Activo to initialize the checkbox as checked
 				for(DTO_Componente temp : content)
 				{
 					if(temp.getActivo().equals("yes"))
 						activo = true;
 				}
-				
+
 				//A new DietaChild is created from the dietaChildFactory
 				final DietaChild newChild = dietaChildFactory.GenerateChild(con, title, content, "10 am", activo);
-				
+
 				//A click listener is added to the checkbox the handle checked and unchecked behavior
 				newChild.getCheckBox().setOnClickListener(new View.OnClickListener() {
-					
+
 					@Override
 					public void onClick(View v) {
 						//when the status of checkbox changes, its current state is saved in the DB
@@ -259,7 +299,7 @@ public class DietaActivity extends Activity {
 						{
 							new DAO_Componente(con).updateComponenteNo(getModifiedChild().getDTO_Componente());
 						}		
-						
+
 						//update inital checkbox status's
 						for(int i=0;i< dietaChildList.size();i++)
 						{
@@ -267,18 +307,18 @@ public class DietaActivity extends Activity {
 						}
 					}
 				});
-				
+
 				//the dietachild is added to the main layout
 				mainLayout.addView(newChild.getChild());
-				
+
 				//we keep track of children views in a list
 				dietaChildList.add(newChild);
-				
+
 				//the content list is cleared 
 				content.clear();
 			}
 		}
-		
+
 		//same behavior as last, but this handles when an Alimento only carries one insert in the content list and is the last Alimento instance
 		String title = lista.get(lista.size()-1).getAlimento();
 		boolean activo = false;
@@ -289,10 +329,10 @@ public class DietaActivity extends Activity {
 			if(temp.getActivo().equals("yes"))
 				activo = true;
 		}
-		
+
 		final DietaChild newChild = dietaChildFactory.GenerateChild(con, title, content, "10 am", activo);
 		newChild.getCheckBox().setOnClickListener(new View.OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
@@ -304,7 +344,7 @@ public class DietaActivity extends Activity {
 				{
 					new DAO_Componente(con).updateComponenteNo(getModifiedChild().getDTO_Componente());
 				}
-				
+
 				for(int i=0;i< dietaChildList.size();i++)
 				{
 					checkBoxInitialState[i] = dietaChildList.get(i).getCheckBox().isChecked();
@@ -315,27 +355,27 @@ public class DietaActivity extends Activity {
 		dietaChildList.add(newChild);
 
 		content.clear();
-		
+
 		checkBoxInitialState = new boolean[dietaChildList.size()];
-		
+
 		for(int i=0;i< dietaChildList.size();i++)
 		{
 			checkBoxInitialState[i] = dietaChildList.get(i).getCheckBox().isChecked();
 		}
 	}
-	
+
 	public DietaChild getModifiedChild()
 	{
 		DietaChild res = new DietaChild(con);
-		
+
 		boolean checkBoxActualState[] = new boolean[dietaChildList.size()];
 		int size = dietaChildList.size();
-		
+
 		for(int i=0;i<size;i++)
 		{
 			checkBoxActualState[i] = dietaChildList.get(i).getCheckBox().isChecked();
 		}
-		
+
 		for(int i=0;i<size;i++)
 		{
 			if(checkBoxInitialState[i] != checkBoxActualState[i])
@@ -343,24 +383,24 @@ public class DietaActivity extends Activity {
 				return dietaChildList.get(i);
 			}
 		}
-		
+
 		return res;
 	}
-	
+
 	public long getDateDiffString(java.util.Date date, java.util.Date date2)
 	{
-	    long timeOne = date.getTime();
-	    long timeTwo = date2.getTime();
-	    long oneDay = 1000 * 60 * 60 * 24;
-	    long delta = (timeTwo - timeOne) / oneDay;
-	    
-	    int dia_Date1 = Integer.valueOf((String)android.text.format.DateFormat.format("dd", date)), 
-	    		dia_Date2 = Integer.valueOf((String)android.text.format.DateFormat.format("dd", date2));
+		long timeOne = date.getTime();
+		long timeTwo = date2.getTime();
+		long oneDay = 1000 * 60 * 60 * 24;
+		long delta = (timeTwo - timeOne) / oneDay;
 
-	    String lol = String.valueOf(timeOne/oneDay);
-	    if(dia_Date2 < dia_Date1)
-	    	return -1;
-	    else
-	    	return delta;
+		int dia_Date1 = Integer.valueOf((String)android.text.format.DateFormat.format("dd", date)), 
+				dia_Date2 = Integer.valueOf((String)android.text.format.DateFormat.format("dd", date2));
+
+		String lol = String.valueOf(timeOne/oneDay);
+		if(dia_Date2 < dia_Date1)
+			return -1;
+		else
+			return delta;
 	}
 }

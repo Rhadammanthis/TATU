@@ -106,6 +106,9 @@ public class HomeActivity extends Activity implements View.OnClickListener, OnCh
 		
 		//Clear the notification
 		cancelNotification(this, 001);
+		
+		//Clears Dieta Completada notification
+		cancelNotification(this, 002);
 				
 		//Adapt the layout depends screen
     	Display display = getWindowManager().getDefaultDisplay();
@@ -298,6 +301,7 @@ public class HomeActivity extends Activity implements View.OnClickListener, OnCh
 		return super.onOptionsItemSelected(item);
 	}
 	
+	//Binds listview in side menu with their respective activities
 	private void setUpMenu()
 	{
 		final String[] values = new String[] { "Mi Perfil", "Mi Dieta", "Mi Ejercicio", 

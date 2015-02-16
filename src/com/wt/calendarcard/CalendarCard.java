@@ -19,7 +19,7 @@ import com.example.miyoideal.R;
 import com.example.miyoideal.extra.API;
 
 public class CalendarCard extends RelativeLayout {
-	
+
 	private TextView cardTitle;
 	private int itemLayout = R.layout.card_item_simple;
 	private OnItemRender mOnItemRender;
@@ -35,37 +35,40 @@ public class CalendarCard extends RelativeLayout {
 		super(context, attrs, defStyle);
 		init(context);
 	}
-	
+
 	public CalendarCard(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		init(context);
 	}
-	
+
 	public CalendarCard(Context context) {
 		super(context);
 		init(context);
 	}
-	
+
 	/**
 	 * 
 	 *Maybe here we can point out which cells to enable as checked from the beginning 
 	 */
-	
+
 	private void init(final Context ctx) {
 		if (isInEditMode()) return;
 		View layout = LayoutInflater.from(ctx).inflate(R.layout.card_view, null, false);
-		
+
 		if (dateDisplay == null)
 			dateDisplay = Calendar.getInstance();
-		
+
 		cardTitle = (TextView)layout.findViewById(R.id.cardTitle);
 		cardGrid = (LinearLayout)layout.findViewById(R.id.cardGrid);
-		
-		checkedDay = Integer.parseInt(getDietaInitialDay(ctx));
-		firstDay = (checkedDay);
-		
+
+		if(new API(ctx).IsDietaSet())
+		{
+			checkedDay = Integer.parseInt(getDietaInitialDay(ctx));
+			firstDay = (checkedDay);
+		}
+
 		cardTitle.setText(new SimpleDateFormat("MMM yyyy", Locale.getDefault()).format(dateDisplay.getTime()));
-		
+
 		Calendar cal = Calendar.getInstance();
 		cal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
 		((TextView)layout.findViewById(R.id.cardDay1)).setText(cal.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, Locale.getDefault()));
@@ -81,7 +84,7 @@ public class CalendarCard extends RelativeLayout {
 		((TextView)layout.findViewById(R.id.cardDay6)).setText(cal.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, Locale.getDefault()));
 		cal.add(Calendar.DAY_OF_WEEK, 1);
 		((TextView)layout.findViewById(R.id.cardDay7)).setText(cal.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, Locale.getDefault()));
-		
+
 		LayoutInflater la = LayoutInflater.from(ctx);
 		for(int y=0; y<cardGrid.getChildCount(); y++) {
 			LinearLayout row = (LinearLayout)cardGrid.getChildAt(y);
@@ -91,31 +94,31 @@ public class CalendarCard extends RelativeLayout {
 					@Override
 					public void onClick(View v) {
 						//for(CheckableLayout c : cells)
-							//c.setChecked(false);
+						//c.setChecked(false);
 						//((CheckableLayout)v).setChecked(true);
-						
+
 						if (getOnCellItemClick()!= null)
 							getOnCellItemClick().onCellClick(v, (CardGridItem)v.getTag()); // TODO create item
 					}
 				});
-				
+
 				View cellContent = la.inflate(itemLayout, cell, false);
 				cell.addView(cellContent);
 				cells.add(cell);
 			}
 		}
-		
+
 		addView(layout);
-		
+
 		mOnItemRenderDefault = new OnItemRender() {
 			@Override
 			public void onRender(CheckableLayout v, CardGridItem item) {
 
 				((TextView)v.getChildAt(0)).setText(item.getDayOfMonth().toString());
-				if(((TextView)v.getChildAt(0)).getText().equals(String.valueOf(checkedDay)))
+				if(((TextView)v.getChildAt(0)).getText().equals(String.valueOf(checkedDay)) && new API(ctx).IsDietaSet())
 				{
 					((CheckableLayout)v).setChecked(true);
-					
+
 					if((Integer.parseInt(new DAO_Dieta(ctx).getDieta(new API(ctx).getID_Dieta()).getDuracion())
 							+ firstDay) - checkedDay > 1)
 					{
@@ -124,15 +127,15 @@ public class CalendarCard extends RelativeLayout {
 				}
 			}
 		};
-		
+
 		updateCells();
 	}
-	
+
 	public int getFirstDay()
 	{
 		return firstDay;
 	}
-	
+
 	private String getDietaInitialDay(Context con)
 	{
 		SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yy");
@@ -143,22 +146,22 @@ public class CalendarCard extends RelativeLayout {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		int t = Integer.parseInt((String)android.text.format.DateFormat.format("dd", initalDate));
 		return String.valueOf(t);
 	}
-	
+
 	private int getDaySpacing(int dayOfWeek) {
 		if (Calendar.SUNDAY == dayOfWeek)
 			return 6;
 		else
 			return dayOfWeek - 2;
 	}
-	
+
 	private int getDaySpacingEnd(int dayOfWeek) {
 		return 8 - dayOfWeek;
 	}
-	
+
 	private void updateCells() {
 		Calendar cal;
 		Integer counter = 0;
@@ -166,11 +169,11 @@ public class CalendarCard extends RelativeLayout {
 			cal = (Calendar)dateDisplay.clone();
 		else
 			cal = Calendar.getInstance();
-		
+
 		cal.set(Calendar.DAY_OF_MONTH, 1);
-		
+
 		int daySpacing = getDaySpacing(cal.get(Calendar.DAY_OF_WEEK));
-		
+
 		// INFO : wrong calculations of first line - fixed
 		if (daySpacing > 0) {
 			Calendar prevMonth = (Calendar)cal.clone();
@@ -185,7 +188,7 @@ public class CalendarCard extends RelativeLayout {
 				prevMonth.add(Calendar.DAY_OF_MONTH, 1);
 			}
 		}
-		
+
 		int firstDay = cal.get(Calendar.DAY_OF_MONTH);
 		cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH));
 		int lastDay = cal.get(Calendar.DAY_OF_MONTH)+1;
@@ -200,14 +203,14 @@ public class CalendarCard extends RelativeLayout {
 			(mOnItemRender == null ? mOnItemRenderDefault : mOnItemRender).onRender(cell, (CardGridItem)cell.getTag());
 			counter++;
 		}
-		
+
 		if (dateDisplay != null) 
 			cal = (Calendar)dateDisplay.clone();
 		else
 			cal = Calendar.getInstance();
-		
+
 		cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH));
-		
+
 		daySpacing = getDaySpacingEnd(cal.get(Calendar.DAY_OF_WEEK));
 
 		if (daySpacing > 0) {
@@ -220,14 +223,14 @@ public class CalendarCard extends RelativeLayout {
 				counter++;
 			}
 		}
-		
+
 		if (counter < cells.size()) {
 			for(int i=counter; i<cells.size(); i++) {
 				cells.get(i).setVisibility(View.GONE);
 			}
 		}
 	}
-	
+
 	@Override
 	protected void onLayout(boolean changed, int l, int t, int r, int b) {
 		super.onLayout(changed, l, t, r, b);
@@ -235,7 +238,7 @@ public class CalendarCard extends RelativeLayout {
 			int size = (r - l) / 7;
 			for(CheckableLayout cell : cells) {
 				cell.getLayoutParams().height = size;
-				
+
 			}
 		}
 	}
@@ -274,7 +277,7 @@ public class CalendarCard extends RelativeLayout {
 	public void setOnCellItemClick(OnCellItemClick mOnCellItemClick) {
 		this.mOnCellItemClick = mOnCellItemClick;
 	}
-	
+
 	/**
 	 * call after change any input data - to refresh view
 	 */
