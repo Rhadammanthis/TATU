@@ -8,23 +8,14 @@ import com.example.miyoideal.extra.ShareContentManager;
 import com.facebook.Session;
 import com.facebook.SessionState;
 import com.facebook.UiLifecycleHelper;
-import com.facebook.model.GraphObject;
-import com.facebook.model.OpenGraphAction;
-import com.facebook.model.OpenGraphObject;
-//import com.facebook.scrumptious.ScrumptiousApplication;
 import com.facebook.widget.FacebookDialog;
-import com.facebook.widget.FacebookDialog.OpenGraphActionDialogBuilder;
-
-//import com.facebook.scrumptious.R;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
-import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.os.Environment;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -32,23 +23,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
-import android.net.Uri;
-import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.v7.app.ActionBarActivity;
-
-
-/**
- * This activity assists in trapping the camera's "State" e.g. where the camera plans
- * on saving it's resulting file and URI. This activity saves this information to the bundle
- * and retrieves it on resume. This is necessary because when the Android external camera starts,
- * the file path anf URI get collected and won't be available on resume, resulting in a crash.
- * <p/>
- * Samsung devices, in particular may crash if you don't do this:
- * Reference: http://stackoverflow.com/questions/8248327/my-android-camera-uri-is-returning-a-null-value-but-the-samsung-fix-is-in-place
- * <p/>
- * Created by Rex St. John (on behalf of AirPair.com) on 3/4/14.
- */
 
 public class ShareActivity extends Activity implements View.OnClickListener {
 	PhotoManager photoManager;
@@ -221,7 +196,7 @@ public class ShareActivity extends Activity implements View.OnClickListener {
     //Set the extras for ShareActivity and start the camera
   	public void startCamera() throws IOException{
   		photoManager = new PhotoManager();
-  		File photoFile = photoManager.createFile();
+  		photoFile = photoManager.createFile();
 		Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 	    if(takePictureIntent.resolveActivity(getPackageManager()) != null){
 			//photoFile = createImageFile();
