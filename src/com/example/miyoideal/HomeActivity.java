@@ -1,6 +1,8 @@
 package com.example.miyoideal;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -41,6 +43,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.DAO.DAO_DietaCompletada;
+import com.example.DB.SQLiteDietaDB;
 import com.example.DB.SQLiteUserDB;
 import com.example.DTO.DTO_DietaCompletada;
 import com.example.miyoideal.extra.DietaCompletedDialog;
@@ -48,6 +51,7 @@ import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.BarLineChartBase.BorderPosition;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.DataSet; 
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.interfaces.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
@@ -86,6 +90,7 @@ public class HomeActivity extends Activity implements View.OnClickListener{
     private File mediaFile;
     private static final int CAMERA = 0;
     private static final int GALLERY = 1;
+    private final String FACEBOOK_URL = "https://facebook.com";
     //private ShareActivity activity;
     
     //REQUEST IMAGE CODE
@@ -105,6 +110,7 @@ public class HomeActivity extends Activity implements View.OnClickListener{
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		setContentView(R.layout.baseline4);
 		cont = this;
+		new DAO_DietaCompletada(cont).InsertCSVFile(null, null, null);
 		
 		//Clear the notification
 		cancelNotification(this, 001);
@@ -128,11 +134,7 @@ public class HomeActivity extends Activity implements View.OnClickListener{
 		dbUser.getReadableDatabase();
 		String query = "Select * FROM " + "usuario" + " WHERE " + "id_usuario" + " =  \"" + "1" + "\"";
 		Cursor cursor = dbUser.getReadableDatabase().rawQuery(query, null);
-		if(cursor.moveToFirst()){
-			cursor.moveToFirst();
-			this.setTitle(cursor.getString(1));
-		}
-		
+				
 		lista = new DAO_DietaCompletada(cont).getLastFiveDietaCompleta();
 		
 		//Initialize the Graph
@@ -163,8 +165,7 @@ public class HomeActivity extends Activity implements View.OnClickListener{
 			}
 		});
     }
-    
-    
+        
     @Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     	Log.d("OnActivityResult", "OnActivityResult");
@@ -295,6 +296,11 @@ public class HomeActivity extends Activity implements View.OnClickListener{
 		    	intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 				startActivity(intent);
 		      break;
+		    case 8:
+		    	intent = new Intent(Intent.ACTION_VIEW);
+		    	intent.setData(Uri.parse(FACEBOOK_URL));
+				startActivity(intent);
+		      break;
 		    case 9:
 		    	intent = new Intent(HomeActivity.this, SelecDieta.class);
 		    	intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -405,27 +411,27 @@ public class HomeActivity extends Activity implements View.OnClickListener{
             float mult = (range + 1);
             float val = (float) (Math.random() * mult) + 3;// + (float)
                                                            // ((mult *
-                                                           // 0.1) / 10);
+            												// 0.1) / 10);
             //yVals.add(new Entry(val, i));
             yVals.add(new BarEntry(Float.valueOf(list.get(i).getPeso()), i));
         }
-
         // create a dataset and give it a type
         set1 = new BarDataSet(yVals, "Peso");
-        
+                
         //Set the graphics to the graph
         //setColorGraph(Color.rgb(00, 00, 00), Color.rgb(255,255,255));
         set1.setBarShadowColor(barShadow);
         set1.setColor(barColor);
-                
         ArrayList<BarDataSet> dataSets = new ArrayList<BarDataSet>();
-        dataSets.add(set1); // add the datasets
-
+        
+        dataSets.add(set1); // add the datasets	
         // create a data object with the datasets
         BarData data = new BarData(xVals, dataSets);
-
+        //for (DataSet<BarEntry> set : mChart.getData().getDataSets())
+          //  set.setDrawValues(true);
         // set data
         mChart.setData(data);
+        
         mChart.invalidate();
     }
     
@@ -476,19 +482,20 @@ public class HomeActivity extends Activity implements View.OnClickListener{
         mChart.setDrawYValues(true);
         mChart.setDrawBorder(true);
         mChart.setBorderPositions(new BorderPosition[] {
-                BorderPosition.BOTTOM
+                BorderPosition.BOTTOM 
         });
 
         // no description text
-        mChart.setDescription("");
+        mChart.setVerticalFadingEdgeEnabled(true);
+        mChart.setDrawValueAboveBar(true);
         mChart.setNoDataTextDescription("You need to provide data for the chart.");
         // enable value highlighting
         mChart.setHighlightEnabled(false);
         // enable touch gestures
-        mChart.setTouchEnabled(true);
+        mChart.setTouchEnabled(false);
         // enable scaling and dragging
-        mChart.setDragEnabled(true);
-        mChart.setScaleEnabled(true);
+        mChart.setDragEnabled(false);
+        mChart.setScaleEnabled(false);
         mChart.setDrawGridBackground(false);
         mChart.setDrawVerticalGrid(true);
         mChart.setDrawHorizontalGrid(true);
@@ -498,6 +505,4 @@ public class HomeActivity extends Activity implements View.OnClickListener{
         mChart.setBackgroundColor(backgroundColor);
         mChart.animateY(2000);
     }
-    
-    
 }

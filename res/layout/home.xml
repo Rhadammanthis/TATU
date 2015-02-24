@@ -50,8 +50,9 @@
 
             <ImageButton
                 android:id="@+id/button2"
-                android:src="@drawable/ic_action_camera"
+                android:src="@drawable/home_button_icon1"
                 android:contentDescription="Camera Button"
+                android:scaleType="fitCenter"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -59,8 +60,9 @@
 
             <ImageButton
                 android:id="@+id/button3"
-                android:src="@drawable/ic_action_time"
+                android:src="@drawable/home_button_icon2"
                 android:contentDescription="Calendar"
+                android:scaleType="fitCenter"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -79,17 +81,19 @@
 
             <ImageButton
                 android:id="@+id/Button02"
-                android:src="@drawable/ic_action_event"
+                android:src="@drawable/home_button_icon3"
                 android:contentDescription="My diets"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:scaleType="fitCenter"
                 android:layout_weight="1"
                 />
 
             <ImageButton
                 android:id="@+id/bottomRight"
-                android:src="@drawable/ic_action_help"
+                android:src="@drawable/home_button_icon4"
                 android:contentDescription="Help"
+                android:scaleType="fitCenter"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"

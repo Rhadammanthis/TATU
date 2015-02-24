@@ -130,8 +130,6 @@ public class MainActivity extends Activity implements SQLiteFactory{
 					values.put("sexo", sexo.getSelectedItem().toString());
 					values.put("edad", edad.getText().toString());
 					
-					
-					
 					userDB.getWritableDatabase().insert("usuario", null, values);
 					userDB.close();
 					Intent intent = new Intent(MainActivity.this, HomeActivity.class);
@@ -161,8 +159,7 @@ public class MainActivity extends Activity implements SQLiteFactory{
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		//Add the menu layout to the action bar
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.base_action_bar, menu);
+		getMenuInflater().inflate(R.menu.base_action_bar, menu);
 		return super.onCreateOptionsMenu(menu);
 	}
 
