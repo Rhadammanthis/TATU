@@ -1,100 +1,171 @@
-   <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white" >
 
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:text="@string/swipe"
-            android:textSize="25sp"
-            android:visibility="invisible" />
-        
-    	<com.github.mikephil.charting.charts.BarChart
-        	android:id="@+id/chart1"
-        	android:layout_width="match_parent"
-	        android:layout_height="match_parent"
-	        android:layout_above="@+id/textView" />
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:text="@string/swipe"
+        android:textSize="25sp"
+        android:visibility="invisible" />
 
-      <!--    <ImageView
-            android:id="@+id/imageView1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/textView"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true"
-            android:scaleType="fitXY"
-            android:src="@drawable/abc_ab_stacked_transparent_light_holo" /> -->
+    <com.github.mikephil.charting.charts.BarChart
+        android:id="@+id/chart1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/textView" />
 
-        <Button
-            android:id="@+id/buttonHome"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentRight="true"
-            android:text="Button" />
+    <!--  -->
 
-        <LinearLayout
-            android:id="@+id/linearLayout1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/buttonHome"
-            android:layout_alignParentLeft="true"
-            android:layout_alignTop="@+id/textView"
-            android:orientation="vertical" >
+    <com.daimajia.swipe.SwipeLayout
+        android:id="@+id/swipeLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_alignTop="@+id/textView" >
 
-            <ImageButton
-                android:id="@+id/button2"
-                android:src="@drawable/ic_action_camera"
-                android:contentDescription="Camera Button"
-                android:layout_width="match_parent"
+        <RelativeLayout
+            android:id="@+id/backLayout"
+            android:layout_width="match_parent"
+            android:layout_height="fill_parent"
+            android:background="#f0f0f0" >
+
+            <TextView
+                android:id="@+id/textView1"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                 />
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginLeft="26dp"
+                android:layout_marginTop="39dp"
+                android:text="Info 1"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
 
-            <ImageButton
-                android:id="@+id/button3"
-                android:src="@drawable/ic_action_time"
-                android:contentDescription="Calendar"
-                android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                />
-        </LinearLayout>
-        
-        <LinearLayout
-            android:id="@+id/linearLayout2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/linearLayout1"
-            android:layout_alignParentRight="true"
-            android:layout_alignTop="@+id/textView"
-            android:layout_toRightOf="@+id/linearLayout1"
-            android:orientation="vertical" >
+                android:layout_alignBaseline="@+id/textView1"
+                android:layout_alignBottom="@+id/textView1"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="25dp"
+                android:text="Some Text"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
 
-            <ImageButton
-                android:id="@+id/Button02"
-                android:src="@drawable/ic_action_event"
-                android:contentDescription="My diets"
-                android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                />
+                android:layout_alignLeft="@+id/textView1"
+                android:layout_below="@+id/textView1"
+                android:layout_marginTop="25dp"
+                android:text="Info 2"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
 
-            <ImageButton
-                android:id="@+id/bottomRight"
-                android:src="@drawable/ic_action_help"
-                android:contentDescription="Help"
-                android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/textView4"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                />
-        </LinearLayout>
+                android:layout_alignBaseline="@+id/textView3"
+                android:layout_alignBottom="@+id/textView3"
+                android:layout_alignLeft="@+id/textView2"
+                android:text="Some Text"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
 
-        
-    </RelativeLayout>
+            <TextView
+                android:id="@+id/textView5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/textView3"
+                android:layout_below="@+id/textView3"
+                android:layout_marginTop="26dp"
+                android:text="Info 3"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+
+            <TextView
+                android:id="@+id/textView6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/textView5"
+                android:layout_alignBottom="@+id/textView5"
+                android:layout_alignRight="@+id/textView4"
+                android:text="Some Text"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/frontLayout"
+            android:layout_width="match_parent"
+            android:layout_height="fill_parent"
+            android:background="#f0f0f0" >
+
+            <LinearLayout
+                android:id="@+id/linearLayout1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/abajoButtonlol"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:orientation="vertical" >
+
+                <ImageButton
+                    android:id="@+id/button2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:contentDescription="Camera Button"
+                    android:src="@drawable/ic_action_camera" />
+
+                <ImageButton
+                    android:id="@+id/button3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:contentDescription="Calendar"
+                    android:src="@drawable/ic_action_time" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/mylinearLayoutRight"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/linearLayout1"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:layout_toRightOf="@+id/linearLayout1"
+                android:clickable="true"
+                android:orientation="vertical" >
+
+                <ImageButton
+                    android:id="@+id/buttonRightTop"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:contentDescription="My diets"
+                    android:src="@drawable/ic_action_event" />
+
+                <ImageButton
+                    android:id="@+id/bottomRight1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:contentDescription="Help"
+                    android:src="@drawable/ic_action_help" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/abajoButtonlol"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentRight="true"
+                android:text="Boton de Abajo" />
+        </RelativeLayout>
+    </com.daimajia.swipe.SwipeLayout>
+
+</RelativeLayout>

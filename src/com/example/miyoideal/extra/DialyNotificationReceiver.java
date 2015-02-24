@@ -30,6 +30,7 @@ public class DialyNotificationReceiver extends BroadcastReceiver {
 			.setContentText("This is a notification for the user");
 		//Implicit intent
 		Intent resultIntent = new Intent(context, MainActivity.class);
+		
 		//Add to the top of the stack
 		TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
 		stackBuilder.addParentStack(MainActivity.class);

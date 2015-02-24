@@ -51,61 +51,62 @@ android:background="@android:color/darker_gray" >
 	        android:cacheColorHint="@android:color/darker_gray"
 	        android:divider="@null" />
 	</LinearLayout>
-	
+
 	<RelativeLayout
 	    android:id="@+id/bNyVare"
 	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content"
-		android:layout_alignParentBottom="true">
-	      
+	    android:layout_alignParentBottom="true"
+	    android:layout_alignParentLeft="true" >
+
 	    <TextView
-	        android:layout_height="wrap_content"
 	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_alignParentLeft="true"
+	        android:layout_centerVertical="true"
 	        android:padding="3dip"
 	        android:text="Color"
-	        android:textSize="20sp"
-	        android:layout_centerVertical="true"
-	        android:layout_alignParentLeft="true">
-	        
-	    </TextView>
-	    
-	    <View
-	        android:layout_centerVertical="true"
-	        android:layout_alignParentRight="true"
-	        android:layout_width="22dip"
-	        android:layout_height="22dip"
-	        android:gravity="right"
-	        android:paddingLeft="2dip"
-	        android:paddingRight="30dip"
-	        android:layout_marginRight="5dp"
-	        android:background="#ff80ff">	        
-	    </View>
+	        android:textSize="20sp" />
 
 	    <View
+	        android:id="@+id/col1"
+	        android:layout_width="22dip"
+	        android:layout_height="22dip"
+	        android:layout_alignParentRight="true"
 	        android:layout_centerVertical="true"
-	        android:id="@+id/col3"
+	        android:layout_marginRight="5dp"
+	        android:background="#ff80ff"
+	        android:clickable="true"
+	        android:gravity="right"
+	        android:paddingLeft="2dip"
+	        android:paddingRight="30dip" />
+
+	    <View
+	        android:id="@+id/col2"
 	        android:layout_width="22dip"
 	        android:layout_height="22dip"
 	        android:layout_alignParentRight="true"
 	        android:layout_alignParentTop="true"
+	        android:layout_centerVertical="true"
 	        android:layout_marginRight="50dp"
 	        android:background="#64b6e6"
+	        android:clickable="true"
 	        android:paddingLeft="10dip"
 	        android:paddingRight="10dip" />
 
 	    <View
-	        android:layout_centerVertical="true"
-	        android:id="@+id/col2"
+	        android:id="@+id/col3"
 	        android:layout_width="22dip"
 	        android:layout_height="22dip"
-	        android:layout_alignParentTop="true"
-	        android:layout_marginRight="25dp"
-	        android:layout_toLeftOf="@+id/col3"
+	        android:layout_alignTop="@+id/col2"
+	        android:layout_marginRight="26dp"
+	        android:layout_toLeftOf="@+id/col2"
 	        android:background="#bbaaee"
+	        android:clickable="true"
 	        android:paddingLeft="10dip"
-	        android:paddingRight="20dip" />
-	    
-	</RelativeLayout>
+	        android:paddingRight="20dip"
+	        android:paddingTop="6dip" />
 
+	</RelativeLayout>
 
 </RelativeLayout>

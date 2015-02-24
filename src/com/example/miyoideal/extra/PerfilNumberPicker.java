@@ -44,7 +44,6 @@ public class PerfilNumberPicker extends DialogFragment{
 		super.onDismiss(dialog);
 		if(shouldRecord)
 		{
-//			np = (EditText) getView().findViewById(R.id.numberPickerText);
 			ContentValues cv = new ContentValues();
 			Log.d("chino", "np val " + np.getText().toString());
 			cv.put("peso_ideal", String.valueOf(np.getText().toString()));

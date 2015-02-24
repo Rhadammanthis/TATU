@@ -13,7 +13,9 @@ public class SQLiteControl extends SQLiteOpenHelper{
             "id_control" + " TEXT, " +
             "id_dieta" + " TEXT, " +
             "dia" + " TEXT, " +
-            "peso_ideal" + " TEXT);";
+            "peso_ideal" + " TEXT, " +
+            "dietaTerminada" + " TEXT, " +
+            "estilo" + " TEXT);";
 
 	public SQLiteControl(Context context) {
 		super(context, TABLE_NAME, null, DATABASE_VERSION);

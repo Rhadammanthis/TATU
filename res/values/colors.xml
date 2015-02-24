@@ -2,5 +2,7 @@
 
     <color name="grid_bg">#FFFFFFFF</color>
     <color name="grid_border">#FFC6C6C6</color>
-
+	<color name="MASCULINO_MAIN">#4752E0</color>
+	<color name="FEMENINO_MAIN">#F8C0C8</color>
+	<color name="NEUTRAL_MAIN">#4BC95A</color>
 </resources>

@@ -122,6 +122,7 @@ public class MainActivity extends Activity implements SQLiteFactory{
 					Spinner nivel = (Spinner) main.getChildAt(1);
 
 					userDB.getWritableDatabase();
+					Log.d("db", userDB.getDatabaseName());
 					values.put("id_usuario", "1");
 					values.put("nombre", "Hugo");
 					values.put("peso", peso.getText().toString());
@@ -184,6 +185,8 @@ public class MainActivity extends Activity implements SQLiteFactory{
 		// TODO Auto-generated method stub
 		SQLiteDietaDB db = new SQLiteDietaDB(this);
 		db.getWritableDatabase();
+		
+		Log.d("db", "Dieta " + db.getDatabaseName());
 
 		ContentValues values = new ContentValues();
 		values.put("id_dieta", "1");
@@ -214,6 +217,8 @@ public class MainActivity extends Activity implements SQLiteFactory{
 		// TODO Auto-generated method stub
 		SQLiteComponenteDB db = new SQLiteComponenteDB(this);
 		db.getWritableDatabase();
+		
+		Log.d("db", "Componente " + db.getDatabaseName());
 
 		//1
 		ContentValues values = new ContentValues();
@@ -327,12 +332,16 @@ public class MainActivity extends Activity implements SQLiteFactory{
 		// TODO Auto-generated method stub
 		SQLiteControl db = new SQLiteControl(this);
 		db.getWritableDatabase();
+		
+		Log.d("db", "Control " + db.getDatabaseName());
 
 		ContentValues values = new ContentValues();
 		values.put("id_control", "1");
 		values.put("id_dieta", "0");
 		values.put("dia", "0");
 		values.put("peso_ideal", "0");
+		values.put("dietaTerminada", "0");
+		values.put("estilo", "neutral");
 		db.getWritableDatabase().insert("control", null, values);
 
 		//Set the notification receiver 
@@ -348,6 +357,8 @@ public class MainActivity extends Activity implements SQLiteFactory{
 		// TODO Auto-generated method stub
 		SQLiteProgramaDB db = new SQLiteProgramaDB(this);
 		db.getWritableDatabase();
+		
+		Log.d("db", "Programa " + db.getDatabaseName());
 
 		//bajo
 		ContentValues values = new ContentValues();

@@ -60,6 +60,34 @@ public class API {
 		return false;
 	}
 	
+	public boolean HasDietaBeenCompleted()
+	{ 		
+		try
+		{
+			if(cursor.moveToFirst())
+			{
+				if(Integer.valueOf(cursor.getString(4)) == 0)
+				{
+					db.close();
+					return false;
+				}
+				else
+				{
+					db.close();
+					return true;
+				}
+			}
+		}
+		catch(Exception ex)
+		{
+			db.close();
+			return false;
+		}
+		//in case everything fails
+		db.close();
+		return false;
+	}
+	
 	public String getID_Dieta()
 	{
 		try
@@ -114,6 +142,27 @@ public class API {
 				Log.d("chino", "2 " + cursor.getString(2));
 				Log.d("chino", "3 " + cursor.getString(3));
 				return cursor.getString(3);
+			}
+			else
+			{
+				return null;
+			}
+		}
+		catch(Exception ex)
+		{
+			db.close();
+			return null;
+		}
+	}
+	
+	public String getStyle()
+	{
+		try
+		{
+			if(cursor.moveToFirst())
+			{
+				cursor.moveToFirst();
+				return cursor.getString(5);
 			}
 			else
 			{

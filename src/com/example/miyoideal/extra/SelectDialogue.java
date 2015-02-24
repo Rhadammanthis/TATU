@@ -98,6 +98,17 @@ public class SelectDialogue extends DialogFragment {
 					//alarm.setRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), 20*1000, pintent); 
 					DietaCompleteNotification notification = new DietaCompleteNotification();
 					notification.setAlarm(con,dieta.getDuracion(),dia);
+					
+					AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(con);
+					dlgAlert.setMessage("Felicidades por comenzar una nueva dieta!");
+					dlgAlert.setTitle("Un Nuevo Comienzo");
+					dlgAlert.setPositiveButton("Gracias!", new DialogInterface.OnClickListener() {
+				        public void onClick(DialogInterface dialog, int which) {
+				            //dismiss the dialog  
+				          }
+				      });
+					dlgAlert.setCancelable(true);
+					dlgAlert.create().show();
 
 
 				}
@@ -146,7 +157,9 @@ public class SelectDialogue extends DialogFragment {
 					alarm = (AlarmManager) con.getSystemService(Context.ALARM_SERVICE);
 
 					// schedule for every 5 hours
-					alarm.setRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), 18000*1000, pintent); 
+					// alarm.setRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), 18000*1000, pintent); 
+					DietaCompleteNotification notification = new DietaCompleteNotification();
+					notification.setAlarm(con,dieta.getDuracion(),dia);
 
 
 				}
@@ -161,70 +174,10 @@ public class SelectDialogue extends DialogFragment {
 		return builder.create();
 	}
 
-//	private class broadcastReceiver extends BroadcastReceiver {
-//		@Override
-//		public void onReceive(Context context, Intent inten) {
-//			//do something
-//
-//			Log.d("service", "stopping...");
-//
-//			if(intent!= null && context!=null)
-//			{
-//				String exit = inten.getStringExtra("exit"); 
-//				if(exit.equals("1") && intent != null && pintent != null)
-//				{
-//					Log.d("service", "stopping...");
-//					Toast.makeText(con, "should stop", Toast.LENGTH_SHORT).show();
-//					alarm.cancel(pintent);
-//					con.stopService(intent);
-//					//Intent inte = new Intent(con, MyService.class); 
-//					Log.d("service", "exit");
-//
-//
-//					/*Dialog dialog = new Dialog(con);
-//
-//	                dialog.setContentView(R.layout.baseline_share);
-//	                dialog.setTitle("Compartir");
-//
-//	                Button save=(Button)dialog.findViewById(R.id.buttonGuardar_share);
-//	                dialog.show();*/
-//
-//					intent = null;
-//					pintent = null;
-//					Log.d("tag", "exit2");
-//					new API(con).clearDieta();
-//				}
-//			}
-//
-//		}
-//	}; 
-
 	private void initEjercicioDB()
 	{
 
 	}
 
-	/* public interface SelectDialogueListener
-    {
-    	public void onDialogPositiveClick(DialogFragment dialog);
-        public void onDialogNegativeClick(DialogFragment dialog);
-    }
-
-    SelectDialogue mListener;
-
-    // Override the Fragment.onAttach() method to instantiate the NoticeDialogListener
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        // Verify that the host activity implements the callback interface
-        try {
-            // Instantiate the NoticeDialogListener so we can send events to the host
-            mListener = (SelectDialogue) activity;
-        } catch (ClassCastException e) {
-            // The activity doesn't implement the interface, throw exception
-            throw new ClassCastException(activity.toString()
-                    + " must implement NoticeDialogListener");
-        }
-    }*/
 
 }
