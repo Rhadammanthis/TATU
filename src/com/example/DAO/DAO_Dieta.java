@@ -17,7 +17,7 @@ public class DAO_Dieta {
 	{
 		con = context;
 	}
-	
+	 	
 	public DTO_Dieta getDieta(String id)
 	{
 		DTO_Dieta dieta = new DTO_Dieta();
@@ -66,5 +66,4 @@ public class DAO_Dieta {
 		db.close();
 		return list_dieta;
 	}
-
 }

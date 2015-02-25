@@ -118,7 +118,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:contentDescription="Camera Button"
-                    android:src="@drawable/ic_action_camera" />
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/home_button_icon1" />
 
                 <ImageButton
                     android:id="@+id/button3"
@@ -126,7 +127,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:contentDescription="Calendar"
-                    android:src="@drawable/ic_action_time" />
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/home_button_icon2" />
             </LinearLayout>
 
             <LinearLayout
@@ -146,15 +148,17 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:contentDescription="My diets"
-                    android:src="@drawable/ic_action_event" />
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/home_button_icon3" />
 
                 <ImageButton
-                    android:id="@+id/bottomRight1"
+                    android:id="@+id/bottomRight"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:scaleType="fitCenter"
                     android:contentDescription="Help"
-                    android:src="@drawable/ic_action_help" />
+                    android:src="@drawable/home_button_icon4"/>
             </LinearLayout>
 
             <Button

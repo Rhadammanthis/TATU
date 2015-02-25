@@ -1,6 +1,8 @@
 package com.example.miyoideal;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -57,6 +59,7 @@ import com.daimajia.swipe.SwipeLayout.DragEdge;
 import com.daimajia.swipe.SwipeLayout.OnRevealListener;
 import com.example.DAO.DAO_DietaCompletada;
 import com.example.DB.SQLiteControl;
+import com.example.DB.SQLiteDietaDB;
 import com.example.DB.SQLiteUserDB;
 import com.example.DTO.DTO_DietaCompletada;
 import com.example.miyoideal.extra.API;
@@ -66,6 +69,7 @@ import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.BarLineChartBase.BorderPosition;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.DataSet; 
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.interfaces.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
@@ -108,8 +112,18 @@ public class HomeActivity extends Activity implements OnTouchListener{//,Gesture
 	private List<DTO_DietaCompletada> lista;
 	private BarDataSet set1;
 	private int textColor, barColor, barShadow, backgroundColor;
-
-	@Override
+	
+	private Uri mImageCaptureUri; // This needs to be initialized.
+    static final int CAMERA_PIC_REQUEST = 1337; 
+    private String filePath;
+    public static final int MEDIA_TYPE_IMAGE = 1;
+    private File mediaFile;
+    private static final int CAMERA = 0;
+    private static final int GALLERY = 1;
+    private final String FACEBOOK_URL = "https://facebook.com";
+    //private ShareActivity activity;
+	
+    @Override
 	protected void onCreate(Bundle savedInstanceState) {		
 		super.onCreate(savedInstanceState);
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
@@ -123,7 +137,8 @@ public class HomeActivity extends Activity implements OnTouchListener{//,Gesture
 		SharedPreferences runCheck = PreferenceManager.getDefaultSharedPreferences(cont);
 		Boolean hasRun = runCheck.getBoolean("hasRun", false); //see if it's run before, default no
 
-
+		new DAO_DietaCompletada(cont).InsertCSVFile(null, null, null);
+		
 		//Clear the notification
 		cancelNotification(this, 001);		
 
@@ -290,8 +305,7 @@ public class HomeActivity extends Activity implements OnTouchListener{//,Gesture
 		});
 	}
 
-
-	@Override
+            
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		Log.d("OnActivityResult", "OnActivityResult");
 		//super.onActivityResult(requestCode, resultCode, data);
@@ -479,7 +493,6 @@ public class HomeActivity extends Activity implements OnTouchListener{//,Gesture
 			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(intent);
 			break;
-
 		case 12:
 			intent = new Intent(HomeActivity.this, TutorialActivity.class);
 			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -498,23 +511,6 @@ public class HomeActivity extends Activity implements OnTouchListener{//,Gesture
 		moveTaskToBack(true);
 	}
 
-	private File createImageFile() throws IOException{
-		// Create an image file name 
-		String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-		String imageFileName = "JPEG_" + timeStamp + "_";
-		File storageDir = Environment.getExternalStoragePublicDirectory(
-				Environment.DIRECTORY_PICTURES);
-		File image = File.createTempFile(
-				imageFileName,  /* prefix */
-				".jpg",         /* suffix */ 
-				storageDir      /* directory */
-				); 
-
-		// Save a file: path for use with ACTION_VIEW intents 
-		mCurrentPhotoPath = "file:" + image.getAbsolutePath();
-		return image;
-
-	}
 
 	//Clear the Notification
 	private void cancelNotification(Context context, int notifyId) {
@@ -564,8 +560,9 @@ public class HomeActivity extends Activity implements OnTouchListener{//,Gesture
 		mChart.invalidate();
 	}
 
-	private void setGraphLabels(){
-		Typeface tf = Typeface.createFromAsset(getAssets(), "OpenSans-Regular.ttf");
+        
+    private void setGraphLabels(){
+    	Typeface tf = Typeface.createFromAsset(getAssets(), "OpenSans-Regular.ttf");
 		XLabels xLabels = mChart.getXLabels();
 		xLabels.setPosition(XLabelPosition.BOTTOM);
 		xLabels.setCenterXLabelText(true);
@@ -620,7 +617,7 @@ public class HomeActivity extends Activity implements OnTouchListener{//,Gesture
 		// enable value highlighting
 		mChart.setHighlightEnabled(false);
 		// enable touch gestures
-		mChart.setTouchEnabled(true);
+		mChart.setTouchEnabled(false);
 		// enable scaling and dragging
 		mChart.setDragEnabled(true);
 		mChart.setScaleEnabled(true);
@@ -698,5 +695,4 @@ public class HomeActivity extends Activity implements OnTouchListener{//,Gesture
 		public abstract void onTopToBottom();
 
 	}
-
 }

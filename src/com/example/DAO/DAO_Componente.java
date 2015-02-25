@@ -1,5 +1,8 @@
 package com.example.DAO;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,6 +11,7 @@ import android.content.Context;
 import android.database.Cursor;
 
 import com.example.DB.SQLiteComponenteDB;
+import com.example.DB.SQLiteDietaDB;
 import com.example.DTO.DTO_Componente;
 
 public class DAO_Componente {
@@ -75,5 +79,4 @@ public class DAO_Componente {
 		
 		db.close();
 	}
-
 }

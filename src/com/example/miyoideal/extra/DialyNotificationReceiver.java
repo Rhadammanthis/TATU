@@ -9,6 +9,7 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
@@ -25,9 +26,11 @@ public class DialyNotificationReceiver extends BroadcastReceiver {
 	public void onReceive(Context context, Intent intent){
 		Log.d("DialyNotification", "Entro notification");
 		NotificationCompat.Builder mNotificationBuilder = new NotificationCompat.Builder(context)
-			.setSmallIcon(R.drawable.infinite_icon)
-			.setContentTitle("My Notification")
-			.setContentText("This is a notification for the user");
+			.setSmallIcon(R.drawable.notification_icon)
+			.setVibrate(new long[] {0, 1000, 50, 2000})
+			.setSound(Uri.parse("android.resource://" + context.getPackageName() + "/" + R.raw.takeme))
+			.setContentTitle("Notificacion Saludable")
+			.setContentText("Recuerda tomar dos litros de agua al dia");
 		//Implicit intent
 		Intent resultIntent = new Intent(context, MainActivity.class);
 		
@@ -53,9 +56,12 @@ public class DialyNotificationReceiver extends BroadcastReceiver {
         // Set the alarm's trigger
         Random mRandom = new Random();
         int iRandom = (mRandom.nextInt(6)+1)+10;
-        calendar.set(Calendar.HOUR_OF_DAY, iRandom);
-        calendar.set(Calendar.MINUTE, 0);
-        		
+        //calendar.set(Calendar.HOUR_OF_DAY, iRandom);
+        //calendar.set(Calendar.MINUTE, 0);
+        
+        calendar.set(Calendar.HOUR_OF_DAY, 13);
+        calendar.set(Calendar.MINUTE, 20);
+        
         // Set the intervals for every day 
 		alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
 		        AlarmManager.INTERVAL_DAY, alarmIntent);
