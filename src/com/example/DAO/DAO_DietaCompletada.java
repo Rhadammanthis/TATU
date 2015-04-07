@@ -18,7 +18,9 @@ import android.util.Log;
 
 import com.example.DB.SQLiteDietaCompletadaDB;
 import com.example.DB.SQLiteDietaDB;
+import com.example.DB.SQLiteEstadisticas;
 import com.example.DTO.DTO_DietaCompletada;
+import com.example.DTO.DTO_Estadisticas;
 import com.example.DTO.DTO_Usuario;
 import com.example.miyoideal.R;
 
@@ -37,7 +39,7 @@ public class DAO_DietaCompletada {
     	int id = 0;
     	
     	db.getReadableDatabase();
-		String query = "Select * FROM " + "dieta_completada";
+		String query = "Select * FROM dieta_completada";
 		Cursor cursor = db.getReadableDatabase().rawQuery(query, null);
 		
 		while(cursor.moveToNext())
@@ -53,8 +55,49 @@ public class DAO_DietaCompletada {
 		values.put("talla", temp.getTalla());
 		values.put("fecha", temp.getFecha());
 		db.getWritableDatabase().insert("dieta_completada", null, values);
+		db.close();
 		
-		db.close();	
+		//Update Estadisticas 
+		DAO_Estadisticas daoEstadisticas = new DAO_Estadisticas(con);
+		DTO_Estadisticas dtoEstadisticas = daoEstadisticas.getEstadisticas();
+		SQLiteEstadisticas dbEstadisticas = new SQLiteEstadisticas(con);
+		dbEstadisticas.getReadableDatabase();
+			
+		values = new ContentValues();
+		values.put("id_estadisticas", 0);
+		if(Float.parseFloat(dtoEstadisticas.getPesoMaximo()) < Float.parseFloat(temp.getPeso())){
+			//Update the maximum and actual weight
+			values.put("peso_maximo", Float.parseFloat(temp.getPeso()));
+		}
+		else if(Float.parseFloat(dtoEstadisticas.getPesoMinimo()) > Float.parseFloat(temp.getPeso())){
+			//Update the minimum and actual weight 
+			values.put("peso_minimo", Float.parseFloat(temp.getPeso()));
+		}
+		
+		if(Float.parseFloat(temp.getPeso()) < Float.parseFloat(dtoEstadisticas.getPesoActual())){
+			values.put("record_peso_perdido", (Float.parseFloat(dtoEstadisticas.getPesoActual()) - Float.parseFloat(temp.getPeso())) + Float.parseFloat(dtoEstadisticas.getRecordPesoPerdido()));
+			values.put("peso_perdido_tratamiento", Float.parseFloat(dtoEstadisticas.getPesoActual()) - Float.parseFloat(temp.getPeso()));
+		}
+		else{
+			values.put("peso_perdido_tratamiento", 0);
+		}
+		
+		values.put("peso_actual", Float.parseFloat(temp.getPeso()));
+		values.put("imc", Float.parseFloat(temp.getPeso())/1);
+		
+		//Update the size
+		if(Float.parseFloat(dtoEstadisticas.getTallaMaxima()) < Float.parseFloat(temp.getTalla())){
+			//Update the maximum size
+			values.put("talla_maxima", Float.parseFloat(temp.getTalla()));
+		}
+		else if(Float.parseFloat(dtoEstadisticas.getTallaMinima()) > Float.parseFloat(temp.getPeso())){
+			//Update the minimum size
+			values.put("talla_minima", Float.parseFloat(temp.getTalla()));
+		}
+		values.put("talla_actual", Float.parseFloat(temp.getTalla()));
+		
+		dbEstadisticas.getReadableDatabase().update("estadisticas", values, null, null);
+		dbEstadisticas.close();	
 	}
 	
 	//return last five insert in 'dieta completada' table. It includes the usuer's data as the first item in the list
@@ -99,7 +142,7 @@ public class DAO_DietaCompletada {
 	
 	public void InsertCSVFile(String FilePath, String filename, String TableName) {
 		
-		ContentValues values = new ContentValues();
+		/*ContentValues values = new ContentValues();
 		SQLiteDietaCompletadaDB db = new SQLiteDietaCompletadaDB(con);
 		try { 
 			String state = Environment.getExternalStorageState();
@@ -149,6 +192,8 @@ public class DAO_DietaCompletada {
 		finally{
 			//db.close();
 		}
+		
+		*/
 	}
 
 }

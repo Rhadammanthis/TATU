@@ -7,6 +7,7 @@ import java.util.List;
 
 import shared.ui.actionscontentview.ActionsContentView;
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -23,8 +24,11 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 
 import com.example.DAO.DAO_Ejercicio;
+import com.example.DAO.DAO_Estadisticas;
 import com.example.DAO.DAO_Programa;
+import com.example.DB.SQLiteEstadisticas;
 import com.example.DTO.DTO_Ejercicio;
+import com.example.DTO.DTO_Estadisticas;
 import com.example.DTO.DTO_Programa;
 import com.example.miyoideal.extra.API;
 import com.example.miyoideal.extra.EjercicioChildFactory;
@@ -117,8 +121,7 @@ public class EjercicioActivity extends Activity {
 					else
 					{
 						dia[(int) distance] = '0';
-					}	
-					
+					}		
 					String l = "";
 					for(int i = 0; i<=ejercicio.getDiasActividad().length()-1;i++)
 						l += String.valueOf(dia[i]);
@@ -129,10 +132,44 @@ public class EjercicioActivity extends Activity {
 				}
 			});
 		}
-		
-
 	}
 
+	@Override
+	public void onStop(){
+		super.onStop();
+		
+		DAO_Estadisticas daoEstadisticas = new DAO_Estadisticas(con);
+		DTO_Estadisticas dtoEstadisticas = daoEstadisticas.getEstadisticas();
+		SQLiteEstadisticas dbEstadisticas = new SQLiteEstadisticas(con);
+		if(dia[(int) distance] == 1){
+			dbEstadisticas.getReadableDatabase();
+			ContentValues values = new ContentValues();
+			values.put("dias_consecutivos_ejercicio", Integer.valueOf(dtoEstadisticas.getDiasConsecutivosEjercicio()) + 1);
+			/*if(distance > 0 && dia[((int)(distance))-1] == 0){
+				values.put("dias_consecutivos_ejercicio", Integer.valueOf(dtoEstadisticas.getDiasConsecutivosEjercicio()) + 1);
+			}
+			else{
+				values.put("dias_consecutivos_ejercicio", 0);
+			}*/
+			dbEstadisticas.close();
+			dbEstadisticas.getWritableDatabase().update("estadisticas", values, null, null);
+			dbEstadisticas.close();
+		}
+		else if(dia[(int) distance] == 0){
+			dbEstadisticas.getReadableDatabase();
+			ContentValues values = new ContentValues();
+			values.put("dias_consecutivos_ejercicio", 0);
+			/*if(distance > 0 && dia[((int) (distance))-1] == 0){
+				values.put("dias_consecutivos_ejercicio", Integer.valueOf(dtoEstadisticas.getDiasConsecutivosEjercicio()) - 1);
+			}else{
+				values.put("dias_consecutivos_ejercicio", 0);
+			}*/
+			dbEstadisticas.close();
+			dbEstadisticas.getWritableDatabase().update("estadisticas", values, null, null);
+			dbEstadisticas.close();
+		}
+	}
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		//Add the menu layout to the action bar

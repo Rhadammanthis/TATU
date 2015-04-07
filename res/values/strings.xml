@@ -40,5 +40,6 @@
     <string name="com.facebook.sdk.ApplicationId">@string/facebook_app_id</string>
     <string name="title_activity_disclaimer">DisclaimerActivity</string>
     <string name="title_activity_tutorial">TutorialActivity</string>
+    <string name="title_activity_estadisticas">Estadisticas</string>
 
 </resources>

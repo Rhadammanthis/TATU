@@ -1,14 +1,17 @@
 package com.example.miyoideal;
 
+import com.facebook.share.model.ShareContent;
+import com.facebook.share.model.ShareLinkContent;
+import com.facebook.share.model.SharePhoto;
+import com.facebook.share.model.SharePhotoContent;
+import com.facebook.share.widget.ShareButton;
+import com.facebook.share.widget.ShareDialog;
+
+
 import java.io.File;
 import java.io.IOException;
 
 import com.example.miyoideal.extra.PhotoManager;
-import com.example.miyoideal.extra.ShareContentManager;
-import com.facebook.Session;
-import com.facebook.SessionState;
-import com.facebook.UiLifecycleHelper;
-import com.facebook.widget.FacebookDialog;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -35,92 +38,64 @@ public class ShareActivity extends Activity implements View.OnClickListener {
     
     private File photoFile;
     
-    //Facebook callback variable
-    private UiLifecycleHelper uiHelper;
-    
     private Button facebookButton;
     private Uri tempUri;
-    private Session.StatusCallback callback = new Session.StatusCallback() {
-        @Override
-        public void call(Session session, SessionState state, Exception exception) {
-            Log.d("ShareActivity", "Callback");
-
-        }
-    };
+    private Uri photoUri;
+    private ShareDialog shareDialog;
     
     @Override
     public void onCreate(Bundle savedInstanceState){
     	super.onCreate(savedInstanceState);
     	setContentView(R.layout.activity_share);
-    	uiHelper = new UiLifecycleHelper(this, callback);
-        uiHelper.onCreate(savedInstanceState);
-		facebookButton = (Button) findViewById(R.id.shareFacebook);
-		facebookButton.setOnClickListener(this);
+    	
+    	shareDialog = new ShareDialog(this);
+    	facebookButton = (Button) findViewById(R.id.shareFacebook);
+    	facebookButton.setOnClickListener(this);
     	//Uri uri = (Uri) bundle.get("URI");
     }
     
     @Override
-    public void onPause() {
-        super.onPause();
-        uiHelper.onPause();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        uiHelper.onDestroy();
-    }
-    
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
-    
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        uiHelper.onSaveInstanceState(outState);
-    }
-    
-    @Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    	super.onActivityResult(requestCode, resultCode, data);
     	if(requestCode == GALLERY_OPEN){
 	    	if(data != null){
-	    		uiHelper.onActivityResult(requestCode, resultCode, data, new FacebookDialog.Callback() {
-	    	        @Override
-	    	        public void onError(FacebookDialog.PendingCall pendingCall, Exception error, Bundle data) {
-	    	            Log.d("Activity", String.format("Error: %s", error.toString()));
-	    	        }
-	    	        @Override
-	    	        public void onComplete(FacebookDialog.PendingCall pendingCall, Bundle data) {
-	    	            Log.d("Activity", "Success!");
-	    	        }
-	    	    });
 	    		//Instance the object with the picture
-	    		ShareContentManager shareContentManager = new ShareContentManager(data.getData());
-	    		createFacebookDialog(shareContentManager);
+		    	SharePhoto photo = new SharePhoto.Builder()
+		    		.setImageUrl(data.getData())
+					.setUserGenerated(false)
+					.build();
+				SharePhotoContent content = new SharePhotoContent.Builder()
+					.addPhoto(photo)
+					
+					//.setContentUrl(Uri.parse("http://cceo.com.mx"))
+					.setRef("http://cceo.com.mx")
+					.build();
+	    		
+//	    		ShareLinkContent content = new ShareLinkContent.Builder()
+//	    			.setContentTitle("Yo ideal")
+//	    			.setContentDescription("Con esta aplicacion puedo adelgazar")
+//	    			.setImageUrl(data.getData())
+//	    			.setContentUrl(Uri.parse("http://cceo.com.mx"))
+//	    			.build();
+//	    			
+				createFacebookDialog(content);
 	    	}
 	    	else{
-	    		Toast.makeText(this, "Se produjo un error al cargar la imagen", Toast.LENGTH_LONG).show();
+	    		Toast.makeText(this, "Fallo", Toast.LENGTH_LONG).show();
 	    	}
     	}
     	else if(requestCode == PHOTO_TAKED){
     		if(resultCode == RESULT_OK) {
-	    		uiHelper.onActivityResult(requestCode, resultCode, data, new FacebookDialog.Callback() {
-	    	        @Override
-	    	        public void onError(FacebookDialog.PendingCall pendingCall, Exception error, Bundle data) {
-	    	            Log.d("Activity", String.format("Error: %s", error.toString()));
-	    	        }
-	    	        @Override
-	    	        public void onComplete(FacebookDialog.PendingCall pendingCall, Bundle data) {
-	    	            Log.d("Activity", "Success!");
-	    	        }
-	    	    });
-	    		//Instance the object with the picture
-	    		ShareContentManager shareContentManager = new ShareContentManager(photoManager.getUri());
-	    		createFacebookDialog(shareContentManager);
-	    		//Toast.makeText(this, "Foto Almacenada en la galeria", Toast.LENGTH_SHORT).show();
-			} 
+    			SharePhoto photo = new SharePhoto.Builder()
+    				.setImageUrl(photoUri)
+    				.setUserGenerated(true)
+    				.build();
+    			SharePhotoContent content = new SharePhotoContent.Builder()
+    				.addPhoto(photo)
+    				.setRef("MiYoIdeal")
+    				.build();
+    			createFacebookDialog(content);
+    		}			 
 			else { 
 				Toast.makeText(this, "No se logro almacenar la imagen", Toast.LENGTH_SHORT).show(); 
 			}
@@ -168,31 +143,6 @@ public class ShareActivity extends Activity implements View.OnClickListener {
 		return super.onOptionsItemSelected(item);
 	}
     
-    
-    
-    public void createFacebookDialog(ShareContentManager shareContentManager){
-    	/*if (FacebookDialog.canPresentOpenGraphActionDialog(this,FacebookDialog.OpenGraphActionDialogFeature.OG_ACTION_DIALOG)){
-		    OpenGraphObject diet = shareContentManager.loadContent(); 
-			OpenGraphAction action = GraphObject.Factory.create(OpenGraphAction.class);
-			action.setProperty("diet", diet);
-			action.setType("yo-ideal:diet");
-			FacebookDialog.OpenGraphActionDialogBuilder shareDialog = new FacebookDialog.OpenGraphActionDialogBuilder(this, action, "diet");
-			shareDialog.build().present();
-			//uiHelper.trackPendingDialogCall(shareDialog.present());
-    	}else { 
-            Toast.makeText(this, "Facebook not available", Toast.LENGTH_SHORT).show();
-        }
-        */
-    	FacebookDialog.ShareDialogBuilder builder = new FacebookDialog.ShareDialogBuilder(this)
-        .setLink("http://facebook.com")
-        .setName("Yo Ideal")
-        .setPicture(shareContentManager.getUri());
-    	
-        if (builder.canPresent()) {
-                builder.build().present();
-            }
-    }
-        
     //Set the extras for ShareActivity and start the camera
   	public void startCamera() throws IOException{
   		photoManager = new PhotoManager();
@@ -200,7 +150,8 @@ public class ShareActivity extends Activity implements View.OnClickListener {
 		Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 	    if(takePictureIntent.resolveActivity(getPackageManager()) != null){
 			//photoFile = createImageFile();
-			takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoManager.getUri());
+			photoUri = photoManager.getUri();
+	    	takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoManager.getUri());
 	    	//Save the image uri for later use
 	  		startActivityForResult(takePictureIntent, PHOTO_TAKED);
 	    }	
@@ -214,4 +165,11 @@ public class ShareActivity extends Activity implements View.OnClickListener {
         String selectPicture = getResources().getString(R.string.select_picture);
         startActivityForResult(Intent.createChooser(intent, selectPicture), GALLERY_OPEN);
   	}	
+  	
+  	public void createFacebookDialog(ShareContent content){
+    	if(ShareDialog.canShow(ShareLinkContent.class)){
+    		Toast.makeText(this, "Entro", Toast.LENGTH_LONG).show();
+    		shareDialog.show(content);
+    	}
+    }
 }

@@ -25,10 +25,12 @@ import android.widget.TextView;
 import com.example.DB.SQLiteComponenteDB;
 import com.example.DB.SQLiteControl;
 import com.example.DB.SQLiteDietaDB;
+import com.example.DB.SQLiteEstadisticas;
 import com.example.DB.SQLiteFactory;
 import com.example.DB.SQLiteProgramaDB;
 import com.example.DB.SQLiteUserDB;
 import com.example.miyoideal.extra.DialyNotificationReceiver;
+import com.facebook.FacebookSdk;
 
 
 public class MainActivity extends Activity implements SQLiteFactory{
@@ -48,8 +50,15 @@ public class MainActivity extends Activity implements SQLiteFactory{
 	private ContentValues values;
 
 	@Override
+	public void onResume(){
+		super.onResume();
+	}
+	
+	
+	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		FacebookSdk.sdkInitialize(getApplicationContext());
 		setContentView(R.layout.activity_main);
 		this.setTitle("Diagnostico");
 		con = this;
@@ -114,13 +123,14 @@ public class MainActivity extends Activity implements SQLiteFactory{
 					initDietaDB();
 					initControlDB();
 					initProgramaDB();
-					
+										
 					Spinner sexo = (Spinner) main.getChildAt(1);
 					EditText edad = (EditText) main.getChildAt(2);
 					EditText talla = (EditText) main.getChildAt(3);
 					EditText peso = (EditText) main.getChildAt(4);
 					Spinner nivel = (Spinner) main.getChildAt(1);
-
+					
+					initEstadisticasDB(peso.getText().toString(), talla.getText().toString());
 					userDB.getWritableDatabase();
 					values.put("id_usuario", "1");
 					values.put("nombre", "Hugo");
@@ -132,6 +142,7 @@ public class MainActivity extends Activity implements SQLiteFactory{
 					
 					userDB.getWritableDatabase().insert("usuario", null, values);
 					userDB.close();
+					
 					Intent intent = new Intent(MainActivity.this, HomeActivity.class);
 					Log.d("grafica", "ya hay usuario");
 					startActivity(intent);
@@ -149,13 +160,15 @@ public class MainActivity extends Activity implements SQLiteFactory{
 					AlertDialog alert = builder.create();
 					alert.show();
 				}
-
-
 			}
 		});	
 	}
 
-
+	@Override
+	public void onPause(){
+		super.onPause();
+	}
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		//Add the menu layout to the action bar
@@ -364,9 +377,29 @@ public class MainActivity extends Activity implements SQLiteFactory{
 		values.put("titulo", "Carrera");
 		values.put("descripcion", "Correr 5 km a un ritmo medio");
 		values.put("hora", "7 pm");
-		db.getWritableDatabase().insert("programa", null, values);				
-
-
+		db.getWritableDatabase().insert("programa", null, values);
+		
 	}		
-
+	
+	//Create the Estaditicas Database 
+	@Override
+	public void initEstadisticasDB(String pesoActual, String tallaActual){
+		SQLiteEstadisticas db = new SQLiteEstadisticas(this);
+		ContentValues values = new ContentValues();
+		values.put("id_estadisticas", 0);
+		values.put("talla_maxima", Float.valueOf(tallaActual));
+		values.put("talla_minima", Float.valueOf(tallaActual));
+		values.put("talla_actual", Float.valueOf(tallaActual));
+		values.put("peso_maximo", Float.valueOf(pesoActual));
+		values.put("peso_minimo", Float.valueOf(pesoActual));
+		values.put("peso_actual", Float.valueOf(pesoActual));
+		values.put("imc", (Float.valueOf(pesoActual) / Float.valueOf(tallaActual)));
+		values.put("record_peso_perdido", 0);
+		values.put("peso_perdido_tratamiento", 0);
+		values.put("dias_consecutivos_dieta", 0);
+		values.put("dias_consecutivos_ejercicio", 0);
+		long i = db.getWritableDatabase().insert("estadisticas", null, values);
+		Log.d("Main Activity Result insert", i+" ");
+		
+	}
 }

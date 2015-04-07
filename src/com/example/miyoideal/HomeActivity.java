@@ -37,6 +37,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -91,8 +92,7 @@ public class HomeActivity extends Activity implements View.OnClickListener{
     private static final int CAMERA = 0;
     private static final int GALLERY = 1;
     private final String FACEBOOK_URL = "https://facebook.com";
-    //private ShareActivity activity;
-    
+        
     //REQUEST IMAGE CODE
     static final int REQUEST_IMAGE_CAPTURE = 1;
     ImageView imageThumbnail;
@@ -110,6 +110,9 @@ public class HomeActivity extends Activity implements View.OnClickListener{
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		setContentView(R.layout.baseline4);
 		cont = this;
+		//For the csv files
+		ImageButton buttonCamera = (ImageButton) findViewById(R.id.button2);
+		buttonCamera.setOnClickListener(this);
 		new DAO_DietaCompletada(cont).InsertCSVFile(null, null, null);
 		
 		//Clear the notification
@@ -143,10 +146,11 @@ public class HomeActivity extends Activity implements View.OnClickListener{
 		setGraphLabels();
 		        
 		button_MiPerfil.setOnClickListener(new View.OnClickListener() {
-			
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
+				Intent intentEstadisticas = new Intent(HomeActivity.this, EstadisticasActivity.class);
+				startActivity(intentEstadisticas);
+				/*
 				DietaCompletedDialog dialog = new DietaCompletedDialog(cont);
                 dialog.show();
                 dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
@@ -161,7 +165,7 @@ public class HomeActivity extends Activity implements View.OnClickListener{
 						mChart.invalidate();
 						mChart.animateX(lista.size() * 250);
 					}
-				});
+				});*/
 			}
 		});
     }
@@ -338,35 +342,55 @@ public class HomeActivity extends Activity implements View.OnClickListener{
 	//When click on the button for take the photo
 	@Override
 	public void onClick(View v){
-		Toast.makeText(this, "Clicked", Toast.LENGTH_LONG).show();
-		Dialog dialog = new Dialog(cont);
-        dialog.setContentView(R.layout.baseline_share);
-        dialog.setTitle("Compartir");
-
-        Button save = (Button)dialog.findViewById(R.id.buttonGuardar_share);
-        dialog.show();
-
-        //imageThumbnail = (ImageView) dialog.findViewById(R.id.foto);
-        save.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View v) {
-            	// Camera exists? Then proceed... 
-            	Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            	if(takePictureIntent.resolveActivity(getPackageManager()) != null){
-            		File photoFile = null;
-            		try{
-            			//Create the Image File
-            			photoFile = createImageFile();
-            		}catch(IOException e){
-            			e.printStackTrace();
-            		}
-            		//Continue only when the ImageFile was created
-            		if(photoFile != null){
-            			takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
-            			startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-            		}
-            	}
-            }
-        });
+		if(v.getId() == R.id.button2){
+			Toast.makeText(this, "Clicked Camera", Toast.LENGTH_LONG).show();
+			DietaCompletedDialog dialog = new DietaCompletedDialog(cont);
+            dialog.show();
+            dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+				
+				@Override
+				public void onDismiss(DialogInterface dialog) {
+					// TODO Auto-generated method stub
+					List<DTO_DietaCompletada> lista = new DAO_DietaCompletada(cont).getLastFiveDietaCompleta();
+					BarEntry e = new BarEntry(Float.valueOf(lista.get(lista.size()-1).getPeso()), lista.size()-1);
+					set1.addEntry(e);
+					setData(lista.size(), 80, lista );
+					mChart.invalidate();
+					mChart.animateX(lista.size() * 250);
+				}
+            });
+		}
+		else{
+			Toast.makeText(this, "Clicked", Toast.LENGTH_LONG).show();
+			Dialog dialog = new Dialog(cont);
+	        dialog.setContentView(R.layout.baseline_share);
+	        dialog.setTitle("Compartir");
+	
+	        Button save = (Button)dialog.findViewById(R.id.buttonGuardar_share);
+	        dialog.show();
+	
+	        //imageThumbnail = (ImageView) dialog.findViewById(R.id.foto);
+	        save.setOnClickListener(new View.OnClickListener(){
+	            public void onClick(View v) {
+	            	// Camera exists? Then proceed... 
+	            	Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+	            	if(takePictureIntent.resolveActivity(getPackageManager()) != null){
+	            		File photoFile = null;
+	            		try{
+	            			//Create the Image File
+	            			photoFile = createImageFile();
+	            		}catch(IOException e){
+	            			e.printStackTrace();
+	            		}
+	            		//Continue only when the ImageFile was created
+	            		if(photoFile != null){
+	            			takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
+	            			startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+	            		}
+	            	}
+	            }
+	        });
+		}
 	}
 	
 	private File createImageFile() throws IOException{
