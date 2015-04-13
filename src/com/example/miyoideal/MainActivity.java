@@ -31,10 +31,17 @@ import com.example.DB.SQLiteProgramaDB;
 import com.example.DB.SQLiteUserDB;
 import com.example.miyoideal.extra.DialyNotificationReceiver;
 import com.facebook.FacebookSdk;
+import com.twitter.sdk.android.Twitter;
+import com.twitter.sdk.android.core.TwitterAuthConfig;
+import io.fabric.sdk.android.Fabric;
 
 
 public class MainActivity extends Activity implements SQLiteFactory{
 
+	// Note: Your consumer key and secret should be obfuscated in your source code before shipping.
+	private static final String TWITTER_KEY = "W0MKS891WG6RThT1rXA0ZXrk2";
+	private static final String TWITTER_SECRET = "qtSPokpJDNzJlIoOKq4rftqW0ibXRXlJYy8vZGjINcSm3yveBe";
+	
 	//layout components
 	private Button button;
 	private Spinner spinnerNivel;
@@ -58,6 +65,8 @@ public class MainActivity extends Activity implements SQLiteFactory{
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		TwitterAuthConfig authConfig = new TwitterAuthConfig(TWITTER_KEY, TWITTER_SECRET);
+		Fabric.with(this, new Twitter(authConfig));
 		FacebookSdk.sdkInitialize(getApplicationContext());
 		setContentView(R.layout.activity_main);
 		this.setTitle("Diagnostico");
@@ -225,7 +234,7 @@ public class MainActivity extends Activity implements SQLiteFactory{
 		values.put("dia", "1");
 		values.put("alimento", "Desayuno");
 		values.put("activo", "no");
-		values.put("descripcion", "Desayuno DIETA UNO Día 1 Alimento 1");
+		values.put("descripcion", "Desayuno DIETA UNO D?a 1 Alimento 1");
 		db.getWritableDatabase().insert("componente", null, values);
 
 		//2
@@ -235,7 +244,7 @@ public class MainActivity extends Activity implements SQLiteFactory{
 		values.put("dia", "1");
 		values.put("alimento", "Desayuno");
 		values.put("activo", "no");
-		values.put("descripcion", "Desayuno DIETA UNO Día 1 Alimento 2");
+		values.put("descripcion", "Desayuno DIETA UNO D?a 1 Alimento 2");
 		db.getWritableDatabase().insert("componente", null, values);
 
 		//3
@@ -245,7 +254,7 @@ public class MainActivity extends Activity implements SQLiteFactory{
 		values.put("dia", "1");
 		values.put("alimento", "Desayuno");
 		values.put("activo", "no");
-		values.put("descripcion", "Desayuno DIETA UNO Día 1 Alimento 3");
+		values.put("descripcion", "Desayuno DIETA UNO D?a 1 Alimento 3");
 		db.getWritableDatabase().insert("componente", null, values);
 
 		//4
@@ -255,7 +264,7 @@ public class MainActivity extends Activity implements SQLiteFactory{
 		values.put("dia", "1");
 		values.put("alimento", "Colacion");
 		values.put("activo", "no");
-		values.put("descripcion", "Colacion DIETA UNO Día 1 Alimento 1");
+		values.put("descripcion", "Colacion DIETA UNO D?a 1 Alimento 1");
 		db.getWritableDatabase().insert("componente", null, values);
 
 		//5
@@ -265,7 +274,7 @@ public class MainActivity extends Activity implements SQLiteFactory{
 		values.put("dia", "1");
 		values.put("alimento", "Colacion");
 		values.put("activo", "no");
-		values.put("descripcion", "Colacion DIETA UNO Día 1 Alimento 2");
+		values.put("descripcion", "Colacion DIETA UNO D?a 1 Alimento 2");
 		db.getWritableDatabase().insert("componente", null, values);
 
 		//6
@@ -275,7 +284,7 @@ public class MainActivity extends Activity implements SQLiteFactory{
 		values.put("dia", "1");
 		values.put("alimento", "Colacion");
 		values.put("activo", "no");
-		values.put("descripcion", "Colacion DIETA UNO Día 1 Alimento 3");
+		values.put("descripcion", "Colacion DIETA UNO D?a 1 Alimento 3");
 		db.getWritableDatabase().insert("componente", null, values);
 
 		///////////////////////////////////////////////////////////////////////////////////////////////
@@ -288,7 +297,7 @@ public class MainActivity extends Activity implements SQLiteFactory{
 		values.put("dia", "2");
 		values.put("alimento", "Desayuno");
 		values.put("activo", "no");
-		values.put("descripcion", "Desayuno DIETA UNO Día 2 Alimento 3");
+		values.put("descripcion", "Desayuno DIETA UNO D?a 2 Alimento 3");
 		db.getWritableDatabase().insert("componente", null, values);
 
 		//88
@@ -298,7 +307,7 @@ public class MainActivity extends Activity implements SQLiteFactory{
 		values.put("dia", "2");
 		values.put("alimento", "Colacion");
 		values.put("activo", "no");
-		values.put("descripcion", "Colacion DIETA UNO Día 2 Alimento 1");
+		values.put("descripcion", "Colacion DIETA UNO D?a 2 Alimento 1");
 		db.getWritableDatabase().insert("componente", null, values);
 
 		//9
@@ -308,7 +317,7 @@ public class MainActivity extends Activity implements SQLiteFactory{
 		values.put("dia", "2");
 		values.put("alimento", "Colacion");
 		values.put("activo", "no");
-		values.put("descripcion", "Colacion DIETA UNO Día 2 Alimento 2");
+		values.put("descripcion", "Colacion DIETA UNO D?a 2 Alimento 2");
 		db.getWritableDatabase().insert("componente", null, values);
 
 		//10
@@ -318,7 +327,7 @@ public class MainActivity extends Activity implements SQLiteFactory{
 		values.put("dia", "2");
 		values.put("alimento", "Colacion");
 		values.put("activo", "no");
-		values.put("descripcion", "Colacion DIETA UNO Día 2 Alimento 3");
+		values.put("descripcion", "Colacion DIETA UNO D?a 2 Alimento 3");
 		db.getWritableDatabase().insert("componente", null, values);
 
 		db.close();
