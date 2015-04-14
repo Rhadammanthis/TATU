@@ -9,18 +9,25 @@ import java.util.List;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
+import android.graphics.Color;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Display;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,8 +49,19 @@ public class DietaActivity extends Activity {
 	private List<DTO_Componente> componentes;
 	private ImageButton nextDay;
 	private ImageButton previousDay;
+	private RelativeLayout dietaBody;
+	private RelativeLayout dietaHeader;
 
 	private Button cancelButton;
+
+	int size;
+
+	int styleMain;
+	int styleDetail;
+	int styleDarkest;
+	int styleDark;
+	int styleBright;
+	int styleBrightest;
 
 	private boolean checkBoxInitialState[];
 
@@ -59,15 +77,21 @@ public class DietaActivity extends Activity {
 		viewActionsList = (ListView) findViewById(R.id.actions);	
 		mainLayout = (LinearLayout) findViewById(R.id.dieta_linearLayout);
 		currentDate = (TextView) findViewById(R.id.fechaDieta);
+		dietaBody = (RelativeLayout) findViewById(R.id.dietaBody);
 		dietaChildFactory = new DietaChildFactory();
 		nextDay = (ImageButton)findViewById(R.id.nextDay);
 		previousDay = (ImageButton)findViewById(R.id.previousDay);
 		cancelButton = (Button) findViewById(R.id.cancelButtonMiDieta);
+		dietaHeader = (RelativeLayout) findViewById(R.id.dietaHeader);
+		
 
+		//initializes side menu
 		setUpMenu();
+		
+		//updates style
+		updateStyle();
 
 		//if a "dieta" is currently set, the corresponding components are loaded
-
 		if(!new API(con).IsDietaSet())
 		{
 			Toast.makeText(con, "Selecciona una dieta!", Toast.LENGTH_LONG).show();
@@ -110,7 +134,10 @@ public class DietaActivity extends Activity {
 			if(componentes.size()>0)
 				initDietaLayout(componentes);
 			else
+			{
 				mainLayout.addView(new DietaChild(con).getDefaultLayout());
+
+			}
 		}
 		currentDate.setText(todayDate);
 
@@ -283,7 +310,7 @@ public class DietaActivity extends Activity {
 				}
 
 				//A new DietaChild is created from the dietaChildFactory
-				final DietaChild newChild = dietaChildFactory.GenerateChild(con, title, content, "10 am", activo);
+				final DietaChild newChild = dietaChildFactory.GenerateChildDieta(con, title, content, "10 am", activo);
 
 				//A click listener is added to the checkbox the handle checked and unchecked behavior
 				newChild.getCheckBox().setOnClickListener(new View.OnClickListener() {
@@ -311,6 +338,12 @@ public class DietaActivity extends Activity {
 				//the dietachild is added to the main layout
 				mainLayout.addView(newChild.getChild());
 
+				//to generate row setoff shadow
+				mainLayout.addView(getDarkest());
+				mainLayout.addView(getDarker());
+				mainLayout.addView(getBrighter());
+				mainLayout.addView(getBrightest());
+
 				//we keep track of children views in a list
 				dietaChildList.add(newChild);
 
@@ -330,7 +363,7 @@ public class DietaActivity extends Activity {
 				activo = true;
 		}
 
-		final DietaChild newChild = dietaChildFactory.GenerateChild(con, title, content, "10 am", activo);
+		final DietaChild newChild = dietaChildFactory.GenerateChildDieta(con, title, content, "10 am", activo);
 		newChild.getCheckBox().setOnClickListener(new View.OnClickListener() {
 
 			@Override
@@ -351,7 +384,15 @@ public class DietaActivity extends Activity {
 				}
 			}
 		});
+		
 		mainLayout.addView(newChild.getChild());
+		
+		//to generate row setoff shadow
+		mainLayout.addView(getDarkest());
+		mainLayout.addView(getDarker());
+		mainLayout.addView(getBrighter());
+		mainLayout.addView(getBrightest());
+		
 		dietaChildList.add(newChild);
 
 		content.clear();
@@ -402,5 +443,118 @@ public class DietaActivity extends Activity {
 			return -1;
 		else
 			return delta;
+	}
+
+	public View getDarkest()
+	{
+		final float scale = con.getResources().getDisplayMetrics().density;
+		int pixels = (int) (1 * scale + 0.5f);
+		View v = new View(con);
+
+		v.setLayoutParams(new LayoutParams(size, pixels));
+		v.setBackgroundColor(styleDarkest);
+
+		return v;
+	}
+	public View getDarker()
+	{
+		final float scale = con.getResources().getDisplayMetrics().density;
+		int pixels = (int) (1 * scale + 0.5f);
+		View v = new View(con);
+
+		v.setLayoutParams(new LayoutParams(size, pixels));
+		v.setBackgroundColor(styleDark);
+
+		return v;
+	}
+	public View getBrighter()
+	{
+		final float scale = con.getResources().getDisplayMetrics().density;
+		int pixels = (int) (1 * scale + 0.5f);
+		View v = new View(con);
+
+		v.setLayoutParams(new LayoutParams(size, pixels));
+		v.setBackgroundColor(styleBright);
+
+		return v;
+	}
+	public View getBrightest()
+	{
+		final float scale = con.getResources().getDisplayMetrics().density;
+		int pixels = (int) (1 * scale + 0.5f);
+		View v = new View(con);
+
+		v.setLayoutParams(new LayoutParams(size, pixels));
+		v.setBackgroundColor(styleBrightest);
+
+		return v;
+	}
+
+	//Saves selected style colors to local variables
+	private void getStyle()
+	{
+		Log.d("color", "en perfil" + new API(con).getStyle());
+		//get selected style from database
+		String style = new API(con).getStyle();
+		//get system resources
+		Resources res = getResources();
+
+		if(style.equals("masculino"))
+		{
+			styleMain = res.getColor(R.color.MASCULINO_MAIN);
+			styleDetail = res.getColor(R.color.MASCULINO_DETAIL);
+			styleDarkest = res.getColor(R.color.MASCULINO_DARKEST);
+			styleDark = res.getColor(R.color.MASCULINO_DARKER);
+			styleBright = res.getColor(R.color.MASCULINO_BRIGHTER);
+			styleBrightest = res.getColor(R.color.MASCULINO_BRIGHTEST);
+		}
+		if(style.equals("femenino"))
+		{
+			styleMain = res.getColor(R.color.FEMENINO_MAIN);
+			styleDetail = res.getColor(R.color.FEMENINO_DETAIL);
+			styleDarkest = res.getColor(R.color.FEMENINO_DARKEST);
+			styleDark = res.getColor(R.color.FEMENINO_DARKER);
+			styleBright = res.getColor(R.color.FEMENINO_BRIGHTER);
+			styleBrightest = res.getColor(R.color.FEMENINO_BRIGHTEST);
+		}
+		if(style.equals("neutral"))
+		{
+			styleMain = res.getColor(R.color.NEUTRAL_MAIN);
+			styleDetail = res.getColor(R.color.NEUTRAL_DETAIL);
+			styleDarkest = res.getColor(R.color.NEUTRAL_DARKEST);
+			styleDark = res.getColor(R.color.NEUTRAL_DARKER);
+			styleBright = res.getColor(R.color.NEUTRAL_BRIGHTER);
+			styleBrightest = res.getColor(R.color.NEUTRAL_BRIGHTEST);
+		}
+
+	}
+
+	//set's specific color to certain components in the layout so it achieves the desired style.
+	private void updateStyle()
+	{
+		//header setoff bar
+		View bar1 = (View) findViewById(R.id.dietaBar1);
+		View bar2 = (View) findViewById(R.id.dietaBar2);
+		View bar3 = (View) findViewById(R.id.dietaBar3);
+		View bar4 = (View) findViewById(R.id.dietaBar4);
+		LinearLayout bodyFrame = (LinearLayout) findViewById(R.id.dietaBodyFrame);
+		
+		//save bar size to a global variable
+		size = bar1.getLayoutParams().width;
+		
+		//sets local style variables
+		getStyle();
+		
+		Log.d("color", "en perfil NUMERO " + String.valueOf(styleMain));
+		mainLayout.setBackgroundColor(styleMain);
+		bodyFrame.setBackgroundColor(styleMain);
+		dietaBody.setBackgroundColor(styleMain);
+		dietaHeader.setBackgroundColor(styleBright);
+		
+		bar1.setBackgroundColor(styleDarkest);
+		bar2.setBackgroundColor(styleDark);
+		bar3.setBackgroundColor(styleBright);
+		bar4.setBackgroundColor(styleBrightest);
+
 	}
 }

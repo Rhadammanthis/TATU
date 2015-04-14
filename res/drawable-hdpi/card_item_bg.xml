@@ -3,25 +3,25 @@
     
     <item android:state_pressed="true" android:state_enabled="true">
         <shape>
-            <solid android:color="#77FFFFFF"/>
+            <solid android:color="@null"/>
         </shape>
     </item>
     
     <item android:state_checked="true" android:state_enabled="true">
         <shape>
-            <solid android:color="#77DBDBDB"/>
+            <solid android:color="@null"/>
         </shape>
     </item>
     
     <item android:state_enabled="false">
         <shape>
-            <solid android:color="#FFF0F0F0"/>
+            <solid android:color="@null"/>
         </shape>
     </item>
     
     <item>
         <shape>
-            <solid android:color="#FFFFFFFF"/>
+            <solid android:color="@null"/>
         </shape>
     </item>
 </selector>

@@ -13,7 +13,8 @@ public class SQLiteDietaDB extends SQLiteOpenHelper{
             "id_dieta" + " TEXT, " +
             "nombre" + " TEXT, " +
             "tipo" + " TEXT, " +
-            "duracion" + " TEXT);";
+            "duracion" + " TEXT, " +
+            "etiqueta" + " TEXT);";
 
 	public SQLiteDietaDB(Context context) {
 		super(context, TABLE_NAME, null, VERSION);

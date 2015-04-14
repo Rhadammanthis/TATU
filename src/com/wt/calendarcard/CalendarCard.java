@@ -4,18 +4,30 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Currency;
 import java.util.Locale;
 
+import android.R.bool;
 import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.sax.EndElementListener;
 import android.util.AttributeSet;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.CheckedTextView;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.DAO.DAO_Dieta;
-import com.example.miyoideal.R;
+import com.example.DTO.DTO_Dieta;
+import com.example.miyoideal.*;
 import com.example.miyoideal.extra.API;
 
 public class CalendarCard extends RelativeLayout {
@@ -30,6 +42,15 @@ public class CalendarCard extends RelativeLayout {
 	private LinearLayout cardGrid;
 	private int checkedDay;
 	private int firstDay;
+	private int pixels;
+	private Context con;
+	private boolean monthBegun;
+	private boolean monthEnded;
+	private CheckedTextView currentCell;
+	private int h = 0;
+	private int w = 0;
+	private int originh = 0;
+	private int originw = 0;
 
 	public CalendarCard(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
@@ -53,37 +74,62 @@ public class CalendarCard extends RelativeLayout {
 
 	private void init(final Context ctx) {
 		if (isInEditMode()) return;
+
+		final float scale = ctx.getResources().getDisplayMetrics().density;
+		pixels = (int) (210 * scale + 0.5f);
+
+		//to track which non-current months cells to display
+		monthBegun = false;
+		monthEnded = false;
+
+		//save Context reference to a global value
+		con=ctx;
+
 		View layout = LayoutInflater.from(ctx).inflate(R.layout.card_view, null, false);
 
 		if (dateDisplay == null)
 			dateDisplay = Calendar.getInstance();
 
 		cardTitle = (TextView)layout.findViewById(R.id.cardTitle);
+		cardTitle.setTextColor(Color.WHITE);
 		cardGrid = (LinearLayout)layout.findViewById(R.id.cardGrid);
 
-		if(new API(ctx).IsDietaSet())
+		try
 		{
 			checkedDay = Integer.parseInt(getDietaInitialDay(ctx));
-			firstDay = (checkedDay);
 		}
+		catch(Exception e)
+		{
+			Toast.makeText(con, "Selecciona una dieta", Toast.LENGTH_LONG).show();
+			e.printStackTrace();
+		}
+		firstDay = (checkedDay);
 
 		cardTitle.setText(new SimpleDateFormat("MMM yyyy", Locale.getDefault()).format(dateDisplay.getTime()));
+		((RelativeLayout.LayoutParams)(cardTitle.getLayoutParams())).setMargins(0, 0, 0, (int) (7 * scale + 0.5f));
 
 		Calendar cal = Calendar.getInstance();
 		cal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
 		((TextView)layout.findViewById(R.id.cardDay1)).setText(cal.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, Locale.getDefault()));
+		((TextView)layout.findViewById(R.id.cardDay1)).setTextColor(Color.WHITE);
 		cal.add(Calendar.DAY_OF_WEEK, 1);
 		((TextView)layout.findViewById(R.id.cardDay2)).setText(cal.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, Locale.getDefault()));
+		((TextView)layout.findViewById(R.id.cardDay2)).setTextColor(Color.WHITE);
 		cal.add(Calendar.DAY_OF_WEEK, 1);
 		((TextView)layout.findViewById(R.id.cardDay3)).setText(cal.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, Locale.getDefault()));
+		((TextView)layout.findViewById(R.id.cardDay3)).setTextColor(Color.WHITE);
 		cal.add(Calendar.DAY_OF_WEEK, 1);
 		((TextView)layout.findViewById(R.id.cardDay4)).setText(cal.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, Locale.getDefault()));
+		((TextView)layout.findViewById(R.id.cardDay4)).setTextColor(Color.WHITE);
 		cal.add(Calendar.DAY_OF_WEEK, 1);
 		((TextView)layout.findViewById(R.id.cardDay5)).setText(cal.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, Locale.getDefault()));
+		((TextView)layout.findViewById(R.id.cardDay5)).setTextColor(Color.WHITE);
 		cal.add(Calendar.DAY_OF_WEEK, 1);
 		((TextView)layout.findViewById(R.id.cardDay6)).setText(cal.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, Locale.getDefault()));
+		((TextView)layout.findViewById(R.id.cardDay6)).setTextColor(Color.WHITE);
 		cal.add(Calendar.DAY_OF_WEEK, 1);
 		((TextView)layout.findViewById(R.id.cardDay7)).setText(cal.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, Locale.getDefault()));
+		((TextView)layout.findViewById(R.id.cardDay7)).setTextColor(Color.WHITE);
 
 		LayoutInflater la = LayoutInflater.from(ctx);
 		for(int y=0; y<cardGrid.getChildCount(); y++) {
@@ -102,6 +148,9 @@ public class CalendarCard extends RelativeLayout {
 					}
 				});
 
+				row.getLayoutParams().height = pixels / cardGrid.getChildCount();
+				cell.getLayoutParams().height = (pixels / cardGrid.getChildCount()) - 2;
+
 				View cellContent = la.inflate(itemLayout, cell, false);
 				cell.addView(cellContent);
 				cells.add(cell);
@@ -113,9 +162,61 @@ public class CalendarCard extends RelativeLayout {
 		mOnItemRenderDefault = new OnItemRender() {
 			@Override
 			public void onRender(CheckableLayout v, CardGridItem item) {
+				int sizeHeight=120;
+				int sizeWidth=120;
+
+				originh = v.getLayoutParams().height;
+				originw = v.getLayoutParams().width;
 
 				((TextView)v.getChildAt(0)).setText(item.getDayOfMonth().toString());
-				if(((TextView)v.getChildAt(0)).getText().equals(String.valueOf(checkedDay)) && new API(ctx).IsDietaSet())
+				((TextView)v.getChildAt(0)).setTextColor(Color.WHITE);
+
+				//hide non-current-month cells
+				int day = Integer.parseInt(((TextView)v.getChildAt(0)).getText().toString());
+				if(day == 1)
+				{
+					monthBegun = true;
+				}
+				if(day > 22 && !monthBegun)
+				{
+					//v.setVisibility(View.INVISIBLE);
+					((TextView)v.getChildAt(0)).setText("");
+
+					sizeHeight = ((TextView)v.getChildAt(0)).getLayoutParams().height;
+					sizeWidth = ((TextView)v.getChildAt(0)).getLayoutParams().width;
+
+				}
+				if(day == 28 && monthBegun)
+				{
+					monthEnded = true;
+				}
+				if(day < 7 && monthEnded && monthBegun)
+				{
+					//v.setVisibility(View.INVISIBLE);
+					((TextView)v.getChildAt(0)).setText("");
+				}
+
+				//reference to today's day
+				Calendar cal = Calendar.getInstance();
+				int dayOfMonth = cal.get(Calendar.DAY_OF_MONTH);
+
+				//Color today's day white, and change text color to black
+				if(((TextView)v.getChildAt(0)).getText().equals(String.valueOf(dayOfMonth)))
+				{
+					((TextView)v.getChildAt(0)).setTextColor(Color.BLACK);
+					v.getChildAt(0).setBackgroundResource(R.drawable.selected_cell);
+					v.getChildAt(0).getLayoutParams().height = (int) (sizeHeight - (sizeHeight / 2));	
+					v.getChildAt(0).getLayoutParams().width = (int) (sizeWidth * 0.5);	
+					((RelativeLayout.LayoutParams)((TextView)v.getChildAt(0)).getLayoutParams()).setMargins(11, 7, 0, 0);
+
+					//save reference to a global variable
+					currentCell =  (CheckedTextView) v.getChildAt(0);
+
+					h = v.getChildAt(0).getLayoutParams().height;	
+					w = v.getChildAt(0).getLayoutParams().width;
+				}
+
+				if(((TextView)v.getChildAt(0)).getText().equals(String.valueOf(checkedDay)))
 				{
 					((CheckableLayout)v).setChecked(true);
 
@@ -139,6 +240,7 @@ public class CalendarCard extends RelativeLayout {
 	private String getDietaInitialDay(Context con)
 	{
 		SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yy");
+		int t = 0;
 		java.util.Date initalDate = null;
 		try {
 			initalDate = df.parse(new API(con).getDia());
@@ -147,7 +249,16 @@ public class CalendarCard extends RelativeLayout {
 			e.printStackTrace();
 		}
 
-		int t = Integer.parseInt((String)android.text.format.DateFormat.format("dd", initalDate));
+		try{
+			t = Integer.parseInt((String)android.text.format.DateFormat.format("dd", initalDate));
+		} catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+
+		if(t == 0)
+			return "";
+
 		return String.valueOf(t);
 	}
 
@@ -234,12 +345,35 @@ public class CalendarCard extends RelativeLayout {
 	@Override
 	protected void onLayout(boolean changed, int l, int t, int r, int b) {
 		super.onLayout(changed, l, t, r, b);
+
 		if (changed && cells.size() > 0) {
 			int size = (r - l) / 7;
 			for(CheckableLayout cell : cells) {
 				cell.getLayoutParams().height = size;
 
+				//cell.setBackground(R.drawable.border);
+				//get selected style from database
+				String style = new API(con).getStyle();
+				//get system resources
+				Resources res = getResources();
+
+
+
+				if(style.equals("masculino"))
+				{
+					cell.setBackgroundResource(R.drawable.border_male);
+				}
+				if(style.equals("femenino"))
+				{
+					cell.setBackgroundResource(R.drawable.border_female);
+				}
+				if(style.equals("neutral"))
+				{
+					cell.setBackgroundResource(R.drawable.border_neutral);
+				}
+
 			}
+
 		}
 	}
 
@@ -284,6 +418,72 @@ public class CalendarCard extends RelativeLayout {
 	public void notifyChanges() {
 		//mCardGridAdapter.init();
 		updateCells();
+	}
+
+	//returns current selected cell
+	//	public CheckableLayout getCurrentCell()
+	//	{
+	//		return currentCell;
+	//	}
+
+	//sets current cell
+	public void setCurrentCell(CheckableLayout v)
+	{
+		//this.currentCell = v;
+	}
+
+	public void updateSelectedCellStyle(String num)
+	{
+		CheckableLayout v = new CheckableLayout(con);
+
+		for(CheckableLayout temp : cells)
+		{
+			if (((TextView)temp.getChildAt(0)).getText().equals(num)) 
+			{
+				v = temp;
+				break;
+			}
+		}
+
+		//updates new cell style
+		((TextView)v.getChildAt(0)).setTextColor(Color.BLACK);
+		v.getChildAt(0).setBackgroundResource(R.drawable.selected_cell);
+		v.getChildAt(0).getLayoutParams().height = h;	
+		v.getChildAt(0).getLayoutParams().width = w;	
+		((RelativeLayout.LayoutParams)((TextView)v.getChildAt(0)).getLayoutParams()).setMargins(11, 7, 0, 0);
+
+		//update previous cell style
+		String style = new API(con).getStyle();
+		Resources res = getResources();
+		if(style.equals("masculino"))
+		{
+			currentCell.setBackgroundResource(R.drawable.border_male);			
+			currentCell.setBackgroundColor(res.getColor(R.color.MASCULINO_MAIN));
+		}
+		if(style.equals("femenino"))
+		{
+			currentCell.setBackgroundResource(R.drawable.border_female);
+			currentCell.setBackgroundColor(res.getColor(R.color.FEMENINO_MAIN));
+		}
+		if(style.equals("neutral"))
+		{
+			currentCell.setBackgroundResource(R.drawable.border_neutral);
+			currentCell.setBackgroundColor(res.getColor(R.color.NEUTRAL_MAIN));
+		}
+
+		((TextView)currentCell).setTextColor(Color.WHITE);
+		currentCell.getLayoutParams().height = originh;	
+		currentCell.getLayoutParams().width = originw;	
+		((RelativeLayout.LayoutParams)((TextView)currentCell).getLayoutParams()).setMargins(0, 7, 0, 0);
+
+		//save new cell as current
+		currentCell = (CheckedTextView) v.getChildAt(0);
+		
+		//if a dieta has not been selected, urge the user to do so
+		if(!new API(con).IsDietaSet())
+		{
+			Toast.makeText(con, "Selecciona una dieta", Toast.LENGTH_SHORT).show();
+		}
 	}
 
 }

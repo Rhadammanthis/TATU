@@ -1,112 +1,104 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-  Copyright 2012 Steven Rudenko
-  
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
-  
-    http://www.apache.org/licenses/LICENSE-2.0
-  
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-  
-      <ListView
-        android:id="@+id/actions"
-        android:layout_width="match_parent"
-        android:layout_height="337dp"
-        android:background="@android:color/darker_gray"
-        android:cacheColorHint="@android:color/darker_gray"
-        android:divider="@null" />
--->
+
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-android:layout_width="fill_parent"
-android:layout_height="fill_parent"
-android:background="@android:color/darker_gray" >
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#4C4D4F" >
 
-	<TextView
-	    android:id="@+id/tvLOL"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:layout_alignParentLeft="true"
-	    android:text="Menu"
-	    android:textSize="35sp" />
-	
-	<LinearLayout
-	    android:id="@+id/homeLinearLayout"
-	    android:layout_width="fill_parent"
-	    android:layout_height="match_parent"
-	    android:layout_below="@id/tvLOL"
-		android:layout_above="@+id/bNyVare"
-	    android:orientation="vertical" >
-	
-	      <ListView
-	        android:id="@+id/actions"
-	        android:layout_width="fill_parent"
-	        android:layout_height="wrap_content"
-	        android:background="@android:color/darker_gray"
-	        android:cacheColorHint="@android:color/darker_gray"
-	        android:divider="@null" />
-	</LinearLayout>
+    <TextView
+        android:id="@+id/tvLOL"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="20dip"
+        android:layout_marginTop="30dip"
+        android:layout_marginBottom="10dip"
+        android:text="Menú"
+        android:textColor="#ffffff"
+        android:textSize="35sp" />
 
-	<RelativeLayout
-	    android:id="@+id/bNyVare"
-	    android:layout_width="fill_parent"
-	    android:layout_height="wrap_content"
-	    android:layout_alignParentBottom="true"
-	    android:layout_alignParentLeft="true" >
+    <View
+        android:layout_below="@+id/tvLOL"
+        android:id="@+id/sideMneuBar"
+        android:layout_marginLeft="10dip"
+        android:layout_marginRight="10dip"
+        android:layout_width="match_parent"
+        android:layout_height="2dip"
+        android:background="#ffffff" />
 
-	    <TextView
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:layout_alignParentLeft="true"
-	        android:layout_centerVertical="true"
-	        android:padding="3dip"
-	        android:text="Color"
-	        android:textSize="20sp" />
+    <LinearLayout
+        android:id="@+id/homeLinearLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/bNyVare"
+        android:layout_below="@id/sideMneuBar"
+        android:orientation="vertical" >
 
-	    <View
-	        android:id="@+id/col1"
-	        android:layout_width="22dip"
-	        android:layout_height="22dip"
-	        android:layout_alignParentRight="true"
-	        android:layout_centerVertical="true"
-	        android:layout_marginRight="5dp"
-	        android:background="#ff80ff"
-	        android:clickable="true"
-	        android:gravity="right"
-	        android:paddingLeft="2dip"
-	        android:paddingRight="30dip" />
+        <ListView
+            android:id="@+id/actions"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="#4C4D4F"
+            android:cacheColorHint="#4C4D4F"
+            android:divider="@null" />
+    </LinearLayout>
 
-	    <View
-	        android:id="@+id/col2"
-	        android:layout_width="22dip"
-	        android:layout_height="22dip"
-	        android:layout_alignParentRight="true"
-	        android:layout_alignParentTop="true"
-	        android:layout_centerVertical="true"
-	        android:layout_marginRight="50dp"
-	        android:background="#64b6e6"
-	        android:clickable="true"
-	        android:paddingLeft="10dip"
-	        android:paddingRight="10dip" />
+    <RelativeLayout
+        android:id="@+id/bNyVare"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true" >
 
-	    <View
-	        android:id="@+id/col3"
-	        android:layout_width="22dip"
-	        android:layout_height="22dip"
-	        android:layout_alignTop="@+id/col2"
-	        android:layout_marginRight="26dp"
-	        android:layout_toLeftOf="@+id/col2"
-	        android:background="#bbaaee"
-	        android:clickable="true"
-	        android:paddingLeft="10dip"
-	        android:paddingRight="20dip"
-	        android:paddingTop="6dip" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:padding="3dip"
+            android:text="Color"
+            android:textColor="#ffffff"
+            android:textSize="20sp" />
 
-	</RelativeLayout>
+        <View
+            android:id="@+id/col1"
+            android:layout_width="22dip"
+            android:layout_height="22dip"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="5dp"
+            android:background="#FB637E"
+            android:clickable="true"
+            android:gravity="right"
+            android:paddingLeft="2dip"
+            android:paddingRight="30dip" />
+
+        <View
+            android:id="@+id/col2"
+            android:layout_width="22dip"
+            android:layout_height="22dip"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="50dp"
+            android:background="#13294B"
+            android:clickable="true"
+            android:paddingLeft="10dip"
+            android:paddingRight="10dip" />
+
+        <View
+            android:id="@+id/col3"
+            android:layout_width="22dip"
+            android:layout_marginTop="4dip"
+            android:layout_height="22dip"
+            android:layout_alignTop="@+id/col2"
+            android:layout_marginRight="26dp"
+            android:layout_toLeftOf="@+id/col2"
+            android:background="#00A499"
+            android:clickable="true"
+            android:paddingLeft="10dip"
+            android:paddingRight="20dip" />
+
+    </RelativeLayout>
 
 </RelativeLayout>

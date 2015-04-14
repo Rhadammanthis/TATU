@@ -1,8 +1,10 @@
 package com.example.DAO;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 
+import com.example.DB.SQLiteControl;
 import com.example.DB.SQLiteUserDB;
 import com.example.DTO.DTO_Usuario;
 
@@ -34,6 +36,26 @@ public class DAO_Usuario {
 		}
 		
 		return usuario;
+	}
+	
+	public void updateNivel(String nivel)
+	{
+		ContentValues cv = new ContentValues();
+		cv.put("nivel", nivel);
+
+		SQLiteUserDB db = new SQLiteUserDB(con);
+		db.getWritableDatabase().update("usuario", cv, "id_usuario "+"="+1, null);
+		db.close();
+	}
+	
+	public void updatePesoActual(String pesoActual)
+	{
+		ContentValues cv = new ContentValues();
+		cv.put("peso", pesoActual);
+
+		SQLiteUserDB db = new SQLiteUserDB(con);
+		db.getWritableDatabase().update("usuario", cv, "id_usuario "+"="+1, null);
+		db.close();
 	}
 
 }

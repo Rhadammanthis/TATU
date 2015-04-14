@@ -30,6 +30,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingTop="10dip"
+            android:textColor="#ffffff"
             android:paddingBottom="10dip"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
@@ -48,10 +49,35 @@
         
     </RelativeLayout>
     
+      <View
+        android:id="@+id/ejerBar1"
+        android:layout_width="match_parent"
+        android:layout_height="1dip"
+        android:background="#5AABA5" />
+
+    <View
+        android:id="@+id/ejerBar2"
+        android:layout_width="match_parent"
+        android:layout_height="1dip"
+        android:background="#00837A" />
+
+    <View
+        android:id="@+id/ejerBar3"
+        android:layout_width="match_parent"
+        android:layout_height="1dip"
+        android:background="#6ED6CF" />
+
+    <View
+        android:id="@+id/ejerBar4"
+        android:layout_width="match_parent"
+        android:layout_height="1dip"
+        android:background="#85DCD6" />
+    
+    
 	<ScrollView
-    android:id="@+id/scrollView1"
+    android:id="@+id/ejercicioScroll"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content" 
+    android:layout_height="match_parent" 
     android:background="@android:color/white">
 
 	    <LinearLayout

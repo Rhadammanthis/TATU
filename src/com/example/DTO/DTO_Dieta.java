@@ -6,6 +6,7 @@ public class DTO_Dieta {
 	private String nombre;
 	private String tipo;
 	private String duracion;
+	private String etiqueta;
 	
 	public String getId_dieta() {
 		return id_dieta;
@@ -32,5 +33,10 @@ public class DTO_Dieta {
 		this.duracion = duracion;
 	}
 	
-
+	public String getEtiqueta() {
+		return etiqueta;
+	}
+	public void setEtiqueta(String etiqueta) {
+		this.etiqueta = etiqueta;
+	}
 }

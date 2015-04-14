@@ -2,7 +2,22 @@
 
     <color name="grid_bg">#FFFFFFFF</color>
     <color name="grid_border">#FFC6C6C6</color>
-	<color name="MASCULINO_MAIN">#4752E0</color>
-	<color name="FEMENINO_MAIN">#F8C0C8</color>
-	<color name="NEUTRAL_MAIN">#4BC95A</color>
+	<color name="MASCULINO_MAIN">#13294B</color>
+	<color name="MASCULINO_DETAIL">#DF4661</color>
+		<color name="MASCULINO_DARKEST">#212741</color>
+		<color name="MASCULINO_DARKER">#20263C</color>
+		<color name="MASCULINO_BRIGHTER">#5A69A0</color>
+		<color name="MASCULINO_BRIGHTEST">#6675B0</color>
+	<color name="FEMENINO_MAIN">#FB637E</color>
+	<color name="FEMENINO_DETAIL">#6CACE4</color>
+		<color name="FEMENINO_DARKEST">#C35764</color>
+		<color name="FEMENINO_DARKER">#BC5361</color>
+		<color name="FEMENINO_BRIGHTER">#F995A1</color>
+		<color name="FEMENINO_BRIGHTEST">#FEA1AC</color>
+	<color name="NEUTRAL_MAIN">#00A499</color>
+	<color name="NEUTRAL_DETAIL">#FFA300</color>
+		<color name="NEUTRAL_DARKEST">#5AABA5</color>
+		<color name="NEUTRAL_DARKER">#00837A</color>
+		<color name="NEUTRAL_BRIGHTER">#6ED6CF</color>
+		<color name="NEUTRAL_BRIGHTEST">#85DCD6</color>
 </resources>

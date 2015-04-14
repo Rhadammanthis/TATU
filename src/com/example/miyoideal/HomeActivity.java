@@ -52,18 +52,22 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.daimajia.swipe.SwipeLayout;
 import com.daimajia.swipe.SwipeLayout.DragEdge;
 import com.daimajia.swipe.SwipeLayout.OnRevealListener;
 import com.example.DAO.DAO_DietaCompletada;
+import com.example.DAO.DAO_Usuario;
 import com.example.DB.SQLiteControl;
 import com.example.DB.SQLiteDietaDB;
 import com.example.DB.SQLiteUserDB;
 import com.example.DTO.DTO_DietaCompletada;
+import com.example.DTO.DTO_Usuario;
 import com.example.miyoideal.extra.API;
 import com.example.miyoideal.extra.DietaCompletedDialog;
+import com.example.miyoideal.extra.MyArrayAdapter;
 import com.example.miyoideal.extra.MyLinearLayout;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.BarLineChartBase.BorderPosition;
@@ -86,15 +90,15 @@ public class HomeActivity extends Activity implements OnTouchListener{//,Gesture
 	private int height;
 
 	//layout components
-	//	private LinearLayout linearLayout1;
+	private LinearLayout linearLayout1;
 	private Button button_MiPerfil;
-	//	private Button button_MiEjercicio;
-	//	private Button button_Calendario;
 	private ActionsContentView viewActionsContentView;
 	private SwipeLayout swipeLayout;
 	private ListView viewActionsList;
 	private Context cont;
 	private RelativeLayout backLayout;
+	private RelativeLayout frontLayout;
+	private RelativeLayout bodyLayout;
 
 	//Control variables
 	private boolean shoudlOpenDrawer = true;
@@ -112,33 +116,43 @@ public class HomeActivity extends Activity implements OnTouchListener{//,Gesture
 	private List<DTO_DietaCompletada> lista;
 	private BarDataSet set1;
 	private int textColor, barColor, barShadow, backgroundColor;
-	
+
 	private Uri mImageCaptureUri; // This needs to be initialized.
-    static final int CAMERA_PIC_REQUEST = 1337; 
-    private String filePath;
-    public static final int MEDIA_TYPE_IMAGE = 1;
-    private File mediaFile;
-    private static final int CAMERA = 0;
-    private static final int GALLERY = 1;
-    private final String FACEBOOK_URL = "https://facebook.com";
-    //private ShareActivity activity;
-	
-    @Override
+	static final int CAMERA_PIC_REQUEST = 1337; 
+	private String filePath;
+	public static final int MEDIA_TYPE_IMAGE = 1;
+	private File mediaFile;
+	private static final int CAMERA = 0;
+	private static final int GALLERY = 1;
+	private final String FACEBOOK_URL = "https://facebook.com";
+	//private ShareActivity activity;
+
+	//Style variables
+	private int styleMain;
+	private int styleDetail;
+
+	@Override
 	protected void onCreate(Bundle savedInstanceState) {		
 		super.onCreate(savedInstanceState);
-		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-				WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		setContentView(R.layout.baseline4);
 		cont = this;
 
+		//bind layout views to local objects
 		backLayout = (RelativeLayout) findViewById(R.id.backLayout);
+		frontLayout = (RelativeLayout) findViewById(R.id.frontLayout);
+		linearLayout1 = (LinearLayout) findViewById(R.id.linearLayout1);
+		button_MiPerfil = (Button) findViewById(R.id.abajoButtonlol);
+		viewActionsContentView = (ActionsContentView) findViewById(R.id.home_actionsContentView);
+		viewActionsList = (ListView) findViewById(R.id.actions);
+		swipeLayout =  (SwipeLayout)findViewById(R.id.swipeLayout);
+		bodyLayout = (RelativeLayout) findViewById(R.id.homeBodyLayout);
 
 		//Tutorial reminder. Runs just the first time the apps runs
 		SharedPreferences runCheck = PreferenceManager.getDefaultSharedPreferences(cont);
 		Boolean hasRun = runCheck.getBoolean("hasRun", false); //see if it's run before, default no
 
 		new DAO_DietaCompletada(cont).InsertCSVFile(null, null, null);
-		
+
 		//Clear the notification
 		cancelNotification(this, 001);		
 
@@ -174,46 +188,43 @@ public class HomeActivity extends Activity implements OnTouchListener{//,Gesture
 		}
 
 
-
-
 		//Adapt the layout depends screen
 		Display display = getWindowManager().getDefaultDisplay();
 		Point size = new Point();
 		display.getSize(size);
 		width = size.x;
-		height = size.y;
-		//linearLayout1 = (LinearLayout) findViewById(R.id.linearLayout1);
-		//linearLayout1.getLayoutParams().width = (width/2);
-		button_MiPerfil = (Button) findViewById(R.id.abajoButtonlol);
+		height = size.y;		
 
-		//
-		viewActionsContentView = (ActionsContentView) findViewById(R.id.home_actionsContentView);
-		viewActionsList = (ListView) findViewById(R.id.actions);
+		//populates side menu list
 		setUpMenu();	
 
+		//updates view's style
+		updateStyle();
+
+		//esto se puede quitar
 		SQLiteUserDB dbUser = new SQLiteUserDB(this);
 		dbUser.getReadableDatabase();
 		String query = "Select * FROM " + "usuario" + " WHERE " + "id_usuario" + " =  \"" + "1" + "\"";
 		Cursor cursor = dbUser.getReadableDatabase().rawQuery(query, null);
 
-		if(cursor.moveToFirst()){
-			cursor.moveToFirst();
-			this.setTitle(cursor.getString(1));
-		}
-
-		//Gathers data to later pass onto Graph
+		//Gathers data to later pass onto Graph. Queries the DietaCompletada database for last 4 entries
 		lista = new DAO_DietaCompletada(cont).getLastFiveDietaCompleta();
 
-		//Initialize the Graph
-		setColors(Color.WHITE, Color.BLUE, Color.argb(0, 255, 255, 255), Color.GRAY);
-		initGraph();
-		setGraphLabels();
+		button_MiPerfil.setOnTouchListener(new DrawerCloseListener());
 
+		//if button is pressed, the dieta ended dialog is shown. For debugging purposes
 		button_MiPerfil.setOnClickListener(new View.OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
+				//checks if drawer is open. If it is, the drawer closes instead of performing action
+				//				if (!viewActionsContentView.isContentShown()) 
+				//				{
+				//					viewActionsContentView.showContent();
+				//				}
+				//				else
+				//				{
 				DietaCompletedDialog dialog = new DietaCompletedDialog(cont);
 				dialog.show();
 				dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
@@ -226,38 +237,36 @@ public class HomeActivity extends Activity implements OnTouchListener{//,Gesture
 						set1.addEntry(e);
 						setData(lista.size(), 80, lista );
 						mChart.invalidate();
-						mChart.animateX(lista.size() * 250);
+						mChart.animateY(lista.size() * 250);
+						
+						//update current user's peso
+						new DAO_Usuario(cont).updatePesoActual(lista.get(lista.size()-1).getPeso());
+						Log.d("update", "ya se cambio esa madre");
+						Log.d("update", "0 :" + lista.get(0).getPeso());
+						Log.d("update", "1 :" + lista.get(lista.size()-1).getPeso());
+						DTO_Usuario user = new DAO_Usuario(cont).getUsuario();
+						Log.d("update", user.getPeso());
 					}
 				});
+				//}
+
 			}
 		});
 
-		swipeLayout =  (SwipeLayout)findViewById(R.id.swipeLayout);
 
-		ImageButton supDer = (ImageButton) findViewById(R.id.buttonRightTop);
-		supDer.setOnTouchListener(new OnFlingGestureListener() {
+		//TouchListner to close the drawer when touched.
+		bodyLayout.setOnTouchListener(new DrawerCloseListener());
 
-			@Override
-			public void onTopToBottom() {
-				Log.d(DEBUG_TAG, "Top");
-				swipeLayout.open();
-			}
+		//Listener to open drawer and close side menu
+		setDrawerListener();
 
-			@Override
-			public void onRightToLeft() {
-				Log.d(DEBUG_TAG, "Right");
-			}
+		//Set peso difference
+		TextView pesodif = (TextView) findViewById(R.id.homePesoDif);
+		pesodif.setText(getPesoDif());
 
-			@Override
-			public void onLeftToRight() {
-				Log.d(DEBUG_TAG, "Left");
-			}
-
-			@Override
-			public void onBottomToTop() {
-				Log.d(DEBUG_TAG, "Bottom");
-			}
-		});
+		//Set Motivacion
+		TextView motivacion = (TextView) findViewById(R.id.homeMotivacionBody);
+		motivacion.setText(new API(cont).getMotivacion());
 
 		//set show mode.
 		swipeLayout.setShowMode(SwipeLayout.ShowMode.LayDown);
@@ -305,7 +314,6 @@ public class HomeActivity extends Activity implements OnTouchListener{//,Gesture
 		});
 	}
 
-            
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		Log.d("OnActivityResult", "OnActivityResult");
 		//super.onActivityResult(requestCode, resultCode, data);
@@ -363,7 +371,17 @@ public class HomeActivity extends Activity implements OnTouchListener{//,Gesture
 		//Add the menu layout to the action bar
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.base_action_bar, menu);
+		viewActionsList.setSelectionAfterHeaderView();
 		return super.onCreateOptionsMenu(menu);
+	}
+	
+	@Override
+	public void onStop()
+	{
+		super.onStop();
+		if(viewActionsContentView != null)
+		viewActionsContentView.showContent();
+	
 	}
 
 	@Override
@@ -387,10 +405,33 @@ public class HomeActivity extends Activity implements OnTouchListener{//,Gesture
 				"Comparte", "Tips y Sujerencias", "Seleccionar Dieta", "Comparativa", "Disclaimer"
 				,"Tutorial"};
 
-		final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-				android.R.layout.simple_list_item_1, android.R.id.text1, values);
+		final MyArrayAdapter adapter = new MyArrayAdapter(this,
+				android.R.layout.simple_list_item_1, values);
 
 		viewActionsList.setAdapter(adapter);
+
+		//		for (int i = 0; i < viewActionsList.getAdapter().getCount(); i++) 
+		//		{
+		//			TextView textv = (TextView) getViewByPosition(i, viewActionsList);
+		//			textv.setTextColor(Color.WHITE);
+		//			textv.setText("LOL");
+		//
+		//			Log.d("menu", "Texto de hijo " + String.valueOf(i) + ":" + textv.getText());
+		//		}
+		//		
+		//		adapter.getItem(0).toUpperCase();
+
+
+		Log.d("menu", "Child count: " + String.valueOf(viewActionsList.getAdapter().getCount()));
+
+
+
+		//		TextView v = (TextView)viewActionsList.getChildAt(5 - 
+		//				viewActionsList.getFirstVisiblePosition());
+		//		v.setBackgroundColor(Color.GREEN);
+
+		//adapter.notifyDataSetChanged();
+
 		viewActionsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> adapter, View v, int position,
@@ -404,13 +445,25 @@ public class HomeActivity extends Activity implements OnTouchListener{//,Gesture
 		notification.setText("Notificaciones");
 		notification.setChecked(false);
 
+
+		Log.d("color", new API(cont).getStyle());
+
 		View color1 = (View) findViewById(R.id.col1);
 		color1.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				setStyle("masculino");
+
+				//asigns style value to data base
+				ContentValues cv = new ContentValues();
+				cv.put("estilo","femenino");
+
+				SQLiteControl db = new SQLiteControl(cont);
+				db.getWritableDatabase().update("control", cv, "id_control "+"="+1, null);
+				db.close();
+
+				updateStyle();
 			}
 		});
 
@@ -420,7 +473,15 @@ public class HomeActivity extends Activity implements OnTouchListener{//,Gesture
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				setStyle("femenino");
+				//asigns style value to data base
+				ContentValues cv = new ContentValues();
+				cv.put("estilo","masculino");
+
+				SQLiteControl db = new SQLiteControl(cont);
+				db.getWritableDatabase().update("control", cv, "id_control "+"="+1, null);
+				db.close();
+
+				updateStyle();
 			}
 		});
 
@@ -430,23 +491,75 @@ public class HomeActivity extends Activity implements OnTouchListener{//,Gesture
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				setStyle("neutral");
+				//asigns style value to data base
+				ContentValues cv = new ContentValues();
+				cv.put("estilo","neutral");
+
+				SQLiteControl db = new SQLiteControl(cont);
+				db.getWritableDatabase().update("control", cv, "id_control "+"="+1, null);
+				db.close();
+
+				updateStyle();
 			}
 		});
 
 		//menuLinearLayout.addView(notification);
 	}
 
-	private void setStyle(String style)
+	//retrieves view from listview
+	public View getViewByPosition(int pos, ListView listView) {
+		final int firstListItemPosition = listView.getFirstVisiblePosition();
+		final int lastListItemPosition = firstListItemPosition + listView.getChildCount() - 1;
+
+		if (pos < firstListItemPosition || pos > lastListItemPosition ) {
+			return listView.getAdapter().getView(pos, null, listView);
+		} else {
+			final int childIndex = pos - firstListItemPosition;
+			return listView.getChildAt(childIndex);
+		}
+	}
+
+	//Saves selected style colors to local variables
+	private void getStyle()
 	{
+		//get selected style from database
+		String style = new API(cont).getStyle();
+		//get system resources
 		Resources res = getResources();
-		
+
 		if(style.equals("masculino"))
-			backLayout.setBackgroundColor(res.getColor(R.color.MASCULINO_MAIN));
+		{
+			styleMain = res.getColor(R.color.MASCULINO_MAIN);
+			styleDetail = res.getColor(R.color.MASCULINO_DETAIL);
+		}
 		if(style.equals("femenino"))
-			backLayout.setBackgroundColor(res.getColor(R.color.FEMENINO_MAIN));
+		{
+			styleMain = res.getColor(R.color.FEMENINO_MAIN);
+			styleDetail = res.getColor(R.color.FEMENINO_DETAIL);
+		}
 		if(style.equals("neutral"))
-			backLayout.setBackgroundColor(res.getColor(R.color.NEUTRAL_MAIN));
+		{
+			styleMain = res.getColor(R.color.NEUTRAL_MAIN);
+			styleDetail = res.getColor(R.color.NEUTRAL_DETAIL);
+		}
+
+	}
+
+	//set's specific color to certain components in the layout so it achieves the desired style.
+	private void updateStyle()
+	{
+
+		//sets local style variables
+		getStyle();
+		Log.d("color", "en home NUMERO " + String.valueOf(styleMain));
+		backLayout.setBackgroundColor(styleMain);
+		frontLayout.setBackgroundColor(styleMain);
+		bodyLayout.setBackgroundColor(styleMain);
+		setColors(Color.WHITE, styleDetail, Color.argb(0, 255, 255, 255), styleMain);
+
+		lista = new DAO_DietaCompletada(cont).getLastFiveDietaCompleta();
+		initGraph();
+		setGraphLabels();
 	}
 
 	private void showActivity(int position) 
@@ -560,9 +673,37 @@ public class HomeActivity extends Activity implements OnTouchListener{//,Gesture
 		mChart.invalidate();
 	}
 
-        
-    private void setGraphLabels(){
-    	Typeface tf = Typeface.createFromAsset(getAssets(), "OpenSans-Regular.ttf");
+	private String getPesoDif() 
+	{
+		// TODO Auto-generated method stub
+		String dif = null;
+
+		//Gets current and target weight. Substracts and 
+		DTO_Usuario usuario = new DAO_Usuario(cont).getUsuario();
+		String pesoActual = usuario.getPeso();
+		String pesoIdeal = new API(cont).getPesoIdeal();
+
+		if(Integer.parseInt(pesoActual) < Integer.parseInt(pesoIdeal))
+		{
+			dif = String.valueOf((Integer.parseInt(pesoIdeal) - Integer.parseInt(pesoActual)));
+		}
+		else
+		{
+			dif = String.valueOf((Integer.parseInt(pesoActual) - Integer.parseInt(pesoIdeal)));
+		}
+
+		if (Integer.parseInt(pesoIdeal) == 0) 
+		{
+			return dif + " Kg";
+		}
+		else
+		{
+			return dif + " Kg";
+		}
+	}
+
+	private void setGraphLabels(){
+		Typeface tf = Typeface.createFromAsset(getAssets(), "OpenSans-Regular.ttf");
 		XLabels xLabels = mChart.getXLabels();
 		xLabels.setPosition(XLabelPosition.BOTTOM);
 		xLabels.setCenterXLabelText(true);
@@ -645,7 +786,6 @@ public class HomeActivity extends Activity implements OnTouchListener{//,Gesture
 
 		@Override
 		public boolean onTouch(final View v, final MotionEvent event) {
-			gdt.onTouchEvent(event);
 			if(gdt.onTouchEvent(event))
 				return true;
 			else
@@ -660,14 +800,14 @@ public class HomeActivity extends Activity implements OnTouchListener{//,Gesture
 			@Override
 			public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
 				if(e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
-					onRightToLeft();
+					//Right To Left();
 					return true;
 				} else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
-					onLeftToRight();
+					//Left To Right();
 					return true;
 				}
 				if(e1.getY() - e2.getY() > SWIPE_MIN_DISTANCE && Math.abs(velocityY) > SWIPE_THRESHOLD_VELOCITY) {
-					onBottomToTop();
+					//Bottom To Top();
 					return true;
 				} else if (e2.getY() - e1.getY() > SWIPE_MIN_DISTANCE && Math.abs(velocityY) > SWIPE_THRESHOLD_VELOCITY) {
 					onTopToBottom();
@@ -679,20 +819,146 @@ public class HomeActivity extends Activity implements OnTouchListener{//,Gesture
 			@Override
 			public boolean onSingleTapUp(MotionEvent e)
 			{
-				Log.d(DEBUG_TAG, "Single Tap");
-				Toast.makeText(cont, "lol;", Toast.LENGTH_SHORT).show();
+				onSingleCLick();
+				//				Log.d(DEBUG_TAG, "Single Tap");
+				//				Toast.makeText(cont, "lol;", Toast.LENGTH_SHORT).show();
 				return true;
 
 			}
 		}
 
-		public abstract void onRightToLeft();
-
-		public abstract void onLeftToRight();
-
-		public abstract void onBottomToTop();
-
 		public abstract void onTopToBottom();
+		public abstract void onSingleCLick();
+		//		public abstract void onRightToLeft();
+		//
+		//		public abstract void onLeftToRight();
+		//
+		//		public abstract void onBottomToTop();
+		//
+
+	}
+
+	private final class DrawerCloseListener implements View.OnTouchListener
+	{
+
+		@Override
+		public boolean onTouch(View v, MotionEvent event) {
+			if (!viewActionsContentView.isContentShown())
+			{
+				viewActionsContentView.showContent();
+				return true;
+			}
+			return false;
+		}
+
+	}
+
+	//The four buttons are given a customn TouchListener that waits for two specific events to trigger.
+	//If a fling-down gesture is detected, the swipeLayot drawer is open
+	//If a single click is detected, the respective activity is called when the side drawer is closed
+	private void setDrawerListener() {
+
+		//bind layout buttons to local objects
+		ImageButton downLeft = (ImageButton) findViewById(R.id.buttonDownLeft);
+		ImageButton topLeft = (ImageButton) findViewById(R.id.buttonTopLeft);		
+		ImageButton topDer = (ImageButton) findViewById(R.id.buttonTopRight);
+		ImageButton downDer = (ImageButton) findViewById(R.id.buttonDownRight);
+
+		topDer.setOnTouchListener(new OnFlingGestureListener() {
+
+			@Override
+			public void onTopToBottom() {
+				if (viewActionsContentView.isContentShown()) 
+				{
+					swipeLayout.open();
+				}				
+			}
+
+			@Override
+			public void onSingleCLick() {
+				// TODO Auto-generated method stub
+				if (!viewActionsContentView.isContentShown()) 
+				{
+					viewActionsContentView.showContent();
+				}
+				else
+				{
+					Toast.makeText(cont, "Top - Derecha", Toast.LENGTH_SHORT).show();
+				}
+			}
+		});
+
+		topLeft.setOnTouchListener(new OnFlingGestureListener() {
+
+			@Override
+			public void onTopToBottom() {
+				if (viewActionsContentView.isContentShown()) 
+				{
+					swipeLayout.open();
+				}				
+			}
+
+			@Override
+			public void onSingleCLick() {
+				// TODO Auto-generated method stub
+				if (!viewActionsContentView.isContentShown()) 
+				{
+					viewActionsContentView.showContent();
+				}
+				else
+				{
+					Toast.makeText(cont, "Top - Izquierda", Toast.LENGTH_SHORT).show();
+				}
+			}
+		});
+
+		downLeft.setOnTouchListener(new OnFlingGestureListener() {
+
+			@Override
+			public void onTopToBottom() {
+				if (viewActionsContentView.isContentShown()) 
+				{
+					swipeLayout.open();
+				}				
+			}
+
+			@Override
+			public void onSingleCLick() {
+				// TODO Auto-generated method stub
+				if (!viewActionsContentView.isContentShown()) 
+				{
+					viewActionsContentView.showContent();
+				}
+				else
+				{
+					Toast.makeText(cont, "Top - Izquierda", Toast.LENGTH_SHORT).show();
+				}
+			}
+		});
+
+		downDer.setOnTouchListener(new OnFlingGestureListener() {
+
+			@Override
+			public void onTopToBottom() {
+				if (viewActionsContentView.isContentShown()) 
+				{
+					swipeLayout.open();
+				}				
+			}
+
+			@Override
+			public void onSingleCLick() {
+				// TODO Auto-generated method stub
+				if (!viewActionsContentView.isContentShown()) 
+				{
+					viewActionsContentView.showContent();
+				}
+				else
+				{
+					Toast.makeText(cont, "Top - Izquierda", Toast.LENGTH_SHORT).show();
+				}
+			}
+		});
 
 	}
 }

@@ -6,7 +6,9 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.util.Log;
@@ -19,6 +21,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -28,6 +31,7 @@ import com.example.DB.SQLiteDietaDB;
 import com.example.DB.SQLiteFactory;
 import com.example.DB.SQLiteProgramaDB;
 import com.example.DB.SQLiteUserDB;
+import com.example.miyoideal.extra.API;
 import com.example.miyoideal.extra.DialyNotificationReceiver;
 
 
@@ -46,6 +50,10 @@ public class MainActivity extends Activity implements SQLiteFactory{
 	//database
 	private SQLiteUserDB userDB;
 	private ContentValues values;
+	
+	//Style variables
+	private int styleMain;
+	private int styleDetail;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -60,18 +68,20 @@ public class MainActivity extends Activity implements SQLiteFactory{
 		display.getSize(size);
 		width = size.x;
 		height = size.y;	
+		
+		updateStyle();
 
 		button = (Button) findViewById(R.id.button1);
 
 		spinnerNivel = (Spinner) findViewById(R.id.spinnerMain);
 		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-				R.array.nivel_array, android.R.layout.simple_spinner_item);
+				R.array.nivel_array, R.layout.spinnercustomitem);
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		spinnerNivel.setAdapter(adapter);
 
 		spinnerSexo = (Spinner) findViewById(R.id.spinnerSexo);
 		ArrayAdapter<CharSequence> adapterSexo = ArrayAdapter.createFromResource(this,
-				R.array.perfil_sexo, android.R.layout.simple_spinner_item);
+				R.array.perfil_sexo, R.layout.spinnercustomitem);
 		adapterSexo.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		spinnerSexo.setAdapter(adapterSexo);
 
@@ -119,7 +129,7 @@ public class MainActivity extends Activity implements SQLiteFactory{
 					EditText edad = (EditText) main.getChildAt(2);
 					EditText talla = (EditText) main.getChildAt(3);
 					EditText peso = (EditText) main.getChildAt(4);
-					Spinner nivel = (Spinner) main.getChildAt(1);
+					Spinner nivel = (Spinner) main.getChildAt(5);
 
 					userDB.getWritableDatabase();
 					Log.d("db", userDB.getDatabaseName());
@@ -190,6 +200,7 @@ public class MainActivity extends Activity implements SQLiteFactory{
 		values.put("nombre", "Dieta 1");
 		values.put("tipo", "Perdida de Peso");
 		values.put("duracion", "7");
+		values.put("etiqueta", "DP1");
 		db.getWritableDatabase().insert("dieta", null, values);
 
 		values = new ContentValues();
@@ -197,6 +208,7 @@ public class MainActivity extends Activity implements SQLiteFactory{
 		values.put("nombre", "Dieta 2");
 		values.put("tipo", "Perdida de Peso");
 		values.put("duracion", "3");
+		values.put("etiqueta", "DP2");
 		db.getWritableDatabase().insert("dieta", null, values);
 		
 		values = new ContentValues();
@@ -204,8 +216,11 @@ public class MainActivity extends Activity implements SQLiteFactory{
 		values.put("nombre", "Dieta 3");
 		values.put("tipo", "Perdida de Peso");
 		values.put("duracion", "2");
+		values.put("etiqueta", "DP3");
 		db.getWritableDatabase().insert("dieta", null, values);
 		db.close();
+		
+		Log.d("selec", "se agregaron dietas");
 
 	}
 
@@ -276,6 +291,26 @@ public class MainActivity extends Activity implements SQLiteFactory{
 		values.put("activo", "no");
 		values.put("descripcion", "Colacion DIETA UNO Día 1 Alimento 3");
 		db.getWritableDatabase().insert("componente", null, values);
+		
+		//6-1
+				values = new ContentValues();
+				values.put("id_componente", "61");
+				values.put("id_dieta", "1");
+				values.put("dia", "1");
+				values.put("alimento", "Comida");
+				values.put("activo", "no");
+				values.put("descripcion", "Pollo");
+				db.getWritableDatabase().insert("componente", null, values);
+				
+				//6-2
+				values = new ContentValues();
+				values.put("id_componente", "62");
+				values.put("id_dieta", "1");
+				values.put("dia", "1");
+				values.put("alimento", "Comida");
+				values.put("activo", "no");
+				values.put("descripcion", "Brocoli");
+				db.getWritableDatabase().insert("componente", null, values);
 
 		///////////////////////////////////////////////////////////////////////////////////////////////
 		//segundo dia
@@ -339,6 +374,7 @@ public class MainActivity extends Activity implements SQLiteFactory{
 		values.put("peso_ideal", "0");
 		values.put("dietaTerminada", "0");
 		values.put("estilo", "neutral");
+		values.put("motivacion", "");
 		db.getWritableDatabase().insert("control", null, values);
 
 		//Set the notification receiver 
@@ -386,5 +422,23 @@ public class MainActivity extends Activity implements SQLiteFactory{
 
 
 	}		
+	
+	//Saves selected style colors to local variables
+	private void getStyle()
+	{	
+		styleMain = Color.parseColor("#00A499");
+		styleDetail = Color.parseColor("#FFA300");
+	}
+
+	//set's specific color to certain components in the layout so it achieves the desired style.
+	private void updateStyle()
+	{
+		//sets local style variables
+		getStyle();
+		
+		ScrollView mainLayout = (ScrollView) findViewById(R.id.mainScrollView);
+		Log.d("color", "en perfil NUMERO " + String.valueOf(styleMain));
+		mainLayout.setBackgroundColor(styleMain);
+	}
 
 }

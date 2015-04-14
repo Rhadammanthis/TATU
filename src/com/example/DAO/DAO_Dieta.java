@@ -33,7 +33,8 @@ public class DAO_Dieta {
 			dieta.setId_dieta(cursor.getString(0));
 			dieta.setNombre(cursor.getString(1));
 			dieta.setTipo(cursor.getString(2));
-			dieta.setDuracion(cursor.getString(3));			
+			dieta.setDuracion(cursor.getString(3));	
+			dieta.setEtiqueta(cursor.getString(4));
 		}
 		
 		return dieta;
@@ -57,6 +58,7 @@ public class DAO_Dieta {
 				temp.setNombre(cursor.getString(1));
 				temp.setTipo(cursor.getString(2));
 				temp.setDuracion(cursor.getString(3));
+				temp.setEtiqueta(cursor.getString(4));
 				
 				list_dieta.add(temp);
 			}

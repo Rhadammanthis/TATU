@@ -32,6 +32,16 @@ public class API {
 		db.close();
 	}
 	
+	public void setMotivacion(String motivacion)
+	{
+		ContentValues cv = new ContentValues();
+		cv.put("motivacion", motivacion);
+ 	   
+		SQLiteControl db = new SQLiteControl(con);
+		db.getWritableDatabase().update("control", cv, "id_control "+"="+1, null);
+		db.close();
+	}
+	
 	public boolean IsDietaSet()
 	{ 		
 		try
@@ -163,6 +173,27 @@ public class API {
 			{
 				cursor.moveToFirst();
 				return cursor.getString(5);
+			}
+			else
+			{
+				return null;
+			}
+		}
+		catch(Exception ex)
+		{
+			db.close();
+			return null;
+		}
+	}
+	
+	public String getMotivacion()
+	{
+		try
+		{
+			if(cursor.moveToFirst())
+			{
+				cursor.moveToFirst();
+				return cursor.getString(6);
 			}
 			else
 			{
