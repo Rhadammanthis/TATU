@@ -7,6 +7,9 @@ import com.facebook.share.model.SharePhotoContent;
 import com.facebook.share.widget.LikeView;
 import com.facebook.share.widget.ShareButton;
 import com.facebook.share.widget.ShareDialog;
+import com.google.android.gms.plus.Plus;
+import com.google.android.gms.plus.PlusOneButton;
+import com.google.android.gms.plus.PlusShare;
 
 
 import java.io.File;
@@ -38,18 +41,25 @@ public class ShareActivity extends Activity implements View.OnClickListener {
     private static final int CAMERA = 0;
     private static final int GALLERY = 1;
     
+    private static final String GOOGLE_PLUS_URL = "https://plus.google.com/+AmauryEsparza/posts";
     
     private static final int TWITTER_BUTTON = R.id.shareTwitter;
     private static final int FACEBOOK_BUTTON = R.id.shareFacebook;
+    private static final int GOOGLEPLUS_BUTTON = R.id.shareGPlus;
     private final int FACEBOOK_CAMERA_CODE = 1;
     private final int FACEBOOK_GALLERY_CODE = 2;
     private final int TWITTER_CAMERA_CODE = 3;
     private final int TWITTER_GALLERY_CODE = 4;
+    private final int GOOGLEPLUS_GALLERY_CODE = 5;
+    private final int GOOGLEPLUS_CAMERA_CODE = 6;
         
     private File photoFile;
     
     private Button facebookButton;
     private Button twitterButton;
+    private Button googlePlusButton;
+    private PlusOneButton mPlusOneButton;
+    
     private Uri tempUri;
     private Uri photoUri;
     private ShareDialog shareDialog;
@@ -69,12 +79,22 @@ public class ShareActivity extends Activity implements View.OnClickListener {
     	twitterButton = (Button) findViewById(TWITTER_BUTTON);
     	twitterButton.setOnClickListener(this);
     	
+    	googlePlusButton = (Button) findViewById(GOOGLEPLUS_BUTTON);
+    	googlePlusButton.setOnClickListener(this);
+    	    
+    	mPlusOneButton = (PlusOneButton) findViewById(R.id.plus_one_button);
     	//AQUII
     	LikeView likeView = (LikeView) findViewById(R.id.like_facebook);
     	likeView.setObjectIdAndType(
     		    "https://www.facebook.com/miyoideal",
     		    LikeView.ObjectType.PAGE);
     	//Uri uri = (Uri) bundle.get("URI");
+    }
+    
+    protected void onResume() {
+        super.onResume();
+        // Actualiza el estado del botón +1 cada vez que se enfoque la actividad.
+        mPlusOneButton.initialize(GOOGLE_PLUS_URL, 0);
     }
     
     @Override
@@ -118,7 +138,24 @@ public class ShareActivity extends Activity implements View.OnClickListener {
 	     		.image(data.getData());
 	     	builder.show();
     	}
-    	
+    	else if(requestCode == GOOGLEPLUS_CAMERA_CODE && resultCode == RESULT_OK){
+    		Intent shareIntent = new PlusShare.Builder(this)
+		        .setType("text/plain")
+		        .setContentUrl(Uri.parse("http://cceo.com.mx"))
+		        .setText("Me siento genial con #YoIdeal")
+		        .setStream(photoUri)
+		        .getIntent();
+    		startActivityForResult(shareIntent, 0);
+    	}
+    	else if(requestCode == GOOGLEPLUS_GALLERY_CODE){
+    		Intent shareIntent = new PlusShare.Builder(this)
+		        .setType("text/plain")
+		        .setContentUrl(Uri.parse("http://cceo.com.mx"))
+		        .setText("Me siento genial gracias a #YoIdeal")
+		        .setStream(data.getData())
+		        .getIntent();
+    		startActivityForResult(shareIntent, 0);
+    	}
 	}
     
     @Override
@@ -137,8 +174,11 @@ public class ShareActivity extends Activity implements View.OnClickListener {
 								if(buttonId == FACEBOOK_BUTTON){
 									startCamera(FACEBOOK_CAMERA_CODE);
 								}
-								else{
+								else if(buttonId == TWITTER_BUTTON){
 									startCamera(TWITTER_CAMERA_CODE);
+								}
+								else if(buttonId == GOOGLEPLUS_BUTTON){
+									startCamera(GOOGLEPLUS_CAMERA_CODE);
 								}
 							} catch (IOException e) {
 								// TODO Auto-generated catch block
@@ -147,11 +187,12 @@ public class ShareActivity extends Activity implements View.OnClickListener {
                         } else if (i == GALLERY) {
                         	if(buttonId == FACEBOOK_BUTTON){
                         		startGallery(FACEBOOK_GALLERY_CODE);
-                        	}else{
+                        	}else if(buttonId == TWITTER_BUTTON){
                         		startGallery(TWITTER_GALLERY_CODE);
-                        	}
-                        		
-                        } 
+                        	}else if(buttonId == GOOGLEPLUS_BUTTON){
+                        		startGallery(GOOGLEPLUS_GALLERY_CODE);
+                        	}	
+                        }
                     }
                 });
         builder.show();	    		

@@ -31,6 +31,7 @@ import com.example.DB.SQLiteProgramaDB;
 import com.example.DB.SQLiteUserDB;
 import com.example.miyoideal.extra.DialyNotificationReceiver;
 import com.facebook.FacebookSdk;
+import com.google.android.gms.plus.Plus;
 import com.twitter.sdk.android.Twitter;
 import com.twitter.sdk.android.core.TwitterAuthConfig;
 import io.fabric.sdk.android.Fabric;
@@ -55,7 +56,7 @@ public class MainActivity extends Activity implements SQLiteFactory{
 	//database
 	private SQLiteUserDB userDB;
 	private ContentValues values;
-
+	
 	@Override
 	public void onResume(){
 		super.onResume();
@@ -68,6 +69,7 @@ public class MainActivity extends Activity implements SQLiteFactory{
 		TwitterAuthConfig authConfig = new TwitterAuthConfig(TWITTER_KEY, TWITTER_SECRET);
 		Fabric.with(this, new Twitter(authConfig));
 		FacebookSdk.sdkInitialize(getApplicationContext());
+		
 		setContentView(R.layout.activity_main);
 		this.setTitle("Diagnostico");
 		con = this;
