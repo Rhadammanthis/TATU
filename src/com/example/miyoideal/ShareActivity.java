@@ -20,6 +20,7 @@ import com.example.miyoideal.extra.PhotoManager;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -59,7 +60,7 @@ public class ShareActivity extends Activity implements View.OnClickListener {
     private Button twitterButton;
     private Button googlePlusButton;
     private PlusOneButton mPlusOneButton;
-    
+    private Button twitterFollowButton;
     private Uri tempUri;
     private Uri photoUri;
     private ShareDialog shareDialog;
@@ -78,6 +79,9 @@ public class ShareActivity extends Activity implements View.OnClickListener {
     	
     	twitterButton = (Button) findViewById(TWITTER_BUTTON);
     	twitterButton.setOnClickListener(this);
+    	
+    	twitterFollowButton = (Button) findViewById(R.id.follow_button);
+    	twitterFollowButton.setOnClickListener(this);
     	
     	googlePlusButton = (Button) findViewById(GOOGLEPLUS_BUTTON);
     	googlePlusButton.setOnClickListener(this);
@@ -162,40 +166,51 @@ public class ShareActivity extends Activity implements View.OnClickListener {
 	public void onClick(View v) {
 		//For Twitter, Facebook or Google+ share buttons
     	final int buttonId = v.getId();
-    	AlertDialog.Builder builder = new AlertDialog.Builder(ShareActivity.this);
-	    CharSequence camera = getResources().getString(R.string.action_photo_camera);
-        CharSequence gallery = getResources().getString(R.string.action_photo_gallery);
-        builder.setCancelable(true).
-                setItems(new CharSequence[] {camera, gallery}, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        if (i == CAMERA) {
-                            try {
-								if(buttonId == FACEBOOK_BUTTON){
-									startCamera(FACEBOOK_CAMERA_CODE);
+    	if(buttonId == R.id.follow_button){
+    		// Twitter follow button
+    		try { 
+    			//user_id get from http://gettwitterid.com
+    			startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("twitter://follow?user_id=613887285"))); 
+    		} catch (ActivityNotFoundException e) { 
+    			startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://twitter.com/intent/follow?user_id=613887285"))); 
+    		}
+    	}
+    	else{
+			AlertDialog.Builder builder = new AlertDialog.Builder(ShareActivity.this);
+		    CharSequence camera = getResources().getString(R.string.action_photo_camera);
+		    CharSequence gallery = getResources().getString(R.string.action_photo_gallery);
+		    builder.setCancelable(true).
+		            setItems(new CharSequence[] {camera, gallery}, new DialogInterface.OnClickListener() {
+		                @Override
+		                public void onClick(DialogInterface dialogInterface, int i) {
+		                    if (i == CAMERA) {
+		                        try {
+									if(buttonId == FACEBOOK_BUTTON){
+										startCamera(FACEBOOK_CAMERA_CODE);
+									}
+									else if(buttonId == TWITTER_BUTTON){
+										startCamera(TWITTER_CAMERA_CODE);
+									}
+									else if(buttonId == GOOGLEPLUS_BUTTON){
+										startCamera(GOOGLEPLUS_CAMERA_CODE);
+									}
+								} catch (IOException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
 								}
-								else if(buttonId == TWITTER_BUTTON){
-									startCamera(TWITTER_CAMERA_CODE);
-								}
-								else if(buttonId == GOOGLEPLUS_BUTTON){
-									startCamera(GOOGLEPLUS_CAMERA_CODE);
-								}
-							} catch (IOException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-                        } else if (i == GALLERY) {
-                        	if(buttonId == FACEBOOK_BUTTON){
-                        		startGallery(FACEBOOK_GALLERY_CODE);
-                        	}else if(buttonId == TWITTER_BUTTON){
-                        		startGallery(TWITTER_GALLERY_CODE);
-                        	}else if(buttonId == GOOGLEPLUS_BUTTON){
-                        		startGallery(GOOGLEPLUS_GALLERY_CODE);
-                        	}	
-                        }
-                    }
-                });
-        builder.show();	    		
+		                    } else if (i == GALLERY) {
+		                    	if(buttonId == FACEBOOK_BUTTON){
+		                    		startGallery(FACEBOOK_GALLERY_CODE);
+		                    	}else if(buttonId == TWITTER_BUTTON){
+		                    		startGallery(TWITTER_GALLERY_CODE);
+		                    	}else if(buttonId == GOOGLEPLUS_BUTTON){
+		                    		startGallery(GOOGLEPLUS_GALLERY_CODE);
+		                    	}	
+		                    }
+		                }
+		            });
+		    builder.show();
+    	}
 	}
     
     @Override

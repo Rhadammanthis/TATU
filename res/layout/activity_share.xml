@@ -53,6 +53,17 @@
 	    android:layout_marginRight="150dp"
 	    plus:size="tall"
 	/>
+    
+    <Button
+	    android:id="@+id/follow_button"
+	    android:text="follow"
+	    android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_marginBottom="38dp"
+	    android:layout_marginLeft="20dp"
+	/>
 </RelativeLayout>
 
 <!--  -->
