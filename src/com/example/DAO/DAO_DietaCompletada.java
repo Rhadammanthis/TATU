@@ -22,7 +22,7 @@ import com.example.DB.SQLiteEstadisticas;
 import com.example.DTO.DTO_DietaCompletada;
 import com.example.DTO.DTO_Estadisticas;
 import com.example.DTO.DTO_Usuario;
-import com.example.miyoideal.R;
+
 
 public class DAO_DietaCompletada {
 	

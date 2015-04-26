@@ -5,8 +5,10 @@
     android:versionName="1.0" >
 
     <uses-sdk
+
         android:minSdkVersion="14"
         android:targetSdkVersion="19" />
+
 
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -105,5 +107,9 @@
 	    <meta-data
             android:name="io.fabric.ApiKey"
             android:value="fdc9dc18a1f62e0c9837ee2e4a063bd06b64f10f" />
+	    <!-- 
+	    <meta-data 
+	        android:name="com.google.android.gms.version"
+        	android:value="@integer/google_play_services_version" /> -->
     </application>
 </manifest>

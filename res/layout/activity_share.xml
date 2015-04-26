@@ -1,6 +1,10 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res/sample.actionscontentview"
+
     android:id="@+id/shareMain"
+
+    xmlns:plus="http://schemas.android.com/apk/lib/com.google.android.gms.plus"
+
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -42,7 +46,28 @@
         android:layout_marginRight="27dp"
         android:text="@string/facebook_like_text" >
     </com.facebook.share.widget.LikeView>
-
+    
+    <com.google.android.gms.plus.PlusOneButton
+	    android:id="@+id/plus_one_button"
+	    android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_marginBottom="52dp"
+	    android:layout_marginRight="150dp"
+	    plus:size="tall"
+	/>
+    
+    <Button
+	    android:id="@+id/follow_button"
+	    android:text="follow"
+	    android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_marginBottom="38dp"
+	    android:layout_marginLeft="20dp"
+	/>
 </RelativeLayout>
 
 <!--  -->
