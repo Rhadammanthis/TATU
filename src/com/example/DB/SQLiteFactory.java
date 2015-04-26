@@ -11,4 +11,6 @@ public interface SQLiteFactory {
 	
 	public void initProgramaDB();
 	
+	public void initEstadisticasDB(String pesoActual, String tallaActual);
+	
 }

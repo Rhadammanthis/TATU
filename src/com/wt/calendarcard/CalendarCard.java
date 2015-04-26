@@ -1,5 +1,6 @@
 package com.wt.calendarcard;
 
+import java.text.DateFormatSymbols;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -10,10 +11,13 @@ import java.util.Locale;
 import android.R.bool;
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.sax.EndElementListener;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,6 +28,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.TableRow.LayoutParams;
 
 import com.example.DAO.DAO_Dieta;
 import com.example.DTO.DTO_Dieta;
@@ -40,17 +45,22 @@ public class CalendarCard extends RelativeLayout {
 	private Calendar dateDisplay;
 	private ArrayList<CheckableLayout> cells = new ArrayList<CheckableLayout>();
 	private LinearLayout cardGrid;
-	private int checkedDay;
+	private int checkedDay = -1;
 	private int firstDay;
 	private int pixels;
 	private Context con;
 	private boolean monthBegun;
 	private boolean monthEnded;
 	private CheckedTextView currentCell;
+	private LayoutParams celParam;
 	private int h = 0;
 	private int w = 0;
 	private int originh = 0;
 	private int originw = 0;
+	private int today;
+	private int duracionDieta = 0;
+	private boolean shoudlRecordDate = true;
+	private java.util.Date initDate;
 
 	public CalendarCard(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
@@ -72,8 +82,11 @@ public class CalendarCard extends RelativeLayout {
 	 *Maybe here we can point out which cells to enable as checked from the beginning 
 	 */
 
-	private void init(final Context ctx) {
+	public void init(final Context ctx) {
 		if (isInEditMode()) return;
+
+		if(new API(ctx).IsDietaSet() && duracionDieta == 0)
+			duracionDieta = (Integer.parseInt(new DAO_Dieta(ctx).getDieta(new API(ctx).getID_Dieta()).getDuracion()));
 
 		final float scale = ctx.getResources().getDisplayMetrics().density;
 		pixels = (int) (210 * scale + 0.5f);
@@ -96,7 +109,8 @@ public class CalendarCard extends RelativeLayout {
 
 		try
 		{
-			checkedDay = Integer.parseInt(getDietaInitialDay(ctx));
+			if(checkedDay == -1)
+				checkedDay = Integer.parseInt(getDietaInitialDay(ctx));
 		}
 		catch(Exception e)
 		{
@@ -105,10 +119,11 @@ public class CalendarCard extends RelativeLayout {
 		}
 		firstDay = (checkedDay);
 
-		cardTitle.setText(new SimpleDateFormat("MMM yyyy", Locale.getDefault()).format(dateDisplay.getTime()));
+		Calendar cal = Calendar.getInstance();
+		cardTitle.setText(getMonthForInt(cal.get(Calendar.MONTH)));
+		//cardTitle.setText(new SimpleDateFormat("MMM yyyy", Locale.getDefault()).format(dateDisplay.getTime()));
 		((RelativeLayout.LayoutParams)(cardTitle.getLayoutParams())).setMargins(0, 0, 0, (int) (7 * scale + 0.5f));
 
-		Calendar cal = Calendar.getInstance();
 		cal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
 		((TextView)layout.findViewById(R.id.cardDay1)).setText(cal.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, Locale.getDefault()));
 		((TextView)layout.findViewById(R.id.cardDay1)).setTextColor(Color.WHITE);
@@ -162,11 +177,14 @@ public class CalendarCard extends RelativeLayout {
 		mOnItemRenderDefault = new OnItemRender() {
 			@Override
 			public void onRender(CheckableLayout v, CardGridItem item) {
-				int sizeHeight=120;
-				int sizeWidth=120;
 
 				originh = v.getLayoutParams().height;
 				originw = v.getLayoutParams().width;
+
+				celParam = (LayoutParams) v.getChildAt(0).getLayoutParams();
+
+				if(shoudlRecordDate)
+					today++;
 
 				((TextView)v.getChildAt(0)).setText(item.getDayOfMonth().toString());
 				((TextView)v.getChildAt(0)).setTextColor(Color.WHITE);
@@ -181,9 +199,6 @@ public class CalendarCard extends RelativeLayout {
 				{
 					//v.setVisibility(View.INVISIBLE);
 					((TextView)v.getChildAt(0)).setText("");
-
-					sizeHeight = ((TextView)v.getChildAt(0)).getLayoutParams().height;
-					sizeWidth = ((TextView)v.getChildAt(0)).getLayoutParams().width;
 
 				}
 				if(day == 28 && monthBegun)
@@ -203,11 +218,11 @@ public class CalendarCard extends RelativeLayout {
 				//Color today's day white, and change text color to black
 				if(((TextView)v.getChildAt(0)).getText().equals(String.valueOf(dayOfMonth)))
 				{
+					shoudlRecordDate = false;
+					celParam = (LayoutParams) v.getChildAt(0).getLayoutParams();
 					((TextView)v.getChildAt(0)).setTextColor(Color.BLACK);
-					v.getChildAt(0).setBackgroundResource(R.drawable.selected_cell);
-					v.getChildAt(0).getLayoutParams().height = (int) (sizeHeight - (sizeHeight / 2));	
-					v.getChildAt(0).getLayoutParams().width = (int) (sizeWidth * 0.5);	
-					((RelativeLayout.LayoutParams)((TextView)v.getChildAt(0)).getLayoutParams()).setMargins(11, 7, 0, 0);
+					((TextView)v.getChildAt(0)).bringToFront();
+
 
 					//save reference to a global variable
 					currentCell =  (CheckedTextView) v.getChildAt(0);
@@ -220,8 +235,158 @@ public class CalendarCard extends RelativeLayout {
 				{
 					((CheckableLayout)v).setChecked(true);
 
-					if((Integer.parseInt(new DAO_Dieta(ctx).getDieta(new API(ctx).getID_Dieta()).getDuracion())
-							+ firstDay) - checkedDay > 1)
+					if((duracionDieta + firstDay) - checkedDay > 1)
+					{
+						checkedDay++;
+					}
+				}
+			}
+		};
+
+		updateCells();
+	}
+
+	public void iniMonth(final Context ctx, Calendar cal) {
+		if (isInEditMode()) return;
+
+		final float scale = ctx.getResources().getDisplayMetrics().density;
+		pixels = (int) (210 * scale + 0.5f);
+
+		//to track which non-current months cells to display
+		monthBegun = false;
+		monthEnded = false;
+
+		//save Context reference to a global value
+		con=ctx;
+
+		View layout = LayoutInflater.from(ctx).inflate(R.layout.card_view, null, false);
+
+		dateDisplay = cal;
+
+		cardGrid = (LinearLayout)layout.findViewById(R.id.cardGrid);
+
+		try
+		{
+			checkedDay = Integer.parseInt(getDietaInitialDay(ctx));
+		}
+		catch(Exception e)
+		{
+			Toast.makeText(con, "Selecciona una dieta", Toast.LENGTH_LONG).show();
+			e.printStackTrace();
+		}
+		firstDay = (checkedDay);
+
+		Log.d("equs", String.valueOf(cal.get(Calendar.MONTH)));
+		cal.getDisplayName(cal.get(Calendar.MONTH), Calendar.LONG, Locale.ENGLISH);
+		Log.d("equs", "strn " + getMonthForInt(cal.get(Calendar.MONTH)));
+
+		//cardTitle.setText("ROFL");
+		//cardTitle.setText(new SimpleDateFormat("MMM yyyy", Locale.getDefault()).format(dateDisplay.getTime()));
+		cardTitle.setText(getMonthForInt(cal.get(Calendar.MONTH)));
+		((RelativeLayout.LayoutParams)(cardTitle.getLayoutParams())).setMargins(0, 0, 0, (int) (7 * scale + 0.5f));
+
+		cal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+		((TextView)layout.findViewById(R.id.cardDay1)).setText(cal.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, Locale.getDefault()));
+		((TextView)layout.findViewById(R.id.cardDay1)).setTextColor(Color.WHITE);
+		cal.add(Calendar.DAY_OF_WEEK, 1);
+		((TextView)layout.findViewById(R.id.cardDay2)).setText(cal.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, Locale.getDefault()));
+		((TextView)layout.findViewById(R.id.cardDay2)).setTextColor(Color.WHITE);
+		cal.add(Calendar.DAY_OF_WEEK, 1);
+		((TextView)layout.findViewById(R.id.cardDay3)).setText(cal.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, Locale.getDefault()));
+		((TextView)layout.findViewById(R.id.cardDay3)).setTextColor(Color.WHITE);
+		cal.add(Calendar.DAY_OF_WEEK, 1);
+		((TextView)layout.findViewById(R.id.cardDay4)).setText(cal.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, Locale.getDefault()));
+		((TextView)layout.findViewById(R.id.cardDay4)).setTextColor(Color.WHITE);
+		cal.add(Calendar.DAY_OF_WEEK, 1);
+		((TextView)layout.findViewById(R.id.cardDay5)).setText(cal.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, Locale.getDefault()));
+		((TextView)layout.findViewById(R.id.cardDay5)).setTextColor(Color.WHITE);
+		cal.add(Calendar.DAY_OF_WEEK, 1);
+		((TextView)layout.findViewById(R.id.cardDay6)).setText(cal.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, Locale.getDefault()));
+		((TextView)layout.findViewById(R.id.cardDay6)).setTextColor(Color.WHITE);
+		cal.add(Calendar.DAY_OF_WEEK, 1);
+		((TextView)layout.findViewById(R.id.cardDay7)).setText(cal.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, Locale.getDefault()));
+		((TextView)layout.findViewById(R.id.cardDay7)).setTextColor(Color.WHITE);
+
+		LayoutInflater la = LayoutInflater.from(ctx);
+		for(int y=0; y<cardGrid.getChildCount(); y++) {
+			LinearLayout row = (LinearLayout)cardGrid.getChildAt(y);
+			for(int x=0; x<row.getChildCount(); x++) {
+				CheckableLayout cell = (CheckableLayout)row.getChildAt(x);
+				cell.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						//for(CheckableLayout c : cells)
+						//c.setChecked(false);
+						//((CheckableLayout)v).setChecked(true);
+
+						if (getOnCellItemClick()!= null)
+							getOnCellItemClick().onCellClick(v, (CardGridItem)v.getTag()); // TODO create item
+					}
+				});
+
+				row.getLayoutParams().height = pixels / cardGrid.getChildCount();
+				cell.getLayoutParams().height = (pixels / cardGrid.getChildCount()) - 2;
+
+				View cellContent = la.inflate(itemLayout, cell, false);
+				cell.addView(cellContent);
+				cells.add(cell);
+			}
+		}
+
+		//addView(layout);
+
+		mOnItemRenderDefault = new OnItemRender() {
+			@Override
+			public void onRender(CheckableLayout v, CardGridItem item) {
+				originh = v.getLayoutParams().height;
+				originw = v.getLayoutParams().width;
+
+				celParam = (LayoutParams) v.getChildAt(0).getLayoutParams();
+
+				((TextView)v.getChildAt(0)).setText(item.getDayOfMonth().toString());
+				((TextView)v.getChildAt(0)).setTextColor(Color.WHITE);
+
+				//hide non-current-month cells
+				int day = Integer.parseInt(((TextView)v.getChildAt(0)).getText().toString());
+				if(day == 1)
+				{
+					monthBegun = true;
+				}
+				if(day > 22 && !monthBegun)
+				{
+					((TextView)v.getChildAt(0)).setText("");
+
+				}
+				if(day == 28 && monthBegun)
+				{
+					monthEnded = true;
+				}
+				if(day < 8 && monthEnded && monthBegun)
+				{
+					((TextView)v.getChildAt(0)).setText("");
+				}
+
+				//reference to today's day
+				Calendar cal = Calendar.getInstance();
+				int dayOfMonth = cal.get(Calendar.DAY_OF_MONTH);
+
+				//Color today's day white, and change text color to black
+				if(((TextView)v.getChildAt(0)).getText().equals(String.valueOf(dayOfMonth)))
+				{
+					celParam = (LayoutParams) v.getChildAt(0).getLayoutParams();
+
+					//save reference to a global variable
+					currentCell =  (CheckedTextView) v.getChildAt(0);
+
+					h = v.getChildAt(0).getLayoutParams().height;	
+					w = v.getChildAt(0).getLayoutParams().width;
+				}
+
+				if(((TextView)v.getChildAt(0)).getText().equals(String.valueOf(checkedDay)))
+				{
+					((CheckableLayout)v).setChecked(true);
+
+					if((duracionDieta + firstDay) - checkedDay > 1)
 					{
 						checkedDay++;
 					}
@@ -235,6 +400,11 @@ public class CalendarCard extends RelativeLayout {
 	public int getFirstDay()
 	{
 		return firstDay;
+	}
+
+	public java.util.Date getInitialDate()
+	{
+		return initDate;
 	}
 
 	private String getDietaInitialDay(Context con)
@@ -255,6 +425,8 @@ public class CalendarCard extends RelativeLayout {
 		{
 			e.printStackTrace();
 		}
+
+		this.initDate = initalDate;
 
 		if(t == 0)
 			return "";
@@ -346,6 +518,8 @@ public class CalendarCard extends RelativeLayout {
 	protected void onLayout(boolean changed, int l, int t, int r, int b) {
 		super.onLayout(changed, l, t, r, b);
 
+		int i =0;
+
 		if (changed && cells.size() > 0) {
 			int size = (r - l) / 7;
 			for(CheckableLayout cell : cells) {
@@ -357,6 +531,18 @@ public class CalendarCard extends RelativeLayout {
 				//get system resources
 				Resources res = getResources();
 
+				if(i == today - 1)
+				{
+					CircleView cirlcoe = new CircleView(con);
+					cell.addView(cirlcoe);
+					cell.getChildAt(0).bringToFront();
+					Log.d("chien", String.valueOf(cell.getChildCount()));
+					//cell.getChildAt(0).bringToFront();
+					//cell.setBackgroundResource(R.drawable.selected_cell);
+					//cell.getLayoutParams().height *= 0.95;
+					//cell.setScaleY(0.50f);
+					//cell.setPadding(0, 30, 0, 0);
+				}
 
 
 				if(style.equals("masculino"))
@@ -365,12 +551,17 @@ public class CalendarCard extends RelativeLayout {
 				}
 				if(style.equals("femenino"))
 				{
+					//cell.setBackgroundResource(R.drawable.selected_cell);
 					cell.setBackgroundResource(R.drawable.border_female);
+					//cell.setBackgroundResource(R.drawable.selected_cell);
 				}
 				if(style.equals("neutral"))
 				{
 					cell.setBackgroundResource(R.drawable.border_neutral);
 				}
+
+
+				i++;
 
 			}
 
@@ -432,58 +623,99 @@ public class CalendarCard extends RelativeLayout {
 		//this.currentCell = v;
 	}
 
+	public void cleanCellStyle()
+	{
+		for(CheckableLayout temp : cells)
+		{
+			if(temp.getChildCount()>1)
+			{
+				Log.d("chien", "Children per Cell: " + String.valueOf(temp.getChildCount()));
+				temp.removeViewAt(0);
+			}
+		}
+	}
+
 	public void updateSelectedCellStyle(String num)
 	{
 		CheckableLayout v = new CheckableLayout(con);
 
+		if(((TextView)currentCell).getText().equals(num))
+			return;
+
 		for(CheckableLayout temp : cells)
 		{
+			if(temp.getChildCount()>1)
+			{
+				Log.d("chien", "Children per Cell: " + String.valueOf(temp.getChildCount()));
+				temp.removeViewAt(0);
+			}
+			Log.d("chien", ((TextView)temp.getChildAt(0)).getText().toString());
 			if (((TextView)temp.getChildAt(0)).getText().equals(num)) 
 			{
 				v = temp;
-				break;
+				CircleView cirlcoe = new CircleView(con);
+				temp.addView(cirlcoe);
+				temp.getChildAt(0).bringToFront();
+				Log.d("chien", String.valueOf(temp.getChildCount()));
+
 			}
 		}
 
 		//updates new cell style
-		((TextView)v.getChildAt(0)).setTextColor(Color.BLACK);
-		v.getChildAt(0).setBackgroundResource(R.drawable.selected_cell);
-		v.getChildAt(0).getLayoutParams().height = h;	
-		v.getChildAt(0).getLayoutParams().width = w;	
-		((RelativeLayout.LayoutParams)((TextView)v.getChildAt(0)).getLayoutParams()).setMargins(11, 7, 0, 0);
+		((TextView)v.getChildAt(1)).setTextColor(Color.BLACK);
 
-		//update previous cell style
-		String style = new API(con).getStyle();
-		Resources res = getResources();
-		if(style.equals("masculino"))
-		{
-			currentCell.setBackgroundResource(R.drawable.border_male);			
-			currentCell.setBackgroundColor(res.getColor(R.color.MASCULINO_MAIN));
-		}
-		if(style.equals("femenino"))
-		{
-			currentCell.setBackgroundResource(R.drawable.border_female);
-			currentCell.setBackgroundColor(res.getColor(R.color.FEMENINO_MAIN));
-		}
-		if(style.equals("neutral"))
-		{
-			currentCell.setBackgroundResource(R.drawable.border_neutral);
-			currentCell.setBackgroundColor(res.getColor(R.color.NEUTRAL_MAIN));
-		}
 
 		((TextView)currentCell).setTextColor(Color.WHITE);
-		currentCell.getLayoutParams().height = originh;	
-		currentCell.getLayoutParams().width = originw;	
-		((RelativeLayout.LayoutParams)((TextView)currentCell).getLayoutParams()).setMargins(0, 7, 0, 0);
 
 		//save new cell as current
-		currentCell = (CheckedTextView) v.getChildAt(0);
-		
+		currentCell = (CheckedTextView) v.getChildAt(1);
+
 		//if a dieta has not been selected, urge the user to do so
 		if(!new API(con).IsDietaSet())
 		{
 			Toast.makeText(con, "Selecciona una dieta", Toast.LENGTH_SHORT).show();
 		}
+	}
+
+	private String getMonthForInt(int num) {
+		String month = "wrong";
+		DateFormatSymbols dfs = new DateFormatSymbols();
+		String[] months = dfs.getMonths();
+		if (num >= 0 && num <= 11 ) {
+			month = months[num];
+		}
+		return month;
+	}
+
+	private class CircleView extends View
+	{
+
+		public CircleView(Context context, AttributeSet attrs) {
+			super(context, attrs);
+			// TODO Auto-generated constructor stub
+		}
+
+		public CircleView(Context context){
+			super(context);
+		}
+
+		@Override
+		protected void onDraw(Canvas canvas) 
+		{
+			final float scale = con.getResources().getDisplayMetrics().density;
+			int dist = (int) (30 * scale + 0.5f);
+			super.onDraw(canvas);
+			Paint paint = new Paint();
+			paint.setStyle(Paint.Style.FILL);
+			paint.setColor(Color.RED);
+
+
+			//canvas.drawColor(Color.WHITE);
+
+			paint.setColor(Color.WHITE);
+			canvas.drawCircle((int) (19 * scale + 0.5f), (int) (20 * scale + 0.5f), (int) (13 * scale + 0.5f), paint);
+		}
+
 	}
 
 }

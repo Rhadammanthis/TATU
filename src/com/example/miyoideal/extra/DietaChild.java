@@ -2,9 +2,11 @@ package com.example.miyoideal.extra;
 
 import java.util.List;
 
+import android.R.bool;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.util.Log;
 import android.view.Gravity;
@@ -15,6 +17,7 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TableLayout;
+import android.widget.Toast;
 import android.widget.TableRow.LayoutParams;
 import android.widget.TextView;
 
@@ -26,6 +29,8 @@ public class DietaChild {
 	private RelativeLayout child;
 	private FrameLayout defaultLayout;
 	private int pixels;
+	private Rect rect;
+	
 	public FrameLayout getDefaultLayout() {
 		return defaultLayout;
 	}
@@ -258,15 +263,6 @@ public class DietaChild {
 		tv_title.setId(tv_title.hashCode());
 		//tv_title.setPadding(0, 0, pixels, 0);
 
-		//		//Title TextView. Color, size and text adjusted
-		//		TextView tv_time = new TextView(context);
-		//		tv_time.setTextSize(25);
-		//		tv_time.setTextColor(Color.WHITE);
-		//		tv_time.setTypeface(null, Typeface.BOLD);
-		//		tv_time.setText(title);
-		//		tv_title.setGravity(Gravity.CENTER_VERTICAL | Gravity.RIGHT);
-		//		//tv_title.setPadding(pixels, 0, 0, 0);
-
 		//title and time added to header
 		header.addView(tv_title);
 
@@ -343,16 +339,27 @@ public class DietaChild {
 		body_frame.setOrientation(LinearLayout.VERTICAL);
 		body_frame.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
 
+		RelativeLayout holder = new RelativeLayout(context);
+		LayoutParams paramHolder = new LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.WRAP_CONTENT);
+		holder.setLayoutParams(paramHolder);
 
 		//creates body with every instance in both content and tga lists
 		for(int i=0; i < content.size();i++)
 		{
+			
+			
+			//LinearLayout to wrap content 
+			LinearLayout cuerpo = new LinearLayout(context);
+			LinearLayout.LayoutParams linear1_cuerpo = new LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.WRAP_CONTENT);
+			cuerpo.setOrientation(LinearLayout.VERTICAL);
+			cuerpo.setLayoutParams(linear1_cuerpo);
+			
 			//RelativeLayout to wrap 'content' and tag
 			final FrameLayout body = new FrameLayout(context);
 			body.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));//(int) (120 * scale + 0.5f)));
 //			body.setPadding(0, (int) (3 * scale + 0.5f), 
 //					0, (int) (3 * scale + 0.5f));
-			body.setPadding(pixels, (int) (5 * scale + 0.5f), pixels, (int) (5 * scale + 0.5f));
+			body.setPadding(pixels, (int) (5 * scale + 0.5f), pixels, (int) (2 * scale + 0.5f));
 			//body.setBackgroundColor(Color.BLUE);
 			//body.setPadding(12, 12, 12, 12);
 
@@ -370,15 +377,35 @@ public class DietaChild {
 			tv_tag.setTextColor(Color.WHITE);
 			tv_tag.setText(tag.get(i));
 			tv_tag.setGravity(Gravity.CENTER_VERTICAL | Gravity.RIGHT);
+			
+			//RelativeLayout to wrap 'content' and checkbox
+			body.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));//(int) (120 * scale + 0.5f)));
+			//body.setBackgroundColor(Color.BLUE);
+			//body.setPadding(12, 12, 12, 12);
+
+			//Content multiline textview
+			final TextView descripction = new TextView(context);
+			//tv_content.setPadding((int) (15 * scale + 0.5f), 0, 0, 0);
+			descripction.setTextSize(17);
+			descripction.setTextColor(Color.WHITE);
+			descripction.setText("Me llamo Hugpo Obette Medina Marmolejo y tengo 23 a;os");
+			descripction.setPadding(pixels, (int) (0 * scale + 0.5f), pixels, (int) (5 * scale + 0.5f));
+			descripction.setGravity(Gravity.CENTER_VERTICAL | Gravity.LEFT);
 
 			//content and checkbox added to body
 			body.addView(tv_content);
 			body.addView(tv_tag);
 			
+			cuerpo.addView(body);
+			cuerpo.addView(descripction);
+			
 			final String dietaId = id.get(i);
 			
-			body.setOnTouchListener( new View.OnTouchListener()
+			
+			
+			cuerpo.setOnTouchListener( new View.OnTouchListener()
 			{
+				private boolean shouldCancel = false;
 
 				@Override
 				public boolean onTouch(View v, MotionEvent event) {
@@ -387,23 +414,44 @@ public class DietaChild {
 					{
 					case MotionEvent.ACTION_DOWN:
 						body.setBackgroundColor(styleDark);
+						descripction.setBackgroundColor(styleDark);
+						
+						rect = new Rect(v.getLeft(), v.getTop(), v.getRight(), v.getBottom());
+						
+						shouldCancel = false;
+						
+						break;
+					case MotionEvent.ACTION_MOVE:
+//						Toast.makeText(context, "lol", Toast.LENGTH_SHORT).show();
+				        if(!rect.contains(v.getLeft() + (int) event.getX(), v.getTop() + (int) event.getY()))
+				        {
+				            // User moved outside bounds
+				        	shouldCancel = true;
+				        	body.setBackgroundColor(styleMain); 
+							descripction.setBackgroundColor(styleMain);
+				        }
 						break;
 					case MotionEvent.ACTION_UP:
 						//set color back to default
 						body.setBackgroundColor(styleMain); 
+						descripction.setBackgroundColor(styleMain);
 
-						SelectDialogue temp1;
-						//Checks whether dieta is available
-						if(!new API(context).IsDietaSet())
+						if (!shouldCancel) 
 						{
-							//If it is, prompts a dialogue to ask whether the user would like to select this one
-							temp1 = new SelectDialogue(context, dietaId, true);
-							temp1.show(fM, "2");
-						}
-						else
-						{
-							temp1 = new SelectDialogue(context, dietaId, false);
-							temp1.show(fM, "2");
+							SelectDialogue temp1;
+							//Checks whether dieta is available
+							if (!new API(context).IsDietaSet()) {
+								//If it is, prompts a dialogue to ask whether the user would like to select this one
+								temp1 = new SelectDialogue(context, dietaId,
+										true);
+								temp1.show(fM, "2");
+							} else {
+								temp1 = new SelectDialogue(context, dietaId,
+										false);
+								temp1.show(fM, "2");
+							}
+							
+							shouldCancel = false;
 						}
 						break;
 					}
@@ -415,12 +463,13 @@ public class DietaChild {
 			Log.d("selec", "Tag " + tv_tag.getText().toString());
 			
 			//add body to body_frame
-			body_frame.addView(body);
+			body_frame.addView(cuerpo);
+			
 		}
 
-
+		holder.addView(body_frame);
 		//body added toi main container
-		linear.addView(body_frame);
+		linear.addView(holder);
 
 		//main container added to view body
 		child.addView(linear);		

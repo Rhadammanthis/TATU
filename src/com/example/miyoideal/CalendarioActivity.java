@@ -24,6 +24,7 @@ import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Bundle;
+import android.os.IInterface;
 import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
@@ -35,12 +36,14 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.TableRow.LayoutParams;
+import android.widget.Toast;
 
 import com.wt.calendarcard.*;
 
@@ -63,6 +66,8 @@ public class CalendarioActivity extends Activity {
 	int styleBright;
 	int styleBrightest;
 
+	Calendar cal;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -74,6 +79,8 @@ public class CalendarioActivity extends Activity {
 		width = size.x;
 		height = size.y;	
 		ctx = this;
+
+		cal = Calendar.getInstance();
 
 		View bar = (View) findViewById(R.id.calBar1);
 		this.size = bar.getLayoutParams().width;
@@ -96,24 +103,7 @@ public class CalendarioActivity extends Activity {
 		//load today's dieta components, if dieta is set
 		if(new API(ctx).IsDietaSet())
 		{
-			Calendar cal = Calendar.getInstance();
-			int dayOfMonth = cal.get(Calendar.DAY_OF_MONTH);
-			int dayOfMonthInt = Integer.parseInt(String.valueOf(dayOfMonth));
-
-			List<DTO_Componente> componentes = new DAO_Componente(ctx).getAllComponente(
-					new API(ctx).getID_Dieta(), String.valueOf((Math.abs(mCalendarCard.getFirstDay()-dayOfMonthInt) + 1)));
-			int p = Math.abs(mCalendarCard.getFirstDay()-dayOfMonthInt) + 1;
-			List<RelativeLayout> childrenLayout = initDietaComponents(componentes);
-			linearLayout.removeAllViewsInLayout();
-			for(RelativeLayout temp : childrenLayout)
-			{
-				linearLayout.addView(temp);
-				//to generate row setoff shadow
-//				linearLayout.addView(getDarkest());
-//				linearLayout.addView(getDarker());
-//				linearLayout.addView(getBrighter());
-//				linearLayout.addView(getBrightest());
-			}
+			initTodayDieta();
 		}
 
 		mCalendarCard.setOnCellItemClick(new OnCellItemClick() {
@@ -126,36 +116,103 @@ public class CalendarioActivity extends Activity {
 				((CheckableLayout)v).setChecked(true);
 				if(new API(ctx).IsDietaSet())
 				{
-					List<DTO_Componente> componentes = new DAO_Componente(ctx).getAllComponente(
-							new API(ctx).getID_Dieta(), String.valueOf((Math.abs(mCalendarCard.getFirstDay()-item.getDayOfMonth()) + 1)));
-					int t = Math.abs(mCalendarCard.getFirstDay()-item.getDayOfMonth()) + 1;
-					List<RelativeLayout> childrenLayout = initDietaComponents(componentes);
-					linearLayout.removeAllViewsInLayout();
-					for(RelativeLayout temp : childrenLayout)
-					{
-						linearLayout.addView(temp);
-						//to generate row setoff shadow
-//						linearLayout.addView(getDarkest());
-//						linearLayout.addView(getDarker());
-//						linearLayout.addView(getBrighter());
-//						linearLayout.addView(getBrightest());
-					}
+					populateDietaList(item.getDayOfMonth());
 
+				}
+				else
+				{
 					//updates selected cell and current cell style
 					String dayOfMonth = item.getDayOfMonth().toString();
 					mCalendarCard.updateSelectedCellStyle(dayOfMonth);
-
 				}
-				
-				//updates selected cell and current cell style
-				String dayOfMonth = item.getDayOfMonth().toString();
-				mCalendarCard.updateSelectedCellStyle(dayOfMonth);
+
+				//				//updates selected cell and current cell style
+				//				String dayOfMonth = item.getDayOfMonth().toString();
+				//				mCalendarCard.updateSelectedCellStyle(dayOfMonth);
 			}
 		});
 
 		CalendarioChildFactory factory = new CalendarioChildFactory(this);
 
 		//linearLayout.addView(factory.GenerateChildEjercicio("Uno 1", "asjhgdlgd ladjgajaldal bd lsjdblsbdlsnv dbasv dv sd"));
+
+		ImageButton der = (ImageButton) findViewById(R.id.calendarRightB);
+		der.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				int month = cal.get(Calendar.MONTH);
+
+				cal.set(Calendar.MONTH, month + 1);
+				
+				if(cal.get(Calendar.MONTH) > month + 1)
+					cal.set(Calendar.MONTH, cal.get(Calendar.MONTH) - 1);
+				
+				mCalendarCard.cleanCellStyle();
+				mCalendarCard.iniMonth(ctx, cal);
+				
+				mCalendarCard.updateSelectedCellStyle("1");
+				
+				if(cal.get(Calendar.MONTH) != month + 1)
+					cal.set(Calendar.MONTH, month + 1);
+
+				if(Calendar.getInstance().get(Calendar.MONTH) == cal.get(Calendar.MONTH))
+				{
+					initTodayDieta();
+				}
+				else
+				{
+					linearLayout.removeAllViewsInLayout();
+					Calendar newDate = Calendar.getInstance();
+					newDate.set(Calendar.MONTH, month + 1);
+					newDate.set(Calendar.DAY_OF_MONTH, 1);
+					
+					populateDietaList(1, newDate);
+				}
+
+				
+			}
+		});
+
+		ImageButton izq = (ImageButton) findViewById(R.id.calendarLeftB);
+		izq.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub	
+				int month = cal.get(Calendar.MONTH);
+				
+				cal.set(Calendar.MONTH, cal.get(Calendar.MONTH) - 1);
+				
+				if(cal.get(Calendar.MONTH) != month - 1)
+					cal.set(Calendar.MONTH, month - 1);
+				
+				mCalendarCard.cleanCellStyle();
+				mCalendarCard.iniMonth(ctx, cal);
+				
+				mCalendarCard.updateSelectedCellStyle("1");
+				
+				if(cal.get(Calendar.MONTH) != month - 1)
+					cal.set(Calendar.MONTH, month - 1);
+				
+				if(Calendar.getInstance().get(Calendar.MONTH) == cal.get(Calendar.MONTH))
+				{
+					initTodayDieta();
+				}
+				else
+				{
+					linearLayout.removeAllViewsInLayout();
+					
+					Calendar newDate = Calendar.getInstance();
+					newDate.set(Calendar.MONTH, month - 1);
+					newDate.set(Calendar.DAY_OF_MONTH, 1);
+					
+					populateDietaList(1, newDate);
+				}
+			}
+		});
+
 	}
 
 	@Override
@@ -217,6 +274,12 @@ public class CalendarioActivity extends Activity {
 
 	public List<RelativeLayout> initDietaComponents(List<DTO_Componente> lista)
 	{
+		if(lista.size() == 0)
+		{
+			Toast.makeText(ctx, "No hay datos para este dia", Toast.LENGTH_SHORT).show();
+			return null;
+		}
+
 		List<RelativeLayout> children = new ArrayList<RelativeLayout>();
 		DietaChildFactory factory = new DietaChildFactory();
 
@@ -369,6 +432,109 @@ public class CalendarioActivity extends Activity {
 		bar3.setBackgroundColor(styleBright);
 		bar4.setBackgroundColor(styleBrightest);
 
+	}
+	
+	//loads tod
+	private void initTodayDieta()
+	{
+		Calendar cal = Calendar.getInstance();
+		int dayOfMonth = cal.get(Calendar.DAY_OF_MONTH);
+
+		populateDietaList(dayOfMonth);
+		
+		mCalendarCard.updateSelectedCellStyle(String.valueOf(dayOfMonth));
+	}
+	
+	public long getDateDiffString(java.util.Date date, java.util.Date date2)
+	{
+		long timeOne = date.getTime();
+		long timeTwo = date2.getTime();
+		long oneDay = 1000 * 60 * 60 * 24;
+		long delta = (timeTwo - timeOne) / oneDay;
+
+		int dia_Date1 = Integer.valueOf((String)android.text.format.DateFormat.format("dd", date)), 
+				dia_Date2 = Integer.valueOf((String)android.text.format.DateFormat.format("dd", date2));
+
+		String lol = String.valueOf(timeOne/oneDay);
+
+		if(date2.before(date))
+				return -1;
+		else
+			return delta;
+	}
+	
+	public void populateDietaList(int day)
+	{
+		if(mCalendarCard.getFirstDay()<=day)
+		{
+			java.util.Date initialDate = mCalendarCard.getInitialDate();
+			cal.set(Calendar.DAY_OF_MONTH, day);
+			java.util.Date selectedDate =  cal.getTime();
+			
+			Log.d("actor", "Fecha de inicio: " + initialDate);
+			Log.d("actor", "Fecha seleccionada: " + selectedDate);
+			
+			long dayDifference = getDateDiffString(initialDate, selectedDate);
+			
+			List<DTO_Componente> componentes = new DAO_Componente(ctx).getAllComponente(
+					new API(ctx).getID_Dieta(),String.valueOf(dayDifference + 1));
+			int t = Math.abs(mCalendarCard.getFirstDay()-day) + 1;
+			List<RelativeLayout> childrenLayout = initDietaComponents(componentes);
+			linearLayout.removeAllViewsInLayout();
+
+			if (childrenLayout != null) 
+			{
+				for (RelativeLayout temp : childrenLayout) 
+				{
+					linearLayout.addView(temp);
+				}
+
+				//updates selected cell and current cell style
+				String dayOfMonth = String.valueOf(day);
+				mCalendarCard.updateSelectedCellStyle(dayOfMonth);
+			}
+		}
+		else
+		{
+			Toast.makeText(ctx, "No hay datos para este dia", Toast.LENGTH_SHORT).show();
+		}
+	}
+	
+	public void populateDietaList(int day, Calendar newD)
+	{
+		
+			java.util.Date initialDate = mCalendarCard.getInitialDate();
+			cal.set(Calendar.DAY_OF_MONTH, day);
+			java.util.Date selectedDate =  newD.getTime();
+			
+			Log.d("actor", "Fecha de inicio1: " + initialDate);
+			Log.d("actor", "Fecha seleccionada1: " + selectedDate);
+			
+			long dayDifference = getDateDiffString(initialDate, selectedDate);
+			
+			List<DTO_Componente> componentes = new DAO_Componente(ctx).getAllComponente(
+					new API(ctx).getID_Dieta(),String.valueOf(dayDifference + 1));
+			int t = Math.abs(mCalendarCard.getFirstDay()-day) + 1;
+			List<RelativeLayout> childrenLayout = initDietaComponents(componentes);
+			linearLayout.removeAllViewsInLayout();
+
+			if (childrenLayout != null) 
+			{
+				for (RelativeLayout temp : childrenLayout) 
+				{
+					linearLayout.addView(temp);
+				}
+
+				//updates selected cell and current cell style
+				String dayOfMonth = String.valueOf(day);
+				mCalendarCard.updateSelectedCellStyle(dayOfMonth);
+			}
+			else
+			{
+				Toast.makeText(ctx, "No hay datos para este dia", Toast.LENGTH_SHORT).show();
+			}
+		
+		
 	}
 
 }

@@ -83,7 +83,7 @@ import com.github.mikephil.charting.utils.XLabels;
 import com.github.mikephil.charting.utils.XLabels.XLabelPosition;
 import com.github.mikephil.charting.utils.YLabels;
 
-public class HomeActivity extends Activity implements OnTouchListener{//,GestureDetector.OnGestureListener{
+public class HomeActivity extends Activity implements OnTouchListener, OnClickListener{
 
 	//global variables;
 	private int width;
@@ -118,6 +118,14 @@ public class HomeActivity extends Activity implements OnTouchListener{//,Gesture
 	private int textColor, barColor, barShadow, backgroundColor;
 
 	private Uri mImageCaptureUri; // This needs to be initialized.
+
+
+
+	//Style variables
+	private int styleMain;
+	private int styleDetail;
+
+
 	static final int CAMERA_PIC_REQUEST = 1337; 
 	private String filePath;
 	public static final int MEDIA_TYPE_IMAGE = 1;
@@ -125,17 +133,15 @@ public class HomeActivity extends Activity implements OnTouchListener{//,Gesture
 	private static final int CAMERA = 0;
 	private static final int GALLERY = 1;
 	private final String FACEBOOK_URL = "https://facebook.com";
-	//private ShareActivity activity;
 
-	//Style variables
-	private int styleMain;
-	private int styleDetail;
 
 	@Override
+
 	protected void onCreate(Bundle savedInstanceState) {		
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.baseline4);
 		cont = this;
+
 
 		//bind layout views to local objects
 		backLayout = (RelativeLayout) findViewById(R.id.backLayout);
@@ -151,6 +157,9 @@ public class HomeActivity extends Activity implements OnTouchListener{//,Gesture
 		SharedPreferences runCheck = PreferenceManager.getDefaultSharedPreferences(cont);
 		Boolean hasRun = runCheck.getBoolean("hasRun", false); //see if it's run before, default no
 
+		//For the csv files
+		ImageButton buttonCamera = (ImageButton) findViewById(R.id.buttonTopLeft);
+		buttonCamera.setOnTouchListener(this);
 		new DAO_DietaCompletada(cont).InsertCSVFile(null, null, null);
 
 		//Clear the notification
@@ -213,45 +222,44 @@ public class HomeActivity extends Activity implements OnTouchListener{//,Gesture
 		button_MiPerfil.setOnTouchListener(new DrawerCloseListener());
 
 		//if button is pressed, the dieta ended dialog is shown. For debugging purposes
-		button_MiPerfil.setOnClickListener(new View.OnClickListener() {
+		button_MiPerfil.setOnClickListener(this);
 
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				//checks if drawer is open. If it is, the drawer closes instead of performing action
-				//				if (!viewActionsContentView.isContentShown()) 
-				//				{
-				//					viewActionsContentView.showContent();
-				//				}
-				//				else
-				//				{
-				DietaCompletedDialog dialog = new DietaCompletedDialog(cont);
-				dialog.show();
-				dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-
-					@Override
-					public void onDismiss(DialogInterface dialog) {
-						// TODO Auto-generated method stub
-						List<DTO_DietaCompletada> lista = new DAO_DietaCompletada(cont).getLastFiveDietaCompleta();
-						BarEntry e = new BarEntry(Float.valueOf(lista.get(lista.size()-1).getPeso()), lista.size()-1);
-						set1.addEntry(e);
-						setData(lista.size(), 80, lista );
-						mChart.invalidate();
-						mChart.animateY(lista.size() * 250);
-						
-						//update current user's peso
-						new DAO_Usuario(cont).updatePesoActual(lista.get(lista.size()-1).getPeso());
-						Log.d("update", "ya se cambio esa madre");
-						Log.d("update", "0 :" + lista.get(0).getPeso());
-						Log.d("update", "1 :" + lista.get(lista.size()-1).getPeso());
-						DTO_Usuario user = new DAO_Usuario(cont).getUsuario();
-						Log.d("update", user.getPeso());
-					}
-				});
-				//}
-
-			}
-		});
+//		swipeLayout.addSwipeListener(new SwipeLayout.SwipeListener() {
+//			@Override
+//			public void onClose(SwipeLayout layout) {
+//				//when the SurfaceView totally cover the BottomView.
+//				shoudlOpenDrawer = true;
+//				isDrawerOpen = false;
+//			}
+//
+//			@Override
+//			public void onUpdate(SwipeLayout layout, int leftOffset, int topOffset) {
+//				//you are swiping.
+//			}
+//
+//			@Override
+//			public void onOpen(SwipeLayout layout) {
+//				//when the BottomView totally show.
+//				shoudlOpenDrawer = true;
+//				isDrawerOpen = true;
+//			}
+//
+//			@Override
+//			public void onHandRelease(SwipeLayout layout, float xvel, float yvel) {
+//				//when user's hand released.
+//			}
+//
+//			@Override
+//			public void onStartClose(SwipeLayout arg0) {
+//				// TODO Auto-generated method stub
+//				shoudlOpenDrawer = false;
+//			}
+//
+//			@Override
+//			public void onStartOpen(SwipeLayout arg0) {
+//				// TODO Auto-generated method stub
+//				shoudlOpenDrawer = false;
+//				});
 
 
 		//TouchListner to close the drawer when touched.
@@ -273,45 +281,9 @@ public class HomeActivity extends Activity implements OnTouchListener{//,Gesture
 
 		//set drag edge.
 		swipeLayout.setDragEdge(SwipeLayout.DragEdge.Top);
+		
+		
 
-		swipeLayout.addSwipeListener(new SwipeLayout.SwipeListener() {
-			@Override
-			public void onClose(SwipeLayout layout) {
-				//when the SurfaceView totally cover the BottomView.
-				shoudlOpenDrawer = true;
-				isDrawerOpen = false;
-			}
-
-			@Override
-			public void onUpdate(SwipeLayout layout, int leftOffset, int topOffset) {
-				//you are swiping.
-			}
-
-			@Override
-			public void onOpen(SwipeLayout layout) {
-				//when the BottomView totally show.
-				shoudlOpenDrawer = true;
-				isDrawerOpen = true;
-			}
-
-			@Override
-			public void onHandRelease(SwipeLayout layout, float xvel, float yvel) {
-				//when user's hand released.
-			}
-
-			@Override
-			public void onStartClose(SwipeLayout arg0) {
-				// TODO Auto-generated method stub
-				shoudlOpenDrawer = false;
-			}
-
-			@Override
-			public void onStartOpen(SwipeLayout arg0) {
-				// TODO Auto-generated method stub
-				shoudlOpenDrawer = false;
-
-			}
-		});
 	}
 
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -374,14 +346,14 @@ public class HomeActivity extends Activity implements OnTouchListener{//,Gesture
 		viewActionsList.setSelectionAfterHeaderView();
 		return super.onCreateOptionsMenu(menu);
 	}
-	
+
 	@Override
 	public void onStop()
 	{
 		super.onStop();
 		if(viewActionsContentView != null)
-		viewActionsContentView.showContent();
-	
+			viewActionsContentView.showContent();
+
 	}
 
 	@Override
@@ -622,6 +594,52 @@ public class HomeActivity extends Activity implements OnTouchListener{//,Gesture
 	@Override
 	public void onBackPressed(){
 		moveTaskToBack(true);
+	}
+
+	//When click on the button for take the photo
+	@Override
+	public void onClick(View v){
+		if(v.getId() == R.id.buttonTopLeft){
+			Toast.makeText(this, "Clicked Camera", Toast.LENGTH_LONG).show();
+//			DietaCompletedDialog dialog = new DietaCompletedDialog(cont);
+//			dialog.show();
+//			dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+//
+//				@Override
+//				public void onDismiss(DialogInterface dialog) {
+//					// TODO Auto-generated method stub
+//					List<DTO_DietaCompletada> lista = new DAO_DietaCompletada(cont).getLastFiveDietaCompleta();
+//					BarEntry e = new BarEntry(Float.valueOf(lista.get(lista.size()-1).getPeso()), lista.size()-1);
+//					set1.addEntry(e);
+//					setData(lista.size(), 80, lista );
+//					mChart.invalidate();
+//					mChart.animateX(lista.size() * 250);
+//				}
+//			});
+		}
+		else
+		{
+			Intent intent = new Intent(HomeActivity.this, EstadisticasActivity.class);
+			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(intent);
+		}
+	}
+
+	private File createImageFile() throws IOException{
+		// Create an image file name 
+		String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+		String imageFileName = "JPEG_" + timeStamp + "_";
+		File storageDir = Environment.getExternalStoragePublicDirectory(
+				Environment.DIRECTORY_PICTURES);
+		File image = File.createTempFile(
+				imageFileName,  /* prefix */
+				".jpg",         /* suffix */ 
+				storageDir      /* directory */
+				); 
+
+		// Save a file: path for use with ACTION_VIEW intents 
+		mCurrentPhotoPath = "file:" + image.getAbsolutePath();
+		return image;
 	}
 
 

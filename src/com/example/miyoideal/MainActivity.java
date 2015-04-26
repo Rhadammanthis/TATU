@@ -28,15 +28,24 @@ import android.widget.TextView;
 import com.example.DB.SQLiteComponenteDB;
 import com.example.DB.SQLiteControl;
 import com.example.DB.SQLiteDietaDB;
+import com.example.DB.SQLiteEstadisticas;
 import com.example.DB.SQLiteFactory;
 import com.example.DB.SQLiteProgramaDB;
 import com.example.DB.SQLiteUserDB;
 import com.example.miyoideal.extra.API;
 import com.example.miyoideal.extra.DialyNotificationReceiver;
+import com.facebook.FacebookSdk;
+import com.twitter.sdk.android.Twitter;
+import com.twitter.sdk.android.core.TwitterAuthConfig;
+import io.fabric.sdk.android.Fabric;
 
 
 public class MainActivity extends Activity implements SQLiteFactory{
 
+	// Note: Your consumer key and secret should be obfuscated in your source code before shipping.
+	private static final String TWITTER_KEY = "W0MKS891WG6RThT1rXA0ZXrk2";
+	private static final String TWITTER_SECRET = "qtSPokpJDNzJlIoOKq4rftqW0ibXRXlJYy8vZGjINcSm3yveBe";
+	
 	//layout components
 	private Button button;
 	private Spinner spinnerNivel;
@@ -56,8 +65,17 @@ public class MainActivity extends Activity implements SQLiteFactory{
 	private int styleDetail;
 
 	@Override
+	public void onResume(){
+		super.onResume();
+	}
+	
+	
+	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		TwitterAuthConfig authConfig = new TwitterAuthConfig(TWITTER_KEY, TWITTER_SECRET);
+		Fabric.with(this, new Twitter(authConfig));
+		FacebookSdk.sdkInitialize(getApplicationContext());
 		setContentView(R.layout.activity_main);
 		this.setTitle("Diagnostico");
 		con = this;
@@ -124,13 +142,14 @@ public class MainActivity extends Activity implements SQLiteFactory{
 					initDietaDB();
 					initControlDB();
 					initProgramaDB();
-					
+										
 					Spinner sexo = (Spinner) main.getChildAt(1);
 					EditText edad = (EditText) main.getChildAt(2);
 					EditText talla = (EditText) main.getChildAt(3);
 					EditText peso = (EditText) main.getChildAt(4);
 					Spinner nivel = (Spinner) main.getChildAt(5);
-
+					
+					initEstadisticasDB(peso.getText().toString(), talla.getText().toString());
 					userDB.getWritableDatabase();
 					Log.d("db", userDB.getDatabaseName());
 					values.put("id_usuario", "1");
@@ -143,6 +162,7 @@ public class MainActivity extends Activity implements SQLiteFactory{
 					
 					userDB.getWritableDatabase().insert("usuario", null, values);
 					userDB.close();
+					
 					Intent intent = new Intent(MainActivity.this, HomeActivity.class);
 					Log.d("grafica", "ya hay usuario");
 					startActivity(intent);
@@ -160,13 +180,15 @@ public class MainActivity extends Activity implements SQLiteFactory{
 					AlertDialog alert = builder.create();
 					alert.show();
 				}
-
-
 			}
 		});	
 	}
 
-
+	@Override
+	public void onPause(){
+		super.onPause();
+	}
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		//Add the menu layout to the action bar
@@ -239,7 +261,7 @@ public class MainActivity extends Activity implements SQLiteFactory{
 		values.put("dia", "1");
 		values.put("alimento", "Desayuno");
 		values.put("activo", "no");
-		values.put("descripcion", "Desayuno DIETA UNO Día 1 Alimento 1");
+		values.put("descripcion", "Desayuno DIETA UNO D?a 1 Alimento 1");
 		db.getWritableDatabase().insert("componente", null, values);
 
 		//2
@@ -249,7 +271,7 @@ public class MainActivity extends Activity implements SQLiteFactory{
 		values.put("dia", "1");
 		values.put("alimento", "Desayuno");
 		values.put("activo", "no");
-		values.put("descripcion", "Desayuno DIETA UNO Día 1 Alimento 2");
+		values.put("descripcion", "Desayuno DIETA UNO D?a 1 Alimento 2");
 		db.getWritableDatabase().insert("componente", null, values);
 
 		//3
@@ -259,7 +281,7 @@ public class MainActivity extends Activity implements SQLiteFactory{
 		values.put("dia", "1");
 		values.put("alimento", "Desayuno");
 		values.put("activo", "no");
-		values.put("descripcion", "Desayuno DIETA UNO Día 1 Alimento 3");
+		values.put("descripcion", "Desayuno DIETA UNO D?a 1 Alimento 3");
 		db.getWritableDatabase().insert("componente", null, values);
 
 		//4
@@ -269,7 +291,7 @@ public class MainActivity extends Activity implements SQLiteFactory{
 		values.put("dia", "1");
 		values.put("alimento", "Colacion");
 		values.put("activo", "no");
-		values.put("descripcion", "Colacion DIETA UNO Día 1 Alimento 1");
+		values.put("descripcion", "Colacion DIETA UNO D?a 1 Alimento 1");
 		db.getWritableDatabase().insert("componente", null, values);
 
 		//5
@@ -279,7 +301,7 @@ public class MainActivity extends Activity implements SQLiteFactory{
 		values.put("dia", "1");
 		values.put("alimento", "Colacion");
 		values.put("activo", "no");
-		values.put("descripcion", "Colacion DIETA UNO Día 1 Alimento 2");
+		values.put("descripcion", "Colacion DIETA UNO D?a 1 Alimento 2");
 		db.getWritableDatabase().insert("componente", null, values);
 
 		//6
@@ -289,7 +311,7 @@ public class MainActivity extends Activity implements SQLiteFactory{
 		values.put("dia", "1");
 		values.put("alimento", "Colacion");
 		values.put("activo", "no");
-		values.put("descripcion", "Colacion DIETA UNO Día 1 Alimento 3");
+		values.put("descripcion", "Colacion DIETA UNO D?a 1 Alimento 3");
 		db.getWritableDatabase().insert("componente", null, values);
 		
 		//6-1
@@ -322,7 +344,7 @@ public class MainActivity extends Activity implements SQLiteFactory{
 		values.put("dia", "2");
 		values.put("alimento", "Desayuno");
 		values.put("activo", "no");
-		values.put("descripcion", "Desayuno DIETA UNO Día 2 Alimento 3");
+		values.put("descripcion", "Desayuno DIETA UNO D?a 2 Alimento 3");
 		db.getWritableDatabase().insert("componente", null, values);
 
 		//88
@@ -332,7 +354,7 @@ public class MainActivity extends Activity implements SQLiteFactory{
 		values.put("dia", "2");
 		values.put("alimento", "Colacion");
 		values.put("activo", "no");
-		values.put("descripcion", "Colacion DIETA UNO Día 2 Alimento 1");
+		values.put("descripcion", "Colacion DIETA UNO D?a 2 Alimento 1");
 		db.getWritableDatabase().insert("componente", null, values);
 
 		//9
@@ -342,7 +364,7 @@ public class MainActivity extends Activity implements SQLiteFactory{
 		values.put("dia", "2");
 		values.put("alimento", "Colacion");
 		values.put("activo", "no");
-		values.put("descripcion", "Colacion DIETA UNO Día 2 Alimento 2");
+		values.put("descripcion", "Colacion DIETA UNO D?a 2 Alimento 2");
 		db.getWritableDatabase().insert("componente", null, values);
 
 		//10
@@ -352,7 +374,7 @@ public class MainActivity extends Activity implements SQLiteFactory{
 		values.put("dia", "2");
 		values.put("alimento", "Colacion");
 		values.put("activo", "no");
-		values.put("descripcion", "Colacion DIETA UNO Día 2 Alimento 3");
+		values.put("descripcion", "Colacion DIETA UNO D?a 2 Alimento 3");
 		db.getWritableDatabase().insert("componente", null, values);
 
 		db.close();
@@ -418,9 +440,8 @@ public class MainActivity extends Activity implements SQLiteFactory{
 		values.put("titulo", "Carrera");
 		values.put("descripcion", "Correr 5 km a un ritmo medio");
 		values.put("hora", "7 pm");
-		db.getWritableDatabase().insert("programa", null, values);				
-
-
+		db.getWritableDatabase().insert("programa", null, values);
+		
 	}		
 	
 	//Saves selected style colors to local variables
@@ -441,4 +462,25 @@ public class MainActivity extends Activity implements SQLiteFactory{
 		mainLayout.setBackgroundColor(styleMain);
 	}
 
+	//Create the Estaditicas Database 
+	@Override
+	public void initEstadisticasDB(String pesoActual, String tallaActual){
+		SQLiteEstadisticas db = new SQLiteEstadisticas(this);
+		ContentValues values = new ContentValues();
+		values.put("id_estadisticas", 0);
+		values.put("talla_maxima", Float.valueOf(tallaActual));
+		values.put("talla_minima", Float.valueOf(tallaActual));
+		values.put("talla_actual", Float.valueOf(tallaActual));
+		values.put("peso_maximo", Float.valueOf(pesoActual));
+		values.put("peso_minimo", Float.valueOf(pesoActual));
+		values.put("peso_actual", Float.valueOf(pesoActual));
+		values.put("imc", (Float.valueOf(pesoActual) / Float.valueOf(tallaActual)));
+		values.put("record_peso_perdido", 0);
+		values.put("peso_perdido_tratamiento", 0);
+		values.put("dias_consecutivos_dieta", 0);
+		values.put("dias_consecutivos_ejercicio", 0);
+		long i = db.getWritableDatabase().insert("estadisticas", null, values);
+		Log.d("Main Activity Result insert", i+" ");
+		
+	}
 }

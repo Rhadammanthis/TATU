@@ -1,16 +1,16 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res/sample.actionscontentview"
+    android:id="@+id/shareMain"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <Button
+    <com.facebook.share.widget.ShareButton
         android:id="@+id/shareFacebook"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="150dp"
+        android:layout_height="40dp"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:paddingTop="16dip"
-        android:text="Facebook" />
+        android:text="@string/facebook_share_text" />
 
     <Button
         android:id="@+id/shareTwitter"
@@ -31,6 +31,17 @@
         android:layout_below="@+id/shareFacebook"
         android:layout_marginTop="29dp"
         android:text="GPlus" />
+
+    <com.facebook.share.widget.LikeView
+        android:id="@+id/like_facebook"
+        android:layout_width="wrap_content"
+        android:layout_height="45dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="38dp"
+        android:layout_marginRight="27dp"
+        android:text="@string/facebook_like_text" >
+    </com.facebook.share.widget.LikeView>
 
 </RelativeLayout>
 

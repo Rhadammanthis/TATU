@@ -7,6 +7,7 @@ import java.util.List;
 
 import shared.ui.actionscontentview.ActionsContentView;
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
@@ -32,9 +33,12 @@ import android.widget.TextView;
 import android.widget.TableRow.LayoutParams;
 
 import com.example.DAO.DAO_Ejercicio;
+import com.example.DAO.DAO_Estadisticas;
 import com.example.DAO.DAO_Programa;
 import com.example.DAO.DAO_Usuario;
+import com.example.DB.SQLiteEstadisticas;
 import com.example.DTO.DTO_Ejercicio;
+import com.example.DTO.DTO_Estadisticas;
 import com.example.DTO.DTO_Programa;
 import com.example.DTO.DTO_Usuario;
 import com.example.miyoideal.extra.API;
@@ -156,6 +160,73 @@ public class EjercicioActivity extends Activity {
 		{
 			RelativeLayout header = (RelativeLayout) findViewById(R.id.ejercicioTopBar);
 			header.setVisibility(View.GONE);
+			checkB.setChecked(true);
+		}
+
+		//if distance > dias que dura la dieta, esconder barra
+
+		//			checkB.setOnClickListener(new View.OnClickListener() {
+		//				
+		//				@Override
+		//				public void onClick(View v) {
+		//					// TODO Auto-generated method stub
+		//					if(checkB.isChecked())
+		//					{
+		//						dia[(int) distance] = '1';
+		//					}
+		//					else
+		//					{
+		//						dia[(int) distance] = '0';
+		//					}		
+		//					String l = "";
+		//					for(int i = 0; i<=ejercicio.getDiasActividad().length()-1;i++)
+		//						l += String.valueOf(dia[i]);
+		//					Log.d("dias", l);
+		//					ejercicio.setDiasActividad(l);
+		//					Log.d("dias", ejercicio.getDiasActividad());
+		//					new DAO_Ejercicio(con).updateEjercicio(ejercicio);
+		//				}
+		//			});
+
+	}
+
+
+	@Override
+	public void onStop(){
+		super.onStop();
+
+		if(new API(con).IsDietaSet())
+		{
+			DAO_Estadisticas daoEstadisticas = new DAO_Estadisticas(con);
+			DTO_Estadisticas dtoEstadisticas = daoEstadisticas.getEstadisticas();
+			SQLiteEstadisticas dbEstadisticas = new SQLiteEstadisticas(con);
+			if(dia[(int) distance] == 1){
+				dbEstadisticas.getReadableDatabase();
+				ContentValues values = new ContentValues();
+				values.put("dias_consecutivos_ejercicio", Integer.valueOf(dtoEstadisticas.getDiasConsecutivosEjercicio()) + 1);
+				/*if(distance > 0 && dia[((int)(distance))-1] == 0){
+					values.put("dias_consecutivos_ejercicio", Integer.valueOf(dtoEstadisticas.getDiasConsecutivosEjercicio()) + 1);
+				}
+				else{
+					values.put("dias_consecutivos_ejercicio", 0);
+				}*/
+				dbEstadisticas.close();
+				dbEstadisticas.getWritableDatabase().update("estadisticas", values, null, null);
+				dbEstadisticas.close();
+			}
+			else if(dia[(int) distance] == 0){
+				dbEstadisticas.getReadableDatabase();
+				ContentValues values = new ContentValues();
+				values.put("dias_consecutivos_ejercicio", 0);
+				/*if(distance > 0 && dia[((int) (distance))-1] == 0){
+					values.put("dias_consecutivos_ejercicio", Integer.valueOf(dtoEstadisticas.getDiasConsecutivosEjercicio()) - 1);
+				}else{
+					values.put("dias_consecutivos_ejercicio", 0);
+				}*/
+				dbEstadisticas.close();
+				dbEstadisticas.getWritableDatabase().update("estadisticas", values, null, null);
+				dbEstadisticas.close();
+			}
 		}
 	}
 
@@ -233,10 +304,15 @@ public class EjercicioActivity extends Activity {
 				dia_Date2 = Integer.valueOf((String)android.text.format.DateFormat.format("dd", date2));
 
 		String lol = String.valueOf(timeOne/oneDay);
-		if(dia_Date2 < dia_Date1)
+
+		if(date2.before(date))
 			return -1;
 		else
 			return delta;
+		//		if(dia_Date2 < dia_Date1)
+		//			return -1;
+		//		else
+		//			return delta;
 	}
 
 	private void initProgramaComponentes()

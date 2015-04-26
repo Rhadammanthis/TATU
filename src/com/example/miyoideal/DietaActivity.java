@@ -102,8 +102,6 @@ public class DietaActivity extends Activity {
 			populateDietaView();
 		}
 
-
-
 		/*check if Cancelar Dieta button should be displayed
 		 * button is active by default
 		 */
@@ -161,6 +159,7 @@ public class DietaActivity extends Activity {
 				}
 				String todayDate = df.format(c.getTime());	
 				long distance = getDateDiffString(initalDate,c.getTime());
+				Log.d("311", "Diferencia " + String.valueOf(distance));
 				if(new API(con).IsDietaSet())
 				{
 					componentes = new DAO_Componente(con).getAllComponente(new API(con).getID_Dieta(), String.valueOf(distance+1));
@@ -439,8 +438,9 @@ public class DietaActivity extends Activity {
 				dia_Date2 = Integer.valueOf((String)android.text.format.DateFormat.format("dd", date2));
 
 		String lol = String.valueOf(timeOne/oneDay);
-		if(dia_Date2 < dia_Date1)
-			return -1;
+
+		if(date2.before(date))
+				return -1;
 		else
 			return delta;
 	}

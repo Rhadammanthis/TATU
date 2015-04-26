@@ -167,7 +167,7 @@
                 android:layout_marginBottom="25dip"
                 android:paddingLeft="20dip"
                 
-                android:text="Boton de Abajo" />
+                android:text="Estadísticas" />
         </RelativeLayout>
     </com.daimajia.swipe.SwipeLayout>
 
