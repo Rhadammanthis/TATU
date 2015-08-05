@@ -109,7 +109,7 @@
                     android:contentDescription="Camera Button"
                     android:padding="5dip"
                     android:scaleType="fitCenter"
-                    android:src="@drawable/home_button_icon1" />
+                    android:src="@drawable/selector_up_left" />
 
                 <ImageButton
                     android:id="@+id/buttonDownLeft"
@@ -168,6 +168,16 @@
                 android:paddingLeft="20dip"
                 
                 android:text="Estadísticas" />
+
+            <ImageView
+                android:id="@+id/imageView1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:clickable="false"
+                android:layout_toRightOf="@+id/linearLayout1"
+                android:src="@drawable/abc_ab_solid_dark_holo" />
+
         </RelativeLayout>
     </com.daimajia.swipe.SwipeLayout>
 

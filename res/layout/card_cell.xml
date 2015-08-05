@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<com.wt.calendarcard.CheckableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.cceo.calendarcard.CheckableLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_weight="1"
@@ -7,4 +7,4 @@
     style="@style/CalendarCard.Cell"
     android:clickable="true">
 
-</com.wt.calendarcard.CheckableLayout>
+</com.cceo.calendarcard.CheckableLayout>

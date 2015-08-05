@@ -35,6 +35,14 @@
         android:layout_below="@+id/shareFacebook"
         android:layout_marginTop="29dp"
         android:text="GPlus" />
+    
+    <com.facebook.login.widget.LoginButton
+    android:id="@+id/login_button"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_horizontal"
+    android:layout_marginTop="30dp"
+    android:layout_marginBottom="30dp" />  
 
     <com.facebook.share.widget.LikeView
         android:id="@+id/like_facebook"
@@ -46,7 +54,8 @@
         android:layout_marginRight="27dp"
         android:text="@string/facebook_like_text" >
     </com.facebook.share.widget.LikeView>
-    
+   
+    <!--  
     <com.google.android.gms.plus.PlusOneButton
 	    android:id="@+id/plus_one_button"
 	    android:layout_alignParentBottom="true"
@@ -56,7 +65,7 @@
 	    android:layout_marginBottom="52dp"
 	    android:layout_marginRight="150dp"
 	    plus:size="tall"
-	/>
+	/>-->
     
     <Button
 	    android:id="@+id/follow_button"
@@ -68,6 +77,17 @@
 	    android:layout_marginBottom="38dp"
 	    android:layout_marginLeft="20dp"
 	/>
+
+    <ImageView
+        android:id="@+id/profile_pic"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/shareTwitter"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/login_button"
+        android:src="@drawable/abc_ab_bottom_solid_dark_holo" />
+
 </RelativeLayout>
 
 <!--  -->

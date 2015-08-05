@@ -1,7 +1,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
     android:id="@+id/dietaBodyFrame"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white"
     android:orientation="vertical" >
@@ -44,11 +44,11 @@
             android:id="@+id/fechaDieta"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="#ffffff"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             android:text="Fecha del Dia"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="#ffffff" />
     </RelativeLayout>
 
     <View
@@ -78,32 +78,38 @@
     <RelativeLayout
         android:id="@+id/dietaBody"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#00A499" >
+        android:layout_height="match_parent" >
 
         <ScrollView
             android:id="@+id/scrollView1"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
+            android:layout_height="match_parent" >
 
-            <LinearLayout
-                android:id="@+id/dieta_linearLayout"
+            <RelativeLayout
+                android:id="@+id/lol"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical" >
-            </LinearLayout>
+                android:layout_height="match_parent" >
+
+                <LinearLayout
+                    android:id="@+id/dieta_linearLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical" >
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/dieta_cancel"
+                    android:layout_width="fill_parent"
+                    android:layout_height="50dip"
+                    android:layout_below="@+id/dieta_linearLayout"
+                    android:layout_alignParentBottom="true"
+                    android:layout_margin="10dip"
+                    android:background="#ff0000"
+                    android:padding="3dip"
+                    android:text="Cancelar Programa Actual"
+                    android:textColor="#000000" />
+            </RelativeLayout>
         </ScrollView>
     </RelativeLayout>
-
-    <Button
-        android:id="@+id/cancelButtonMiDieta"
-        android:layout_width="fill_parent"
-        android:layout_height="50dip"
-        android:layout_alignParentBottom="true"
-        android:layout_margin="3dip"
-        android:background="#ff0000"
-        android:padding="3dip"
-        android:text="Cancelar Programa Actual"
-        android:textColor="#000000" />
 
 </LinearLayout>

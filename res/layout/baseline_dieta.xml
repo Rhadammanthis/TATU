@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:effect_actions="@anim/actions"
-        app:actions_layout="@layout/side_menu"        
+        app:actions_layout="@layout/side_menu_simple"        
         app:content_layout="@layout/activity_dieta"
         app:swiping_type="full"
         app:spacing_type="actions_width"

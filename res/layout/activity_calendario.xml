@@ -5,7 +5,7 @@
     android:background="@android:color/white"
     android:orientation="vertical" >
 
-    <com.wt.calendarcard.CalendarCard
+    <com.cceo.calendarcard.CalendarCard
         android:id="@+id/calendarCard6"
         android:layout_marginLeft="35dip"
         android:layout_marginRight="35dip"

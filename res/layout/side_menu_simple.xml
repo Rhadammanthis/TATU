@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#4C4D4F" >
+
+    <fragment
+        android:id="@+id/simple_menu_fragment"
+        android:name="com.cceo.miyoideal.extra.MenuFragment"
+        android:layout_width="45dip"
+        android:layout_height="45dip"
+
+        android:layout_alignParentLeft="true"
+		android:layout_marginBottom="10dip"
+        android:layout_marginLeft="20dip"
+        android:layout_marginTop="30dip" />
+
+    <View
+        android:id="@+id/sideMneuBar"
+        android:layout_width="match_parent"
+        android:layout_height="2dip"
+        android:layout_below="@+id/simple_menu_fragment"
+        android:layout_marginLeft="10dip"
+        android:layout_marginRight="10dip"
+        android:background="#ffffff" />
+
+    <LinearLayout
+        android:id="@+id/homeLinearLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/bNyVare"
+        android:layout_below="@id/sideMneuBar"
+        android:orientation="vertical" >
+
+        <ListView
+            android:id="@+id/actions_simple"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="#4C4D4F"
+            android:cacheColorHint="#4C4D4F"
+            android:divider="@null" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tvLOL_simple"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/simple_menu_fragment"
+        android:layout_marginLeft="22dp"
+        android:layout_toRightOf="@+id/simple_menu_fragment"
+        android:text="Menú"
+        android:textColor="#ffffff"
+        android:textSize="35sp" />
+
+</RelativeLayout>

@@ -12,23 +12,10 @@
         android:paddingTop="6dip"
         android:text="FELICIDADES"
         android:textAppearance="?android:attr/textAppearanceLarge" />
-
-
-    <TextView
-        android:id="@+id/shareText2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/shareText1"
-        android:layout_centerHorizontal="true"
-        android:gravity="center"
-        android:paddingTop="6dip"
-        android:paddingBottom="16dip"
-        android:text="Haz completado la dieta XXX. Ahora actualiza tus datos"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
     
     <View 
         android:id="@+id/shareView1"
-        android:layout_below="@+id/shareText2"
+        android:layout_below="@+id/textView1"
         android:layout_width="match_parent"
         android:layout_height="2dip"
         android:background="#9f9f9f"
@@ -55,7 +42,7 @@
         android:layout_marginLeft="5dip"
         android:layout_below="@+id/shareText3"
         android:layout_centerHorizontal="true"
-        android:hint="Peso" />
+        android:hint="Kg - Lb" />
     
     <TextView
         android:id="@+id/shareText4"
@@ -77,19 +64,47 @@
         android:layout_marginLeft="5dip"
         android:layout_below="@+id/shareText4"
         android:layout_centerHorizontal="true"
-        android:hint="Talla" />
+        android:hint="Cm" />
 
-    <Button
-        android:id="@+id/buttonGuardar_share"
-        android:layout_width="120dip"
-        android:layout_marginTop="10dip"
-        android:layout_marginBottom="5dip"
+    <TextView
+        android:id="@+id/shareText2"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/tallaEditText_Share"
-        android:paddingEnd="16dip"
+        android:layout_below="@+id/shareText1"
         android:layout_centerHorizontal="true"
-        android:text="Guardar" />
+        android:gravity="center"
+        android:paddingBottom="6dip"
+        android:paddingTop="6dip"
+        android:text="Haz completado la dieta XXX."
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/shareText2"
+        android:layout_centerHorizontal="true"
+        android:paddingBottom="16dip"
+        android:paddingTop="6dip"
+        android:text=" Ahora actualiza tus datos"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <ImageButton
+        android:id="@+id/finished_dialog_facebook"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/shareText2"
+        android:layout_below="@+id/tallaEditText_Share"
+        android:layout_marginTop="19dp"
+        android:src="@drawable/abc_ab_stacked_transparent_light_holo" />
+
+    <ImageButton
+        android:id="@+id/finished_dialog_twitter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/shareText2"
+        android:layout_alignTop="@+id/finished_dialog_facebook"
+        android:src="@drawable/abc_ab_stacked_transparent_light_holo" />
 
 </RelativeLayout>
 
