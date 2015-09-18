@@ -21,6 +21,7 @@ import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.Menu;
@@ -33,10 +34,13 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout.LayoutParams;
+import android.widget.Toast;
+
 import com.cceo.miyoideal.R;
 import com.cceo.miyoideal.extra.API;
 import com.cceo.miyoideal.extra.MenuFragment;
 import com.cceo.miyoideal.extra.MyArrayAdapter;
+import com.cceo.miyoideal.extra.PhotoManager;
 
 public class ComparativeActivity extends Activity{
 	ImageView initialImage;
@@ -44,6 +48,11 @@ public class ComparativeActivity extends Activity{
 	private File[] imageFiles;
 	private Matrix matrix;
 	Context con;
+	PhotoManager photoManager;
+	private File photoFile;
+	private Uri photoUri;
+	
+	private int CAMERA_CODE = 1;
 	
 	private ActionsContentView viewActionsContentView;
 	private ListView viewActionsList;
@@ -52,6 +61,9 @@ public class ComparativeActivity extends Activity{
 	public void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.baseline_comparar);
+		this.getActionBar().setDisplayHomeAsUpEnabled(true);
+		getActionBar().setIcon(R.drawable.actionbar_icon_white);
+		
 		con = this;
 		
 		setUpMenu();
@@ -63,34 +75,7 @@ public class ComparativeActivity extends Activity{
 			imageFiles = getTheTwoImages();
 			if(imageFiles != null){
 				//Layout Parameters for modify
-				LayoutParams paramsInitialImage = (LayoutParams) initialImage.getLayoutParams();
-				LayoutParams paramsFinalImage = (LayoutParams) finalImage.getLayoutParams();
-				DisplayMetrics displaymetrics = new DisplayMetrics();
-				getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
-				int heightScreen = displaymetrics.heightPixels;
-				paramsInitialImage.height = heightScreen/2;
-				paramsFinalImage.height = heightScreen/2;
-				initialImage.setLayoutParams(paramsInitialImage);
-				finalImage.setLayoutParams(paramsFinalImage);
-				
-				//get screen size
-				Display display = getWindowManager().getDefaultDisplay();
-				Point size = new Point();
-				display.getSize(size);
-				//Get the two images on Bitmap object
-				Bitmap firstBitmap = BitmapFactory.decodeFile(imageFiles[0].getAbsolutePath());
-				Bitmap lastBitmap = BitmapFactory.decodeFile(imageFiles[1].getAbsolutePath());
-				//Verify the orientation of the image
-				matrix = verifyOrientation(imageFiles[0].getAbsolutePath());
-				Bitmap rotatedBitmapFirst = Bitmap.createBitmap(firstBitmap, 0, 0,
-                         firstBitmap.getWidth(), firstBitmap.getHeight(), matrix, true);
-				matrix = verifyOrientation(imageFiles[1].getAbsolutePath());
-				Bitmap rotatedBitmapLast = Bitmap.createBitmap(lastBitmap, 0, 0,
-                        lastBitmap.getWidth(), lastBitmap.getHeight(), matrix, true);
-				initialImage.setImageBitmap(rotatedBitmapFirst);
-				initialImage.setScaleType(ScaleType.FIT_XY);
-				finalImage.setImageBitmap(rotatedBitmapLast);
-				finalImage.setScaleType(ScaleType.FIT_XY);				
+				loadImages();	
 			}
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
@@ -101,20 +86,110 @@ public class ComparativeActivity extends Activity{
 		}
 	}
 	
+	//loads first and last photos in album to ImageViews
+	public void loadImages()
+	{
+		LayoutParams paramsInitialImage = (LayoutParams) initialImage.getLayoutParams();
+		LayoutParams paramsFinalImage = (LayoutParams) finalImage.getLayoutParams();
+		DisplayMetrics displaymetrics = new DisplayMetrics();
+		getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
+		int heightScreen = displaymetrics.heightPixels;
+		paramsInitialImage.height = heightScreen/2;
+		paramsFinalImage.height = heightScreen/2;
+		initialImage.setLayoutParams(paramsInitialImage);
+		finalImage.setLayoutParams(paramsFinalImage);
+		
+		//get screen size
+		Display display = getWindowManager().getDefaultDisplay();
+		Point size = new Point();
+		display.getSize(size);
+		//Get the two images on Bitmap object
+		Bitmap firstBitmap = BitmapFactory.decodeFile(imageFiles[0].getAbsolutePath());
+		Bitmap lastBitmap = BitmapFactory.decodeFile(imageFiles[1].getAbsolutePath());
+		//Verify the orientation of the image
+		try {
+			matrix = verifyOrientation(imageFiles[0].getAbsolutePath());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		Bitmap rotatedBitmapFirst = Bitmap.createBitmap(firstBitmap, 0, 0,
+                 firstBitmap.getWidth(), firstBitmap.getHeight(), matrix, true);
+		try {
+			matrix = verifyOrientation(imageFiles[1].getAbsolutePath());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		Bitmap rotatedBitmapLast = Bitmap.createBitmap(lastBitmap, 0, 0,
+                lastBitmap.getWidth(), lastBitmap.getHeight(), matrix, true);
+		initialImage.setImageBitmap(ShrinkBitmap(imageFiles[0].getAbsolutePath(), 400, 400));
+		initialImage.setScaleType(ScaleType.FIT_XY);
+		finalImage.setImageBitmap(ShrinkBitmap(imageFiles[1].getAbsolutePath(), 600, 600));
+		finalImage.setScaleType(ScaleType.FIT_XY);	
+	}
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) 
+	{
+		loadImages();
+		startActivity(getIntent());
+	}
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		//Add the menu layout to the action bar
 		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.base_action_bar, menu);
+		inflater.inflate(R.menu.extra_button, menu);
 		return super.onCreateOptionsMenu(menu);
 	}
 	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		//If the Logo clicked
-		Intent intent = new Intent(this, HomeActivity.class);
-		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		startActivity(intent);
+
+		switch (item.getItemId()) 
+		{
+			case 16908332:
+				if(viewActionsContentView.isContentShown())
+					viewActionsContentView.showActions();
+				else
+					viewActionsContentView.showContent();
+			return true;
+			
+			case 2131231055:
+				try {
+				startCamera(CAMERA_CODE);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+				break;
+
+			default:
+				Intent intent = new Intent(this, HomeActivity.class);
+				intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+				startActivity(intent);
+			break;
+		}
+
+//		if(item.getItemId() == findViewById(R.id.action_home).getId())
+//		{
+//			Intent intent = new Intent(this, HomeActivity.class);
+//			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//			startActivity(intent);			
+//			
+//		}
+//		else
+//		{
+//			try {
+//				startCamera(CAMERA_CODE);
+//			} catch (IOException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//		}
+		
 		return super.onOptionsItemSelected(item);
 	}
 	
@@ -319,4 +394,42 @@ public class ComparativeActivity extends Activity{
 		}
 		return matrix;
 	}
+	
+	//Set the extras for ShareActivity and start the camera
+	public void startCamera(int requestCode) throws IOException{
+		photoManager = new PhotoManager();
+		photoFile = photoManager.createFile();
+		Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+		if(takePictureIntent.resolveActivity(getPackageManager()) != null){
+			//photoFile = createImageFile();
+			photoUri = photoManager.getUri();
+			takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoManager.getUri());
+			//Save the image uri for later use
+			startActivityForResult(takePictureIntent, requestCode);
+		}	
+	}
+	
+	Bitmap ShrinkBitmap(String file, int width, int height){
+
+		 BitmapFactory.Options bmpFactoryOptions = new BitmapFactory.Options();
+		    bmpFactoryOptions.inJustDecodeBounds = true;
+		    Bitmap bitmap = BitmapFactory.decodeFile(file, bmpFactoryOptions);
+
+		    int heightRatio = (int)Math.ceil(bmpFactoryOptions.outHeight/(float)height);
+		    int widthRatio = (int)Math.ceil(bmpFactoryOptions.outWidth/(float)width);
+
+		    if (heightRatio > 1 || widthRatio > 1)
+		    {
+		     if (heightRatio > widthRatio)
+		     {
+		      bmpFactoryOptions.inSampleSize = heightRatio;
+		     } else {
+		      bmpFactoryOptions.inSampleSize = widthRatio; 
+		     }
+		    }
+
+		    bmpFactoryOptions.inJustDecodeBounds = false;
+		    bitmap = BitmapFactory.decodeFile(file, bmpFactoryOptions);
+		 return bitmap;
+		}
 }

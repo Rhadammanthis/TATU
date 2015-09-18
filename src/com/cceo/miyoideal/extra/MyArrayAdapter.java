@@ -6,6 +6,7 @@ import com.cceo.miyoideal.HomeActivity;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
@@ -20,12 +21,14 @@ public class MyArrayAdapter extends ArrayAdapter<String> {
 	Context context; 
 	int layoutResourceId;    
 	String data[] = null;
+	private Typeface type;
 
 	public MyArrayAdapter(Context context, int layoutResourceId, String[] data) {
 		super(context, layoutResourceId, data);
 		this.layoutResourceId = layoutResourceId;
 		this.context = context;
 		this.data = data;
+		type = Typeface.createFromAsset(context.getAssets(),"fonts/Raleway-Medium.ttf");
 	}
 
 
@@ -37,6 +40,7 @@ public class MyArrayAdapter extends ArrayAdapter<String> {
 		TextView tv = (TextView) super.getView(position, convertView, parent);
 
 		tv.setTextColor(Color.WHITE);
+		tv.setTypeface(type);
 		
 		//LinearLayout.LayoutParams llp = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 	    //llp.setMargins(0, (int) (5 * scale + 0.5f), 0, 0);

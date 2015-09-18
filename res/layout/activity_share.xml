@@ -7,6 +7,14 @@
 
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+    
+       <com.facebook.login.widget.LoginButton
+        android:id="@+id/share_facebook_login"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="93dp" />
 
     <com.facebook.share.widget.ShareButton
         android:id="@+id/shareFacebook"
@@ -14,35 +22,7 @@
         android:layout_height="40dp"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:text="@string/facebook_share_text" />
-
-    <Button
-        android:id="@+id/shareTwitter"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/shareFacebook"
-        android:layout_alignLeft="@+id/shareFacebook"
-        android:layout_alignRight="@+id/shareFacebook"
-        android:layout_marginBottom="29dp"
-        android:text="Twitter" />
-
-    <Button
-        android:id="@+id/shareGPlus"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/shareFacebook"
-        android:layout_alignRight="@+id/shareFacebook"
-        android:layout_below="@+id/shareFacebook"
-        android:layout_marginTop="29dp"
-        android:text="GPlus" />
-    
-    <com.facebook.login.widget.LoginButton
-    android:id="@+id/login_button"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_gravity="center_horizontal"
-    android:layout_marginTop="30dp"
-    android:layout_marginBottom="30dp" />  
+        android:text="@string/facebook_share_text" />  
 
     <com.facebook.share.widget.LikeView
         android:id="@+id/like_facebook"
@@ -78,15 +58,29 @@
 	    android:layout_marginLeft="20dp"
 	/>
 
-    <ImageView
-        android:id="@+id/profile_pic"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/shareTwitter"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:layout_toRightOf="@+id/login_button"
-        android:src="@drawable/abc_ab_bottom_solid_dark_holo" />
+    <ImageButton
+        android:id="@+id/shareTwitter"
+        android:layout_width="60dip"
+        android:layout_height="60dip"
+        android:layout_above="@+id/shareFacebook"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="27dp"
+        android:background="@null"
+        android:scaleType="fitXY"
+        android:src="@drawable/share_twitter_circ"
+        android:text="Twitter" />
+
+    <ImageButton
+        android:id="@+id/shareGPlus"
+        android:layout_width="60dip"
+        android:layout_height="60dip"
+        android:layout_alignLeft="@+id/shareTwitter"
+        android:layout_below="@+id/shareFacebook"
+        android:layout_marginTop="32dp"
+        android:background="@null"
+        android:scaleType="fitXY"
+        android:src="@drawable/share_gplus_circ"
+        android:text="GPlus" />
 
 </RelativeLayout>
 

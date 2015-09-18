@@ -4,6 +4,7 @@ import shared.ui.actionscontentview.ActionsContentView;
 
 import com.cceo.miyoideal.R;
 import com.cceo.miyoideal.extra.API;
+import com.cceo.miyoideal.extra.Font;
 import com.cceo.miyoideal.extra.MenuFragment;
 import com.cceo.miyoideal.extra.MyArrayAdapter;
 
@@ -46,6 +47,8 @@ public class DisclaimerActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.baseline_disclaimer);
+		this.getActionBar().setDisplayHomeAsUpEnabled(true);
+		getActionBar().setIcon(R.drawable.actionbar_icon_white);
 
 		con = this;
 
@@ -69,9 +72,23 @@ public class DisclaimerActivity extends Activity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		//If the Logo clicked
-		Intent intent = new Intent(this, HomeActivity.class);
-		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		startActivity(intent);
+		//If the Logo clicked
+		switch (item.getItemId()) 
+		{
+			case android.R.id.home:
+				if(viewActionsContentView.isContentShown())
+					viewActionsContentView.showActions();
+				else
+					viewActionsContentView.showContent();
+			return true;
+
+			default:
+				Intent intent = new Intent(this, HomeActivity.class);
+				intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+				startActivity(intent);
+			break;
+		}
+
 		return super.onOptionsItemSelected(item);
 	}
 
@@ -115,6 +132,9 @@ public class DisclaimerActivity extends Activity {
 			
 			TextView facebook_name = (TextView) findViewById(R.id.tvLOL_simple);
 			facebook_name.setText(new API(con).getFacebookName());
+			
+			Font f = new Font();					
+			f.changeFontRaleway(con, facebook_name);
 		}
 	}
 

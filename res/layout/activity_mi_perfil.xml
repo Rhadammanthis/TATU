@@ -1,9 +1,9 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="#f0f0f0"
     android:id="@+id/miPerfilScroll"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:background="#f0f0f0" >
 
     <LinearLayout
         android:id="@+id/miPerfilMainLayout"
@@ -12,119 +12,133 @@
         android:background="@null"
         android:orientation="vertical"
         android:paddingBottom="20dip"
-        android:paddingLeft="40dip"
-        android:paddingRight="40dip"
         android:paddingTop="20dip"
         tools:context="com.cceo.miyoideal.MiPerfilActivity" >
 
         <TextView
+            android:id="@+id/miPerfil_1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:paddingLeft="40dip"
+            android:paddingRight="40dip"
             android:text="Mis Datos"
-            android:textColor="#ffffff"
             android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="#ffffff"
             android:textSize="25sp" />
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="60dip" >
+            android:layout_height="60dip"
+            android:paddingLeft="40dip"
+            android:paddingRight="40dip" >
 
             <TextView
-                android:id="@+id/pesoActual"
-                android:textColor="#ffffff"
+                android:id="@+id/miPerfil_2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
                 android:text="Mi Peso Actual"
                 android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="#ffffff"
                 android:textSize="20sp" />
 
             <TextView
                 android:id="@+id/pesoActual_"
-                android:textColor="#ffffff"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:text="0"
                 android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="#ffffff"
                 android:textSize="20sp" />
         </RelativeLayout>
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="60dip" >
+            android:layout_height="60dip"
+            android:paddingLeft="40dip"
+            android:paddingRight="40dip" >
 
             <TextView
-                android:id="@+id/tallaActual"
-                android:textColor="#ffffff"
+                android:id="@+id/miPerfil_3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
                 android:text="Mi Talla"
                 android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="#ffffff"
                 android:textSize="20sp" />
 
             <TextView
                 android:id="@+id/tallaActual_"
-                android:textColor="#ffffff"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:text="0"
                 android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="#ffffff"
                 android:textSize="20sp" />
-        </RelativeLayout>       
-                
-        <View 
+        </RelativeLayout>
+
+        <View
             android:id="@+id/miPerfilBar"
-            android:layout_width="match_parent"
+            android:layout_width="319dp"
             android:layout_height="2dip"
-            android:background="#808080"/>
+            android:layout_gravity="center_horizontal"
+            android:background="#808080"
+            android:paddingLeft="40dip"
+            android:paddingRight="40dip" />
 
         <RelativeLayout
             android:id="@+id/pesoDeseadoRL"
             android:layout_width="match_parent"
-            android:layout_height="60dip" >
+            android:layout_height="60dip"
+            android:paddingLeft="40dip"
+            android:paddingRight="40dip" >
 
             <TextView
-                android:id="@+id/textView1"
-                android:textColor="#ffffff"
+                android:id="@+id/miPerfil_4"
                 android:layout_width="200dip"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
                 android:text="Mi Peso Deseado"
                 android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="#ffffff"
                 android:textSize="20sp" />
 
             <TextView
                 android:id="@+id/pesoIdeal"
-                android:textColor="#ffffff"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:text="0"
                 android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="#ffffff"
                 android:textSize="20sp" />
         </RelativeLayout>
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="60dip" >
+            android:layout_height="60dip"
+            android:paddingLeft="40dip"
+            android:paddingRight="40dip" >
 
             <TextView
+                android:id="@+id/miPerfil_5"
                 android:layout_width="100dip"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
-                android:textColor="#FFFFFF"
+                android:layout_toLeftOf="@+id/spinner1"
                 android:text="Nivel de Actividad"
                 android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="#FFFFFF"
                 android:textSize="20sp" />
 
             <Spinner
@@ -133,122 +147,42 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentTop="true" />
-
         </RelativeLayout>
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="40dip" >
+            android:layout_height="40dip"
+            android:paddingLeft="40dip"
+            android:paddingRight="40dip" >
 
             <TextView
+                android:id="@+id/miPerfil_6"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:text="Motivaciones"
-                android:textColor="#FFFFFF"
                 android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="#FFFFFF"
                 android:textSize="20sp" />
         </RelativeLayout>
 
         <EditText
             android:id="@+id/miPerfilMotivaciones"
-            android:layout_width="match_parent"
+            android:layout_width="292dp"
             android:layout_height="120dip"
-            android:textColorHint="#dfdede"
-            android:textColor="#ffffff"
+            android:layout_gravity="center_horizontal"
             android:ems="10"
             android:hint="Escribe aquí tus motivaciones"
-            android:inputType="textMultiLine" >
+            android:windowSoftInputMode="stateHidden"
+            android:inputType="textMultiLine"
+            android:paddingLeft="40dip"
+            android:paddingRight="40dip"
+            android:textColor="#ffffff"
+            android:textColorHint="#dfdede" >
+
+            <requestFocus />
         </EditText>
 
-        <!--  
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="70dip" >
-
-            <TextView
-                android:id="@+id/textView5"
-                android:textColor="#ffffff"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_centerVertical="true"
-                android:text="Record de Peso Perdido"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textSize="20sp" />
-
-            <TextView
-                android:id="@+id/textView6"
-                android:textColor="#ffffff"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:paddingBottom="16dip"
-                android:text="0 KG"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textSize="20sp" />
-
-            <TextView
-<<<<<<< HEAD
-                android:id="@+id/textView7"
-                android:textColor="#ffffff"
-=======
-                android:id="@+id/textPesoMaximo"
->>>>>>> 1a1e2fc23518de21e98b8b46f3b55ec0133e8c51
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/textView6"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="10dp"
-                android:paddingRight="1dip"
-                android:text="Semanal"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="70dip" >
-
-            <TextView
-                android:id="@+id/textView8"
-                android:textColor="#ffffff"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_centerVertical="true"
-                android:text="Record de Ejercicio"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textSize="20sp" />
-
-            <TextView
-                android:id="@+id/textView9"
-                android:textColor="#ffffff"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:paddingBottom="16dip"
-                android:text="0"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textSize="20sp" />
-
-            <TextView
-<<<<<<< HEAD
-                android:id="@+id/textView10"
-                android:textColor="#ffffff"
-=======
-                android:id="@+id/textTallaActual"
->>>>>>> 1a1e2fc23518de21e98b8b46f3b55ec0133e8c51
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/textView9"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="10dp"
-                android:paddingRight="1dip"
-                android:text="Dias"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
-        </RelativeLayout>-->
     </LinearLayout>
 
 </ScrollView>

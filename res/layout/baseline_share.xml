@@ -1,7 +1,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res/sample.actionscontentview"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:layout_marginBottom="7dip">
 
     <TextView
         android:id="@+id/shareText1"
@@ -91,20 +92,24 @@
 
     <ImageButton
         android:id="@+id/finished_dialog_facebook"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="45dip"
+        android:layout_height="45dip"
+        android:scaleType="fitXY"
         android:layout_alignLeft="@+id/shareText2"
         android:layout_below="@+id/tallaEditText_Share"
         android:layout_marginTop="19dp"
-        android:src="@drawable/abc_ab_stacked_transparent_light_holo" />
+        android:background="@null"
+        android:src="@drawable/share_facebook_squa" />
 
     <ImageButton
         android:id="@+id/finished_dialog_twitter"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="45dip"
+        android:layout_height="45dip"
+        android:scaleType="fitXY"
         android:layout_alignRight="@+id/shareText2"
         android:layout_alignTop="@+id/finished_dialog_facebook"
-        android:src="@drawable/abc_ab_stacked_transparent_light_holo" />
+        android:background="@null"
+        android:src="@drawable/share_twitter_squa" />
 
 </RelativeLayout>
 

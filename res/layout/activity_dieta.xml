@@ -3,7 +3,7 @@
     android:id="@+id/dietaBodyFrame"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white"
+    android:background="@android:color/black"
     android:orientation="vertical" >
 
     <RelativeLayout
@@ -25,7 +25,7 @@
             android:paddingBottom="3dip"
             android:paddingTop="3dip"
             android:scaleType="fitCenter"
-            android:src="@drawable/flechaizq" />
+            android:src="@drawable/flechaizq_neut" />
 
         <ImageButton
             android:id="@+id/nextDay"
@@ -38,7 +38,7 @@
             android:paddingBottom="3dip"
             android:paddingTop="3dip"
             android:scaleType="fitCenter"
-            android:src="@drawable/flechader" />
+            android:src="@drawable/flechader_neu" />
 
         <TextView
             android:id="@+id/fechaDieta"
@@ -97,17 +97,21 @@
                     android:orientation="vertical" >
                 </LinearLayout>
 
-                <Button
+                <ImageButton
                     android:id="@+id/dieta_cancel"
-                    android:layout_width="fill_parent"
+                    android:layout_width="220dip"
                     android:layout_height="50dip"
                     android:layout_below="@+id/dieta_linearLayout"
-                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
                     android:layout_margin="10dip"
-                    android:background="#ff0000"
+                    android:background="@null"
                     android:padding="3dip"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/selector_dieta_cancel"
                     android:text="Cancelar Programa Actual"
                     android:textColor="#000000" />
+
             </RelativeLayout>
         </ScrollView>
     </RelativeLayout>

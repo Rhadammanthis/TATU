@@ -28,7 +28,7 @@ public class DialyNotificationReceiver extends BroadcastReceiver {
 	@Override
 	public void onReceive(Context context, Intent intent){
 		Log.d("DialyNotification", "Entro notification");
-		if (new API(context).shouldSendNotif() && !isAfterHours()) 
+		if (new API(context).shouldSendNotif() && isTimetoSendNotif()) 
 		{
 			NotificationCompat.Builder mNotificationBuilder = new NotificationCompat.Builder(
 					context)
@@ -75,8 +75,8 @@ public class DialyNotificationReceiver extends BroadcastReceiver {
 		calendar.set(Calendar.MINUTE, 20);
 
 		// Set the intervals for every day 
-		alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
-				AlarmManager.INTERVAL_DAY, alarmIntent);
+		alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
+				60*1000, alarmIntent);
 	}
 
 	public String getRandomNotification()
@@ -99,10 +99,10 @@ public class DialyNotificationReceiver extends BroadcastReceiver {
 		return strings.get(rad.nextInt(strings.size() - 1));
 	}
 	
-	private boolean isAfterHours()
+	private boolean isTimetoSendNotif()
 	{
 		Calendar c = Calendar.getInstance();
-		if(c.get(Calendar.HOUR_OF_DAY) != 13)
+		if(c.get(Calendar.HOUR_OF_DAY) == 13 && (c.get(Calendar.MINUTE) == 21))
 			return true;
 		else
 			return false;

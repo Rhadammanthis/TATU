@@ -109,7 +109,7 @@
                     android:contentDescription="Camera Button"
                     android:padding="5dip"
                     android:scaleType="fitCenter"
-                    android:src="@drawable/selector_up_left" />
+                    android:src="@drawable/selector_home_dieta" />
 
                 <ImageButton
                     android:id="@+id/buttonDownLeft"
@@ -120,7 +120,7 @@
                     android:contentDescription="Calendar"
                     android:padding="5dip"
                     android:scaleType="fitCenter"
-                    android:src="@drawable/home_button_icon2" />
+                    android:src="@drawable/selector_home_calendar" />
             </LinearLayout>
 
             <LinearLayout
@@ -143,7 +143,7 @@
                     android:contentDescription="My diets"
                     android:padding="5dip"
                     android:scaleType="fitCenter"
-                    android:src="@drawable/home_button_icon3" />
+                    android:src="@drawable/selector_home_exercise" />
 
                 <ImageButton
                     android:id="@+id/buttonDownRight"
@@ -157,26 +157,29 @@
                     android:src="@drawable/home_button_icon4" />
             </LinearLayout>
 
-            <Button
+            <ImageButton
                 android:id="@+id/abajoButtonlol"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="37dip"
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentLeft="true"
-                android:layout_alignParentRight="true"
-                android:layout_marginBottom="25dip"
+                android:layout_alignRight="@+id/mylinearLayoutRight"
+                android:layout_marginBottom="20dip"
+                android:background="@null"
                 android:paddingLeft="20dip"
-                
+                android:scaleType="fitXY"
+                android:src="@drawable/selector_home_statistics_neutral"
                 android:text="Estadísticas" />
 
             <ImageView
-                android:id="@+id/imageView1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:id="@+id/home_down"
+                android:layout_width="23dip"
+                android:layout_height="23dip"
                 android:layout_alignParentTop="true"
                 android:clickable="false"
+                android:visibility="invisible"
                 android:layout_toRightOf="@+id/linearLayout1"
-                android:src="@drawable/abc_ab_solid_dark_holo" />
+                android:src="@drawable/home_down" />
 
         </RelativeLayout>
     </com.daimajia.swipe.SwipeLayout>

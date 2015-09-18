@@ -64,24 +64,28 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content" >
 
+            <CheckBox
+                android:id="@+id/homeNotifCheckB"
+                android:layout_width="37dip"
+                android:layout_height="37dip"
+                android:layout_marginRight="3dip"
+				android:scaleY="0.7"
+                android:layout_alignParentRight="true"
+                android:background="@drawable/selector_checkbox"
+                android:button="@null"
+                android:gravity="right" />
+
             <TextView
-                android:id="@+id/homeNotifiacionesText"
+                android:id="@+id/sideNotif"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
                 android:gravity="left"
                 android:paddingLeft="5dip"
                 android:text="Notificaciones"
                 android:textColor="#ffffff"
                 android:textSize="20sp" />
-
-            <CheckBox
-                android:id="@+id/homeNotifCheckB"
-                android:layout_width="37dip"
-                android:layout_height="37dip"
-                android:layout_alignParentRight="true"
-                android:background="@null"
-                android:button="@drawable/checkbox_custom"
-                android:gravity="right" />
 
         </RelativeLayout>
 
@@ -90,6 +94,7 @@
             android:layout_height="wrap_content" >
 
             <TextView
+                android:id="@+id/side_color"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
@@ -129,9 +134,10 @@
                 android:id="@+id/col3"
                 android:layout_width="22dip"
                 android:layout_height="22dip"
+                android:layout_centerVertical="true"
                 android:layout_alignTop="@+id/col2"
                 android:layout_marginRight="28dp"
-                android:layout_marginTop="4dip"
+                
                 android:layout_toLeftOf="@+id/col2"
                 android:background="#00A499"
                 android:clickable="true"
@@ -152,3 +158,4 @@
         android:textSize="35sp" />
 
 </RelativeLayout>
+<!-- android:button="@drawable/checkbox_custom" -->

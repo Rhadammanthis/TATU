@@ -16,6 +16,7 @@ import android.graphics.Color;
 import android.graphics.Point;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.Display;
 import android.view.Menu;
@@ -38,12 +39,11 @@ import android.widget.Toast;
 import com.cceo.DAO.DAO_Componente;
 import com.cceo.DTO.DTO_Componente;
 import com.cceo.miyoideal.R;
-import com.cceo.miyoideal.extra.API;
-import com.cceo.miyoideal.extra.CancelDietaDialog;
-import com.cceo.miyoideal.extra.DietaChild;
-import com.cceo.miyoideal.extra.DietaChildFactory;
-import com.cceo.miyoideal.extra.MenuFragment;
-import com.cceo.miyoideal.extra.MyArrayAdapter;
+import com.cceo.miyoideal.HomeActivity.*;
+import com.cceo.miyoideal.extra.*;
+import com.github.johnpersano.supertoasts.SuperActivityToast;
+import com.github.johnpersano.supertoasts.SuperToast;
+import com.github.johnpersano.supertoasts.util.OnClickWrapper;
 
 public class DietaActivity extends Activity {
 
@@ -60,7 +60,7 @@ public class DietaActivity extends Activity {
 	private RelativeLayout dietaBody;
 	private RelativeLayout dietaHeader;
 
-	private Button cancelButton;
+	private ImageButton cancelButton;
 	private ActionsContentView viewActionsContentView;
 
 	int size;
@@ -75,13 +75,18 @@ public class DietaActivity extends Activity {
 	private boolean checkBoxInitialState[];
 
 	private Calendar c;
+	private Font font;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);	
 		setContentView(R.layout.baseline_dieta);
-
+		this.getActionBar().setDisplayHomeAsUpEnabled(true);
+		getActionBar().setIcon(R.drawable.actionbar_icon_white);
+		
 		con = this;
+		font = new Font();
+		
 		dietaChildList = new ArrayList<DietaChild>();
 		viewActionsList = (ListView) findViewById(R.id.actions_simple);	
 		mainLayout = (LinearLayout) findViewById(R.id.dieta_linearLayout);
@@ -90,12 +95,15 @@ public class DietaActivity extends Activity {
 		dietaChildFactory = new DietaChildFactory();
 		nextDay = (ImageButton)findViewById(R.id.nextDay);
 		previousDay = (ImageButton)findViewById(R.id.previousDay);
-		cancelButton = (Button) findViewById(R.id.dieta_cancel);
+		cancelButton = (ImageButton) findViewById(R.id.dieta_cancel);
 		dietaHeader = (RelativeLayout) findViewById(R.id.dietaHeader);
 		
 		mainLayout.setOnTouchListener(new DrawerCloseListener());
 		previousDay.setOnTouchListener(new DrawerCloseListener());
 		dietaBody.setOnTouchListener(new DrawerCloseListener());
+		
+		font.changeFontRaleway(con, currentDate);
+		//font.changeFontRaleway(con, cancelButton);
 		
 		LinearLayout ln = (LinearLayout) findViewById(R.id.dietaBodyFrame);
 		ln.setOnTouchListener(new DrawerCloseListener());
@@ -108,7 +116,35 @@ public class DietaActivity extends Activity {
 		//if a "dieta" is currently set, the corresponding components are loaded
 		if(!new API(con).IsDietaSet())
 		{
-			Toast.makeText(con, "Selecciona una dieta!", Toast.LENGTH_LONG).show();
+			OnClickWrapper onClickWrapper;
+			
+			SuperActivityToast superActivityToast = new SuperActivityToast(DietaActivity.this, SuperToast.Type.BUTTON);
+			superActivityToast.setDuration(SuperToast.Duration.LONG);
+			superActivityToast.setBackground(SuperToast.Background.BLACK);
+			superActivityToast.setTextColor(Color.WHITE);
+			superActivityToast.setText("¡Selecciona una Dieta!");
+			superActivityToast.setButtonIcon(SuperToast.Icon.Dark.UNDO, " ");
+			
+			superActivityToast.show();
+
+			/**
+			 * The OnClickWrapper is needed to reattach SuperToast.OnClickListeners on orientation changes. 
+			 * It does this via a unique String tag defined in the first parameter so each OnClickWrapper's tag 
+			 * should be unique.
+			 */
+			onClickWrapper = new OnClickWrapper("superactivitytoast", new SuperToast.OnClickListener() {
+
+				@Override
+				public void onClick(View view, Parcelable token) {
+					// TODO Auto-generated method stub
+					Intent intent = new Intent(DietaActivity.this, SelecDieta.class);
+					intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+					startActivity(intent);
+				}
+
+			});
+			
+			superActivityToast.setOnClickWrapper(onClickWrapper);
 		}
 		else 
 		{
@@ -258,11 +294,22 @@ public class DietaActivity extends Activity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		//If the Logo clicked
-		if(item.getItemId() == android.R.id.home)
-			Toast.makeText(con, "LOL", Toast.LENGTH_SHORT).show();
-		Intent intent = new Intent(this, HomeActivity.class);
-		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		startActivity(intent);
+		switch (item.getItemId()) 
+		{
+			case android.R.id.home:
+				if(viewActionsContentView.isContentShown())
+					viewActionsContentView.showActions();
+				else
+					viewActionsContentView.showContent();
+			return true;
+
+			default:
+				Intent intent = new Intent(this, HomeActivity.class);
+				intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+				startActivity(intent);
+			break;
+		}
+
 		return super.onOptionsItemSelected(item);
 	}
 
@@ -306,6 +353,9 @@ public class DietaActivity extends Activity {
 			
 			TextView facebook_name = (TextView) findViewById(R.id.tvLOL_simple);
 			facebook_name.setText(new API(con).getFacebookName());
+			
+			Font f = new Font();					
+			f.changeFontRaleway(con, facebook_name);
 		}
 	}
 
@@ -607,6 +657,9 @@ public class DietaActivity extends Activity {
 			styleDark = res.getColor(R.color.MASCULINO_DARKER);
 			styleBright = res.getColor(R.color.MASCULINO_BRIGHTER);
 			styleBrightest = res.getColor(R.color.MASCULINO_BRIGHTEST);
+			
+			nextDay.setImageResource(R.drawable.flechader_mas);
+			previousDay.setImageResource(R.drawable.flechaizq_mas);
 		}
 		if(style.equals("femenino"))
 		{
@@ -616,6 +669,9 @@ public class DietaActivity extends Activity {
 			styleDark = res.getColor(R.color.FEMENINO_DARKER);
 			styleBright = res.getColor(R.color.FEMENINO_BRIGHTER);
 			styleBrightest = res.getColor(R.color.FEMENINO_BRIGHTEST);
+			
+			nextDay.setImageResource(R.drawable.flechader_fem);
+			previousDay.setImageResource(R.drawable.flechaizq_fem);
 		}
 		if(style.equals("neutral"))
 		{
@@ -625,6 +681,9 @@ public class DietaActivity extends Activity {
 			styleDark = res.getColor(R.color.NEUTRAL_DARKER);
 			styleBright = res.getColor(R.color.NEUTRAL_BRIGHTER);
 			styleBrightest = res.getColor(R.color.NEUTRAL_BRIGHTEST);
+			
+			nextDay.setImageResource(R.drawable.flechader_neu);
+			previousDay.setImageResource(R.drawable.flechaizq_neut);
 		}
 
 	}
@@ -655,6 +714,7 @@ public class DietaActivity extends Activity {
 		bar2.setBackgroundColor(styleDark);
 		bar3.setBackgroundColor(styleBright);
 		bar4.setBackgroundColor(styleBrightest);
+		
 
 	}
 	

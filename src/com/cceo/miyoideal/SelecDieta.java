@@ -38,6 +38,7 @@ import com.cceo.miyoideal.R;
 import com.cceo.miyoideal.extra.API;
 import com.cceo.miyoideal.extra.DietaChild;
 import com.cceo.miyoideal.extra.DietaChildFactory;
+import com.cceo.miyoideal.extra.Font;
 import com.cceo.miyoideal.extra.MenuFragment;
 import com.cceo.miyoideal.extra.MyArrayAdapter;
 import com.cceo.miyoideal.extra.SelectDialogue;
@@ -74,7 +75,9 @@ public class SelecDieta extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.baseline_selec_dieta);
-
+		this.getActionBar().setDisplayHomeAsUpEnabled(true);
+		getActionBar().setIcon(R.drawable.actionbar_icon_white);
+		
 		con = this;
 		
 		setUpMenu();
@@ -165,6 +168,9 @@ public class SelecDieta extends Activity {
 			
 			TextView facebook_name = (TextView) findViewById(R.id.tvLOL_simple);
 			facebook_name.setText(new API(con).getFacebookName());
+			
+			Font f = new Font();					
+			f.changeFontRaleway(con, facebook_name);
 		}
 	}
 
@@ -326,9 +332,22 @@ public class SelecDieta extends Activity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		//If the Logo clicked
-		Intent intent = new Intent(this, HomeActivity.class);
-		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		startActivity(intent);
+		switch (item.getItemId()) 
+		{
+			case android.R.id.home:
+				if(viewActionsContentView.isContentShown())
+					viewActionsContentView.showActions();
+				else
+					viewActionsContentView.showContent();
+			return true;
+
+			default:
+				Intent intent = new Intent(this, HomeActivity.class);
+				intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+				startActivity(intent);
+			break;
+		}
+
 		return super.onOptionsItemSelected(item);
 	}
 

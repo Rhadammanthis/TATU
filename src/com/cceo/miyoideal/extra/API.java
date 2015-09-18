@@ -67,6 +67,19 @@ public class API {
 		db.close();
 	}
 	
+	public void incDietaIteration()
+	{
+		String dIterator = this.getDietaIteration();
+		int inc = Integer.valueOf(dIterator) + 1;
+		
+		ContentValues cv = new ContentValues();
+		cv.put("dieta_iteration", String.valueOf(inc));
+ 	   
+		SQLiteControl db = new SQLiteControl(con);
+		db.getWritableDatabase().update("control", cv, "id_control "+"="+1, null);
+		db.close();
+	}
+	
 	public boolean IsDietaSet()
 	{ 		
 		try
@@ -323,9 +336,30 @@ public class API {
 		}
 	}
 	
+	public String getDietaIteration()
+	{
+		try
+		{
+			if(cursor.moveToFirst())
+			{
+				cursor.moveToFirst();
+				return cursor.getString(11);
+			}
+			else
+			{
+				return null;
+			}
+		}
+		catch(Exception ex)
+		{
+			db.close();
+			return null;
+		}
+	}
+	
 	public static Bitmap getRoundedShape(Bitmap scaleBitmapImage) {
-	    int targetWidth = 200;
-	    int targetHeight = 200;
+	    int targetWidth = 400;
+	    int targetHeight = 400;
 	    Bitmap targetBitmap = Bitmap.createBitmap(targetWidth, 
 	                        targetHeight,Bitmap.Config.ARGB_8888);
 

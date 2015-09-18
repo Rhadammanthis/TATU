@@ -20,7 +20,8 @@ public class SQLiteControl extends SQLiteOpenHelper{
 					"notif" + " TEXT, " +
 					"fb_id" + " TEXT, " +
 					"fb_name" + " TEXT, " +
-					"peso_inicial" + " TEXT);";
+					"peso_inicial" + " TEXT, " +
+					"dieta_iteration" + " TEXT);";
 
 
 

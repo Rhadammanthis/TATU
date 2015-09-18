@@ -64,6 +64,7 @@ public class ImageAsyncTask extends AsyncTask<String, Integer,String>{
 	protected void onPostExecute(String result) {
 		// TODO Auto-generated method stub
 		super.onPostExecute(result);
+
 		
 		if(parent.equals("main"))
 			MainActivity.setFacebokProfilePic(bitmap);
@@ -71,7 +72,6 @@ public class ImageAsyncTask extends AsyncTask<String, Integer,String>{
 		if(parent.equals("simple"))
 		{
 			MenuFragment.getFacebookProfilePic(bitmap);
-			//imageView.setImageBitmap(bitmap);
 		}
 		else
 			HomeActivity.setFacebokProfilePic(bitmap);

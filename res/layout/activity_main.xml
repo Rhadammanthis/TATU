@@ -19,7 +19,7 @@
             android:layout_width="120dp"
             android:layout_height="120dp"
             android:layout_gravity="center"
-            android:background="@drawable/round" />
+            android:background="@null" />
 
         <Spinner
             android:id="@+id/spinnerSexo"
@@ -53,22 +53,46 @@
             android:textColor="#FFFFFF"
             android:textColorHint="#FFFFFF" />
 
-        <Spinner
-            android:id="@+id/spinnerMain"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="match_parent" >
+
+            <TextView
+                android:id="@+id/diagnostico_textView"
+                android:layout_width="100dip"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@+id/spinnerMain"
+                android:text="Nivel de Actividad"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="#FFFFFF"
+                android:textSize="20sp" />
+
+            <Spinner
+                android:id="@+id/spinnerMain"
+                android:layout_width="100dip"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:gravity="right" />
+        </RelativeLayout>
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical" >
 
-            <Button
+            <ImageButton
                 android:id="@+id/button1"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="40dip"
+                android:layout_marginTop="10dip"
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentLeft="true"
+                android:background="@null"
+                android:scaleType="fitXY"
+                android:src="@drawable/selector_diagnostic"
                 android:text="Button" />
         </RelativeLayout>
     </LinearLayout>

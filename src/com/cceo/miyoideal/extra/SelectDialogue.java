@@ -22,10 +22,16 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.cceo.DAO.DAO_Dieta;
+import com.cceo.DAO.DAO_Dieta_Iteration;
 import com.cceo.DAO.DAO_Ejercicio;
+import com.cceo.DAO.DAO_TutorialControl;
 import com.cceo.DB.SQLiteControl;
 import com.cceo.DTO.DTO_Dieta;
+import com.cceo.DTO.DTO_DietaIteration;
 import com.cceo.DTO.DTO_Ejercicio;
+import com.cceo.miyoideal.DietaActivity;
+import com.cceo.miyoideal.HomeActivity;
+import com.cceo.miyoideal.MiPerfilActivity;
 import com.cceo.miyoideal.R;
 
 public class SelectDialogue extends DialogFragment {
@@ -70,6 +76,8 @@ public class SelectDialogue extends DialogFragment {
 					SQLiteControl db = new SQLiteControl(con);
 					db.getWritableDatabase().update("control", cv, "id_control "+"="+1, null);
 					db.close();
+					
+					new API(con).incDietaIteration();
 
 					DTO_Dieta dieta = new DAO_Dieta(con).getDieta(new API(con).getID_Dieta());
 
@@ -80,7 +88,15 @@ public class SelectDialogue extends DialogFragment {
 					/*Add new insert to DB Ejercicio. This helps us keep track of the days in
 					 *which physical activity was performed when undertaking the diet program*/
 					DTO_Ejercicio ejercicio = new DTO_Ejercicio(id_Dieta, todaysDate, actividad);
-					new DAO_Ejercicio(con).newEjercicio(ejercicio);                  	   
+					new DAO_Ejercicio(con).newEjercicio(ejercicio);   
+					
+					Log.d("sopor", "Dieta Iteration number: "  + new API(con).getDietaIteration());
+					Log.d("sopor", "Dieta id assigned: "  + String.valueOf(id_Dieta));
+					Log.d("sopor", "Activity: "  + actividad);
+					
+					//create new dieta iteration
+					DTO_DietaIteration dieta_it = new DTO_DietaIteration(new API(con).getDietaIteration(), id_Dieta, actividad);
+					new DAO_Dieta_Iteration(con).newDietaIteration(dieta_it);
 
 					//service
 					Calendar cal = Calendar.getInstance();
@@ -101,16 +117,22 @@ public class SelectDialogue extends DialogFragment {
 					DietaCompleteNotification notification = new DietaCompleteNotification();
 					notification.setAlarm(con,dieta.getDuracion(),dia);
 					
-					AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(con);
-					dlgAlert.setMessage("Felicidades por comenzar una nueva dieta!");
-					dlgAlert.setTitle("Un Nuevo Comienzo");
-					dlgAlert.setPositiveButton("Gracias!", new DialogInterface.OnClickListener() {
-				        public void onClick(DialogInterface dialog, int which) {
-				            //dismiss the dialog  
-				          }
-				      });
-					dlgAlert.setCancelable(true);
-					dlgAlert.create().show();
+//					AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(con);
+//					dlgAlert.setMessage("Felicidades por comenzar una nueva dieta!");
+//					dlgAlert.setTitle("Un Nuevo Comienzo");
+//					dlgAlert.setPositiveButton("Gracias!", new DialogInterface.OnClickListener() {
+//				        public void onClick(DialogInterface dialog, int which) {
+//				            //dismiss the dialog  
+//				          }
+//				      });
+//					dlgAlert.setCancelable(true);
+//					dlgAlert.create().show();
+					
+					Intent intent = new Intent(con, HomeActivity.class);
+					intent.putExtra("intent_origin", "select".toString());
+					startActivity(intent);
+					
+					
 
 
 				}
@@ -137,22 +159,39 @@ public class SelectDialogue extends DialogFragment {
 					db.getWritableDatabase().update("control", cv, "id_control "+"="+1, null);
 					db.close();
 
-					/*Add new insert to DB Ejercicio. This helps us keep track of the days in
-					 *which physical activity was performed when undertaking the diet program*/
-					DTO_Ejercicio ejercicio = new DTO_Ejercicio(id_Dieta, todaysDate, "0");
-					new DAO_Ejercicio(con).newEjercicio(ejercicio);
-
-					//To get the time reference when the script is initially run
-					Calendar cal = Calendar.getInstance();
-
-					Intent intent = new Intent(con, MyService.class);
-
+					new API(con).incDietaIteration();
+					
 					//to gather extras
+					intent = new Intent(con, MyService.class);
 					String dia = new API(con).getDia();
 					intent.putExtra("dia_inicial", new API(con).getDia());
 
 					DTO_Dieta dieta = new DAO_Dieta(con).getDieta(new API(con).getID_Dieta());
 					intent.putExtra("duracion", dieta.getDuracion());
+					
+					Log.d("sopor", "Duracion de dieta" + dieta.getDuracion());
+					
+					String actividad = "";
+					for(int i = 0; i < Integer.parseInt(dieta.getDuracion()); i++)
+						actividad += "0";
+
+					/*Add new insert to DB Ejercicio. This helps us keep track of the days in
+					 *which physical activity was performed when undertaking the diet program*/
+					DTO_Ejercicio ejercicio = new DTO_Ejercicio(id_Dieta, todaysDate, actividad);
+					new DAO_Ejercicio(con).newEjercicio(ejercicio);  
+					
+					Log.d("sopor", "Dieta Iteration number: "  + new API(con).getDietaIteration());
+					Log.d("sopor", "Dieta id assigned: "  + String.valueOf(id_Dieta));
+					Log.d("sopor", "Activity: "  + actividad);
+					
+					//create new dieta iteration
+					DTO_DietaIteration dieta_it = new DTO_DietaIteration(new API(con).getDietaIteration(), id_Dieta, actividad);
+					new DAO_Dieta_Iteration(con).newDietaIteration(dieta_it);
+
+					//To get the time reference when the script is initially run
+					Calendar cal = Calendar.getInstance();
+
+					Intent intent = new Intent(con, MyService.class);
 
 					pintent = PendingIntent.getService(con, 1234, intent, 0);
 
@@ -162,6 +201,10 @@ public class SelectDialogue extends DialogFragment {
 					// alarm.setRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), 18000*1000, pintent); 
 					DietaCompleteNotification notification = new DietaCompleteNotification();
 					notification.setAlarm(con,dieta.getDuracion(),dia);
+					
+					Intent intent_home = new Intent(con, HomeActivity.class);
+					//intent_home.putExtra("intent_origin", "select".toString());
+					startActivity(intent_home);
 
 
 				}

@@ -36,11 +36,13 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.TableRow.LayoutParams;
 
+import com.cceo.DAO.DAO_Dieta_Iteration;
 import com.cceo.DAO.DAO_Ejercicio;
 import com.cceo.DAO.DAO_Estadisticas;
 import com.cceo.DAO.DAO_Programa;
 import com.cceo.DAO.DAO_Usuario;
 import com.cceo.DB.SQLiteEstadisticas;
+import com.cceo.DTO.DTO_DietaIteration;
 import com.cceo.DTO.DTO_Ejercicio;
 import com.cceo.DTO.DTO_Estadisticas;
 import com.cceo.DTO.DTO_Programa;
@@ -50,6 +52,7 @@ import com.cceo.miyoideal.R;
 import com.cceo.miyoideal.extra.API;
 import com.cceo.miyoideal.extra.DietaChildFactory;
 import com.cceo.miyoideal.extra.EjercicioChildFactory;
+import com.cceo.miyoideal.extra.Font;
 import com.cceo.miyoideal.extra.MenuFragment;
 import com.cceo.miyoideal.extra.MyArrayAdapter;
 
@@ -63,7 +66,8 @@ public class EjercicioActivity extends Activity {
 	private RelativeLayout topBar;
 
 	private Calendar c;
-	private DTO_Ejercicio ejercicio;
+
+	private DTO_DietaIteration dIt;
 	private long distance;
 	private char[] dia;
 
@@ -75,13 +79,18 @@ public class EjercicioActivity extends Activity {
 	int styleBrightest;
 
 	private EjercicioChildFactory ejercicioFactory;
+	private Font font;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.baseline_ejercicio);
+		this.getActionBar().setDisplayHomeAsUpEnabled(true);
+		getActionBar().setIcon(R.drawable.actionbar_icon_white);
+		
 		con = this;
-
+		font = new Font();
+		
 		setUpMenu();
 
 
@@ -92,6 +101,9 @@ public class EjercicioActivity extends Activity {
 
 		scroll.setOnTouchListener(new DrawerCloseListener());
 		mainLayout.setOnTouchListener(new DrawerCloseListener());
+		
+		TextView banner_text = (TextView) findViewById(R.id.ejercicio_banner_tx);
+		font.changeFontRaleway(con, banner_text);
 		
 		updateStyle();
 
@@ -116,10 +128,15 @@ public class EjercicioActivity extends Activity {
 			distance = getDateDiffString(initalDate,c.getTime());
 
 			//Obtain current ejercicio info from BD
-			ejercicio = new DTO_Ejercicio();
-			ejercicio = new DAO_Ejercicio(con).getEjercicio(new API(con).getID_Dieta(), new API(con).getDia());
+//			ejercicio = new DTO_Ejercicio();
+//			ejercicio = new DAO_Ejercicio(con).getEjercicio(new API(con).getID_Dieta(), new API(con).getDia());
+			
+			dIt = new DAO_Dieta_Iteration(con).getDietaIteration(new API(con).getDietaIteration());
+			
+			Log.d("sopor", "Total Ejercicio Activity: " + dIt.getActividad());
+			//Log.d("sopor", "Dias Ejercicio Activity: " + ejercicio.getDiasActividad());
 
-			if(distance > ejercicio.getDiasActividad().length())
+			if(distance > dIt.getActividad().length())
 			{
 				topBar.setVisibility(View.GONE);
 			}
@@ -127,8 +144,8 @@ public class EjercicioActivity extends Activity {
 			{
 				//Check the state of todays physical activity
 				Log.d("congo", "distancia: " + String.valueOf(distance));
-				Log.d("congo", ejercicio.getDiasActividad());
-				dia = ejercicio.getDiasActividad().toCharArray();
+				//Log.d("congo", ejercicio.getDiasActividad());
+				dia = dIt.getActividad().toCharArray();
 				if(dia[(int) distance] == '0')
 				{
 					checkB.setChecked(false);
@@ -155,12 +172,13 @@ public class EjercicioActivity extends Activity {
 						}	
 
 						String l = "";
-						for(int i = 0; i<=ejercicio.getDiasActividad().length()-1;i++)
+						for(int i = 0; i<=dIt.getActividad().length()-1;i++)
 							l += String.valueOf(dia[i]);
 						Log.d("dias", l);
-						ejercicio.setDiasActividad(l);
-						Log.d("dias", ejercicio.getDiasActividad());
-						new DAO_Ejercicio(con).updateEjercicio(ejercicio);
+						dIt.setActividad(l);
+						Log.d("dias", dIt.getActividad());
+						new DAO_Dieta_Iteration(con).updateEjercicio(dIt);
+						//new DAO_Ejercicio(con).updateEjercicio(ejercicio);
 					}
 				});
 			}
@@ -252,10 +270,22 @@ public class EjercicioActivity extends Activity {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		//If the Logo clicked
-		Intent intent = new Intent(this, HomeActivity.class);
-		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		startActivity(intent);
+		switch (item.getItemId()) 
+		{
+			case android.R.id.home:
+				if(viewActionsContentView.isContentShown())
+					viewActionsContentView.showActions();
+				else
+					viewActionsContentView.showContent();
+			return true;
+
+			default:
+				Intent intent = new Intent(this, HomeActivity.class);
+				intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+				startActivity(intent);
+			break;
+		}
+
 		return super.onOptionsItemSelected(item);
 	}
 
@@ -299,6 +329,9 @@ public class EjercicioActivity extends Activity {
 			
 			TextView facebook_name = (TextView) findViewById(R.id.tvLOL_simple);
 			facebook_name.setText(new API(con).getFacebookName());
+			
+			Font f = new Font();					
+			f.changeFontRaleway(con, facebook_name);
 		}
 	}
 
@@ -545,6 +578,7 @@ public class EjercicioActivity extends Activity {
 			styleDark = res.getColor(R.color.MASCULINO_DARKER);
 			styleBright = res.getColor(R.color.MASCULINO_BRIGHTER);
 			styleBrightest = res.getColor(R.color.MASCULINO_BRIGHTEST);
+			checkB.setBackgroundResource(R.drawable.selector_checkbox);
 		}
 		if(style.equals("femenino"))
 		{
@@ -554,6 +588,7 @@ public class EjercicioActivity extends Activity {
 			styleDark = res.getColor(R.color.FEMENINO_DARKER);
 			styleBright = res.getColor(R.color.FEMENINO_BRIGHTER);
 			styleBrightest = res.getColor(R.color.FEMENINO_BRIGHTEST);
+			checkB.setBackgroundResource(R.drawable.selector_checkbox_alt);
 		}
 		if(style.equals("neutral"))
 		{
@@ -563,6 +598,7 @@ public class EjercicioActivity extends Activity {
 			styleDark = res.getColor(R.color.NEUTRAL_DARKER);
 			styleBright = res.getColor(R.color.NEUTRAL_BRIGHTER);
 			styleBrightest = res.getColor(R.color.NEUTRAL_BRIGHTEST);
+			checkB.setBackgroundResource(R.drawable.selector_checkbox);
 		}
 
 	}

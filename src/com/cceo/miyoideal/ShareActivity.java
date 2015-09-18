@@ -18,9 +18,9 @@ import com.facebook.share.model.SharePhotoContent;
 import com.facebook.share.widget.LikeView;
 import com.facebook.share.widget.ShareButton;
 import com.facebook.share.widget.ShareDialog;
-//import com.google.android.gms.plus.Plus;
-//import com.google.android.gms.plus.PlusOneButton;
-//import com.google.android.gms.plus.PlusShare;
+import com.google.android.gms.plus.Plus;
+import com.google.android.gms.plus.PlusOneButton;
+import com.google.android.gms.plus.PlusShare;
 
 
 import java.io.File;
@@ -33,6 +33,7 @@ import java.util.Arrays;
 
 import org.json.JSONObject;
 
+import com.cceo.DB.SQLiteControl;
 import com.cceo.miyoideal.R;
 import com.cceo.miyoideal.extra.API;
 import com.cceo.miyoideal.extra.ImageAsyncTask;
@@ -45,6 +46,7 @@ import android.content.Context;
 
 import android.content.ActivityNotFoundException;
 
+import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
@@ -59,9 +61,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.Toast;
 import android.provider.MediaStore;
 import io.fabric.sdk.android.Fabric;
@@ -89,8 +91,8 @@ public class ShareActivity extends Activity implements View.OnClickListener {
 	private File photoFile;
 
 	private Button facebookButton;
-	private Button twitterButton;
-	private Button googlePlusButton;
+	private ImageButton twitterButton;
+	private ImageButton googlePlusButton;
 	//private PlusOneButton mPlusOneButton;
 	private Button twitterFollowButton;
 	private Uri tempUri;
@@ -98,8 +100,7 @@ public class ShareActivity extends Activity implements View.OnClickListener {
 	private ShareDialog shareDialog;
 	//Facebook Share Button
 	ShareButton shareFacebookButton;
-	LoginButton loginButton;
-	private static ImageView profile_pic;
+
 
 	//Style variables
 	private int styleMain;
@@ -112,46 +113,66 @@ public class ShareActivity extends Activity implements View.OnClickListener {
 	public void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_share);
+		this.getActionBar().setDisplayHomeAsUpEnabled(true);
+		getActionBar().setIcon(R.drawable.actionbar_icon_white);
 
 		con = this;
 		updateStyle();
 
 		FacebookSdk.sdkInitialize(getApplicationContext());
 
-		Fabric.with(this, new TweetComposer());
+		//Fabric.with(this, new TweetComposer());
 		shareDialog = new ShareDialog(this);
 		shareFacebookButton = (ShareButton) findViewById(FACEBOOK_BUTTON);
 		shareFacebookButton.setOnClickListener(this);
 
-		twitterButton = (Button) findViewById(TWITTER_BUTTON);
+		twitterButton = (ImageButton) findViewById(TWITTER_BUTTON);
 		twitterButton.setOnClickListener(this);
 
 		twitterFollowButton = (Button) findViewById(R.id.follow_button);
 		twitterFollowButton.setOnClickListener(this);
 
-		googlePlusButton = (Button) findViewById(GOOGLEPLUS_BUTTON);
+		googlePlusButton = (ImageButton) findViewById(GOOGLEPLUS_BUTTON);
 		googlePlusButton.setOnClickListener(this);
 
-		 profile_pic = (ImageView) findViewById(R.id.profile_pic);
 		//mPlusOneButton = (PlusOneButton) findViewById(R.id.plus_one_button);
+
 		//AQUII
 		LikeView likeView = (LikeView) findViewById(R.id.like_facebook);
 		likeView.setObjectIdAndType(
 				"https://www.facebook.com/miyoideal",
 				LikeView.ObjectType.PAGE);
 
-		loginButton = (LoginButton) findViewById(R.id.login_button);
-		loginButton.setReadPermissions("user_friends");
 
 		callbackManager = CallbackManager.Factory.create();
 		// Callback registration
-		
+
+		LoginButton loginButton = (LoginButton) findViewById(R.id.share_facebook_login);
+
 		loginButton.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				LoginManager.getInstance().logInWithReadPermissions(ShareActivity.this, (Arrays.asList("public_profile", "user_friends","user_birthday","user_about_me","email")));
+				if(!new API(con).getFacebookID().equals(""))
+				{
+					Log.d("maneling","eliminar datos");
+
+					//lo elimino
+					ContentValues cv = new ContentValues();
+					cv.put("fb_id", "");
+					cv.put("fb_name", "");
+
+					SQLiteControl db = new SQLiteControl(con);
+					db.getWritableDatabase().update("control", cv, "id_control "+"="+1, null);
+					db.close();
+
+					Log.d("maneling","ID " + (new API(con).getFacebookID()));
+					Log.d("maneling","NAme " + (new API(con).getFacebookName()));
+				}
+
+				//				if(new API(con).getFacebookID().equals(""))
+				//					LoginManager.getInstance().logInWithReadPermissions(ShareActivity.this, (Arrays.asList("public_profile", "user_friends")));//,"user_birthday","user_about_me","email")));
 			}
 		});
 
@@ -160,18 +181,91 @@ public class ShareActivity extends Activity implements View.OnClickListener {
 			public void onSuccess(LoginResult loginResult) {
 				// App code
 				final AccessToken accessToken = loginResult.getAccessToken();
-
+				Log.d("maneling","boton clicked");
 				GraphRequestAsyncTask request = GraphRequest.newMeRequest(accessToken, new GraphRequest.GraphJSONObjectCallback() {
 					@Override
 					public void onCompleted(JSONObject user, GraphResponse graphResponse) {
-						Log.d("CONTRA", user.optString("email"));
-						Log.d("CONTRA", user.optString("name"));
-						Log.d("CONTRA", user.optString("id"));
-						
+						Log.d("CONTRA", "Mail" + user.optString("email"));
+						Log.d("CONTRA", "Name " + user.optString("name"));
+						Log.d("CONTRA", "ID " + user.optString("id"));
+						Log.d("CONTRA", "First name " + user.optString("first_name"));
+
+						//si no tengo id de Facebook
+						if(new API(con).getFacebookID().equals(""))
+						{
+							Log.d("maneling","guardar datos");
+							//lo agrego
+							String[] name = user.optString("name").split(" ");
+
+							ContentValues cv = new ContentValues();
+							cv.put("fb_id", user.optString("id"));
+							cv.put("fb_name", name[0]);
+
+							SQLiteControl db = new SQLiteControl(con);
+							db.getWritableDatabase().update("control", cv, "id_control "+"="+1, null);
+							db.close();
+
+							Log.d("maneling","ID " + (new API(con).getFacebookID()));
+							Log.d("maneling","NAme " + (new API(con).getFacebookName()));
+						}
+						//si tengo id de facebook
+						//						else
+						//						{
+						//							Log.d("maneling","eliminar datos");
+						//
+						//							//lo elimino
+						//							ContentValues cv = new ContentValues();
+						//							cv.put("fb_id", "");
+						//							cv.put("fb_name", "");
+						//
+						//							SQLiteControl db = new SQLiteControl(con);
+						//							db.getWritableDatabase().update("control", cv, "id_control "+"="+1, null);
+						//							db.close();
+						//
+						//							Log.d("maneling","ID " + (new API(con).getFacebookID()));
+						//							Log.d("maneling","NAme " + (new API(con).getFacebookName()));
+						//
+						//							//							Intent intent = new Intent(ShareActivity.this, MainActivity.class);
+						//							//							startActivity(intent);
+						//						}
+
 						//cal Aynk
-						ImageAsyncTask programming = new ImageAsyncTask("", null);
-						programming.setId(user.optString("id"));
-						programming.execute();
+						//						ImageAsyncTask programming = new ImageAsyncTask();
+						//						programming.setId(user.optString("id"));
+						//						programming.execute();
+
+						//						SQLiteControl db = new SQLiteControl(con);
+						//						
+						//						db.getWritableDatabase();
+						//						
+						//						Log.d("db", "Control " + db.getDatabaseName());
+						//						
+						//						String[] name = user.optString("name").split(" ");
+						//
+						//						ContentValues values = new ContentValues();
+						//						values.put("id_control", "1");
+						//						values.put("id_dieta", "0");
+						//						values.put("dia", "0");
+						//						values.put("peso_ideal", "0");
+						//						values.put("dietaTerminada", "0");
+						//						values.put("estilo", "neutral");
+						//						values.put("motivacion", "");
+						//						values.put("notif", "0");
+						//						values.put("fb_id", user.optString("id"));
+						//						values.put("fb_name", name[0]);
+						//						values.put("peso_inicial", "0");
+						//						db.getWritableDatabase().insert("control", null, values);
+						//
+						//						db.close();
+						//						
+						//						if(!new API(con).getFacebookID().equals(""))
+						//						{
+						//							Intent intent = new Intent(ShareActivity.this, MainActivity.class);
+						//							startActivity(intent);
+						//						}
+
+
+						Toast.makeText(con, "Log In Succes", Toast.LENGTH_SHORT).show();
 					}
 
 				}).executeAsync();
@@ -237,22 +331,22 @@ public class ShareActivity extends Activity implements View.OnClickListener {
 			builder.show();
 		}
 		else if(requestCode == GOOGLEPLUS_CAMERA_CODE && resultCode == RESULT_OK){
-			//    		Intent shareIntent = new PlusShare.Builder(this)
-			//		        .setType("text/plain")
-			//		        .setContentUrl(Uri.parse("http://cceo.com.mx"))
-			//		        .setText("Me siento genial con #YoIdeal")
-			//		        .setStream(photoUri)
-			//		        .getIntent();
-			//    		startActivityForResult(shareIntent, 0);
+			Intent shareIntent = new PlusShare.Builder(this)
+			.setType("text/plain")
+			.setContentUrl(Uri.parse("http://cceo.com.mx"))
+			.setText("Me siento genial con #YoIdeal")
+			.setStream(photoUri)
+			.getIntent();
+			startActivityForResult(shareIntent, 0);
 		}
 		else if(requestCode == GOOGLEPLUS_GALLERY_CODE){
-			//    		Intent shareIntent = new PlusShare.Builder(this)
-			//		        .setType("text/plain")
-			//		        .setContentUrl(Uri.parse("http://cceo.com.mx"))
-			//		        .setText("Me siento genial gracias a #YoIdeal")
-			//		        .setStream(data.getData())
-			//		        .getIntent();
-			//    		startActivityForResult(shareIntent, 0);
+			Intent shareIntent = new PlusShare.Builder(this)
+			.setType("text/plain")
+			.setContentUrl(Uri.parse("http://cceo.com.mx"))
+			.setText("Me siento genial gracias a #YoIdeal")
+			.setStream(data.getData())
+			.getIntent();
+			startActivityForResult(shareIntent, 0);
 		}
 		callbackManager.onActivityResult(requestCode, resultCode, data);
 	}
@@ -395,38 +489,34 @@ public class ShareActivity extends Activity implements View.OnClickListener {
 		Log.d("color", "en perfil NUMERO " + String.valueOf(styleMain));
 		mainLayout.setBackgroundColor(styleMain);
 	}
-	
+
 	public Bitmap getPhotoFacebook(final String id) {
 
-	    Bitmap bitmap=null;
-	    final String nomimg = "https://graph.facebook.com/"+id+"/picture?type=large";
-	    URL imageURL = null;
+		Bitmap bitmap=null;
+		final String nomimg = "https://graph.facebook.com/"+id+"/picture?type=large";
+		URL imageURL = null;
 
-	    try {
-	        imageURL = new URL(nomimg);
-	    } catch (MalformedURLException e) {
-	        e.printStackTrace();
-	    }
+		try {
+			imageURL = new URL(nomimg);
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		}
 
-	    try {
-	    	InputStream in = (InputStream) imageURL.getContent();
-	        bitmap = BitmapFactory.decodeStream(in);
+		try {
+			InputStream in = (InputStream) imageURL.getContent();
+			bitmap = BitmapFactory.decodeStream(in);
 
-	    } catch (IOException e) {
+		} catch (IOException e) {
 
-	        e.printStackTrace();
-	    }
-	    return bitmap;
+			e.printStackTrace();
+		}
+		return bitmap;
 
 	}
-	
-	public static void setFacebokProfilePic(Bitmap bitMap)
-	{		
-		profile_pic.setImageBitmap(bitMap);
-	}
-	
-//	public boolean isLoggedIn() {
-//	    //Session session = Session.getActiveSession();
-//	    //return (session != null && session.isOpened());
-//	}
+
+
+	//	public boolean isLoggedIn() {
+	//	    //Session session = Session.getActiveSession();
+	//	    //return (session != null && session.isOpened());
+	//	}
 }

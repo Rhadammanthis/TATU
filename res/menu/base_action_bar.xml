@@ -3,6 +3,6 @@
     <item
         android:id="@+id/action_home"
         android:showAsAction="ifRoom"
-        android:icon="@drawable/notification_icon"
+        android:icon="@drawable/notification_icon_alt"
         android:title="@string/action_home"/>
 </menu>

@@ -33,7 +33,7 @@ public class DietaCompleteNotification extends BroadcastReceiver {
 
 	@Override
 	public void onReceive(Context context, Intent intent){
-		Log.d("DialyNotification", "Entro notification");
+		Log.d("FinishedDietaNotif", "Entro notification terminar dieta");
 
 		if (new API(context).IsDietaSet()) 
 		{

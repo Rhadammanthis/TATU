@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -13,6 +15,7 @@ import java.util.List;
 import org.json.JSONObject;
 
 import shared.ui.actionscontentview.ActionsContentView;
+import android.R.style;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.NotificationManager;
@@ -21,6 +24,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
+import android.content.pm.Signature;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -32,11 +39,14 @@ import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.net.Uri;
+import android.opengl.Visibility;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.v4.view.MotionEventCompat;
+import android.util.Base64;
 import android.util.Log;
 import android.view.Display;
 import android.view.GestureDetector;
@@ -62,9 +72,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cceo.DAO.DAO_DietaCompletada;
+import com.cceo.DAO.DAO_TutorialControl;
 import com.cceo.DAO.DAO_Usuario;
 import com.cceo.DB.SQLiteControl;
 import com.cceo.DB.SQLiteDietaDB;
+import com.cceo.DB.SQLiteTutorialControl;
 import com.cceo.DB.SQLiteUserDB;
 import com.cceo.DTO.DTO_DietaCompletada;
 import com.cceo.DTO.DTO_Usuario;
@@ -72,6 +84,8 @@ import com.cceo.miyoideal.R;
 import com.cceo.miyoideal.extra.API;
 import com.cceo.miyoideal.extra.DialyNotificationReceiver;
 import com.cceo.miyoideal.extra.DietaCompletedDialog;
+import com.cceo.miyoideal.extra.Font;
+import com.cceo.miyoideal.extra.Fragment_ImagePager;
 import com.cceo.miyoideal.extra.ImageAsyncTask;
 import com.cceo.miyoideal.extra.MyArrayAdapter;
 import com.cceo.miyoideal.extra.MyLinearLayout;
@@ -106,7 +120,7 @@ public class HomeActivity extends Activity implements OnTouchListener, OnClickLi
 
 	//layout components
 	private LinearLayout linearLayout1;
-	private Button button_MiPerfil;
+	private ImageButton button_MiPerfil;
 	private ActionsContentView viewActionsContentView;
 	private SwipeLayout swipeLayout;
 	private ListView viewActionsList;
@@ -117,6 +131,7 @@ public class HomeActivity extends Activity implements OnTouchListener, OnClickLi
 	private RelativeLayout frontLayout;
 	private RelativeLayout bodyLayout;
 	private static ImageView menu_profile_pic;
+	private ImageView home_down;
 
 	//Control variables
 	private boolean shoudlOpenDrawer = true;
@@ -159,15 +174,34 @@ public class HomeActivity extends Activity implements OnTouchListener, OnClickLi
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.baseline4);
 		this.getActionBar().setDisplayHomeAsUpEnabled(true);
+		getActionBar().setIcon(R.drawable.actionbar_icon_white);
+
+
 		cont = this;
-		getActionBar().setIcon(R.drawable.actionbar_icon1);
+
+
+		try {
+			PackageInfo info = getPackageManager().getPackageInfo(
+					"com.cceo.miyoideal", PackageManager.GET_SIGNATURES);
+			for (Signature signature : info.signatures) {
+				MessageDigest md = MessageDigest.getInstance("SHA");
+				md.update(signature.toByteArray());
+				String sign = Base64
+						.encodeToString(md.digest(), Base64.DEFAULT);
+
+				Log.d("stumme","Key " + sign);
+
+			}
+		} catch (NameNotFoundException e) {
+		} catch (NoSuchAlgorithmException e) {
+		}
 
 
 		//bind layout views to local objects
 		backLayout = (RelativeLayout) findViewById(R.id.backLayout);
 		frontLayout = (RelativeLayout) findViewById(R.id.frontLayout);
 		linearLayout1 = (LinearLayout) findViewById(R.id.linearLayout1);
-		button_MiPerfil = (Button) findViewById(R.id.abajoButtonlol);
+		button_MiPerfil = (ImageButton) findViewById(R.id.abajoButtonlol);
 		viewActionsContentView = (ActionsContentView) findViewById(R.id.home_actionsContentView);
 		viewActionsList = (ListView) findViewById(R.id.actions);
 		swipeLayout =  (SwipeLayout)findViewById(R.id.swipeLayout);
@@ -175,6 +209,7 @@ public class HomeActivity extends Activity implements OnTouchListener, OnClickLi
 		checkBoxNotif = (CheckBox) findViewById(R.id.homeNotifCheckB);
 		layoutNotif = (RelativeLayout) findViewById(R.id.notifRelativeLayout);
 		menu_profile_pic = (ImageView) findViewById(R.id.menu_profile_pic);
+		home_down = (ImageView) findViewById(R.id.home_down);
 
 		//Tutorial reminder. Runs just the first time the apps runs
 		SharedPreferences runCheck = PreferenceManager.getDefaultSharedPreferences(cont);
@@ -190,13 +225,13 @@ public class HomeActivity extends Activity implements OnTouchListener, OnClickLi
 
 		//PAROOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOLE
 
-		Log.d("opera", String.valueOf(isAfterHours()));
-		if(new API(cont).shouldSendNotif() && !isAfterHours())
-		{
-			//Set the notification receiver 
-			DialyNotificationReceiver dialyNotification = new DialyNotificationReceiver();
-			dialyNotification.setAlarm(this);
-		}
+		//		Log.d("moj", "Should send notif " + String.valueOf(new API(cont).shouldSendNotif()));
+		//		if(new API(cont).shouldSendNotif() && isAfterHours())
+		//		{
+		//			//Set the notification receiver 
+		//			DialyNotificationReceiver dialyNotification = new DialyNotificationReceiver();
+		//			dialyNotification.setAlarm(this);
+		//		}
 
 		//Checks if Dieta Completed Dialog should be displayed
 		if(this.getIntent().hasExtra("response") || new API(cont).HasDietaBeenCompleted())
@@ -266,7 +301,65 @@ public class HomeActivity extends Activity implements OnTouchListener, OnClickLi
 		//set drag edge.
 		swipeLayout.setDragEdge(SwipeLayout.DragEdge.Top);
 
+		//prompt button tutorial
+		String newString = "";
+		if (savedInstanceState == null) {
+			Bundle extras = getIntent().getExtras();
+			if(extras == null) {
+				newString= "";
+			} else {
+				newString= extras.getString("intent_origin");
+			}
+		} else {
+			newString= (String) savedInstanceState.getSerializable("intent_origin");
+		}
 
+		if(new DAO_TutorialControl(cont).buttonTutorialShown().equals("0") && newString.equals("select"))
+		{
+			new CountDownTimer(1000, 1000) {
+
+				public void onTick(long millisUntilFinished) {
+				}
+
+				public void onFinish() {
+					Fragment_ImagePager recomedn_dialog = new Fragment_ImagePager(cont);
+					recomedn_dialog.show(getFragmentManager(), "Dieta Completed");
+
+					ContentValues cv = new ContentValues();
+					cv.put("button_tutorial", "1");
+
+					SQLiteTutorialControl db = new SQLiteTutorialControl(cont);
+					db.getWritableDatabase().update("tutorialcontrol", cv, "id_tutorialcontrol "+"="+1, null);
+					db.close();
+				}
+
+			}.start();
+
+		}
+
+		frontLayout.setOnTouchListener(new OnTouchListener() {
+
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				// TODO Auto-generated method stub
+				home_down.setVisibility(View.VISIBLE);
+				
+				if (event.getAction() == android.view.MotionEvent.ACTION_UP) {
+					home_down.setVisibility(View.INVISIBLE);
+				}
+
+				return false;
+			}
+		});
+		backLayout.setOnTouchListener(new OnTouchListener() {
+
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				// TODO Auto-generated method stub
+				home_down.setVisibility(View.INVISIBLE);
+				return false;
+			}
+		});
 
 	}
 
@@ -347,14 +440,14 @@ public class HomeActivity extends Activity implements OnTouchListener, OnClickLi
 		// as you specify a parent activity in AndroidManifest.xml.
 		switch (item.getItemId()) 
 		{
-		    case android.R.id.home:
-		    	if(viewActionsContentView.isContentShown())
-		    		viewActionsContentView.showActions();
-		    	else
-		    		viewActionsContentView.showContent();
-		        return true;
+		case android.R.id.home:
+			if(viewActionsContentView.isContentShown())
+				viewActionsContentView.showActions();
+			else
+				viewActionsContentView.showContent();
+			return true;
 		}
-		
+
 		int id = item.getItemId();
 		if (id == R.id.action_settings) {
 			return true;
@@ -528,6 +621,13 @@ public class HomeActivity extends Activity implements OnTouchListener, OnClickLi
 
 			TextView facebook_name = (TextView) findViewById(R.id.tvLOL);
 			facebook_name.setText(new API(cont).getFacebookName());
+
+			TextView notif = (TextView) findViewById(R.id.sideNotif);
+			TextView color = (TextView) findViewById(R.id.side_color);
+
+			Font f = new Font();
+			f.changeFontRaleway(cont, notif);
+			f.changeFontRaleway(cont, color);			
 		}
 
 	}
@@ -563,16 +663,22 @@ public class HomeActivity extends Activity implements OnTouchListener, OnClickLi
 		{
 			styleMain = res.getColor(R.color.MASCULINO_MAIN);
 			styleDetail = res.getColor(R.color.MASCULINO_DETAIL);
+			button_MiPerfil.setImageResource(R.drawable.selector_home_statistics_male);
+			checkBoxNotif.setBackgroundResource(R.drawable.selector_checkbox);
 		}
 		if(style.equals("femenino"))
 		{
 			styleMain = res.getColor(R.color.FEMENINO_MAIN);
 			styleDetail = res.getColor(R.color.FEMENINO_DETAIL);
+			button_MiPerfil.setImageResource(R.drawable.selector_home_statistics_female);
+			checkBoxNotif.setBackgroundResource(R.drawable.selector_checkbox_alt);
 		}
 		if(style.equals("neutral"))
 		{
 			styleMain = res.getColor(R.color.NEUTRAL_MAIN);
 			styleDetail = res.getColor(R.color.NEUTRAL_DETAIL);
+			button_MiPerfil.setImageResource(R.drawable.selector_home_statistics_neutral);
+			checkBoxNotif.setBackgroundResource(R.drawable.selector_checkbox);
 		}
 
 	}
@@ -673,29 +779,49 @@ public class HomeActivity extends Activity implements OnTouchListener, OnClickLi
 			Toast.makeText(this, "Clicked Camera", Toast.LENGTH_LONG).show();
 			DietaCompletedDialog dialog = new DietaCompletedDialog(cont);
 			dialog.show(getFragmentManager(), "Dieta Completed");
-			//			dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-			//
-			//				@Override
-			//				public void onDismiss(DialogInterface dialog) {
-			//					// TODO Auto-generated method stub
-			//					List<DTO_DietaCompletada> lista = new DAO_DietaCompletada(cont).getLastFiveDietaCompleta();
-			//					BarEntry e = new BarEntry(Float.valueOf(lista.get(lista.size()-1).getPeso()), lista.size()-1);
-			//					set1.addEntry(e);
-			//					setData(lista.size(), 80, lista );
-			//					mChart.invalidate();
-			//					mChart.animateX(lista.size() * 250);
-			//				}
-			//			});
+//						dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+//			
+//							@Override
+//							public void onDismiss(DialogInterface dialog) {
+//								// TODO Auto-generated method stub
+//								List<DTO_DietaCompletada> lista = new DAO_DietaCompletada(cont).getLastFiveDietaCompleta();
+//								BarEntry e = new BarEntry(Float.valueOf(lista.get(lista.size()-1).getPeso()), lista.size()-1);
+//								set1.addEntry(e);
+//								setData(lista.size(), 80, lista );
+//								mChart.invalidate();
+//								mChart.animateX(lista.size() * 250);
+//							}
+//						});
 		}
 		else
 		{
-			//			Intent intent = new Intent(HomeActivity.this, EstadisticasActivity.class);
-			//			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-			//			startActivity(intent);
+//			DietaCompletedDialog dialog = new DietaCompletedDialog(cont);
+//			dialog.show(getFragmentManager(), "Dieta Completed");
+			Intent intent = new Intent(HomeActivity.this, EstadisticasActivity.class);
+			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(intent);
 
-			DietaCompletedDialog dialog = new DietaCompletedDialog(cont);
-			dialog.show(getFragmentManager(), "Dieta Completed");
-			
+			//			DietaCompletedDialog dialog = new DietaCompletedDialog(cont);
+			//			dialog.show(getFragmentManager(), "Dieta Completed");
+			//			
+			//			Fragment_ImagePager recomedn_dialog = new Fragment_ImagePager(cont);
+			//			recomedn_dialog.show(getFragmentManager(), "Dieta Completed");
+//			DietaCompletedDialog dialog = new DietaCompletedDialog(cont);
+//			dialog.show(getFragmentManager(), "Dieta Completed");
+//						dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+//			
+//							@Override
+//							public void onDismiss(DialogInterface dialog) {
+//								// TODO Auto-generated method stub
+//								List<DTO_DietaCompletada> lista = new DAO_DietaCompletada(cont).getLastFiveDietaCompleta();
+//								BarEntry e = new BarEntry(Float.valueOf(lista.get(lista.size()-1).getPeso()), lista.size()-1);
+//								set1.addEntry(e);
+//								setData(lista.size(), 80, lista );
+//								mChart.invalidate();
+//								mChart.animateX(lista.size() * 250);
+//							}
+//						});
+
 
 		}
 	}
@@ -896,7 +1022,7 @@ public class HomeActivity extends Activity implements OnTouchListener, OnClickLi
 			{
 				Log.d("fallout4", "Closing...");
 				viewActionsContentView.showContent();
-				return true;
+				return false;
 			}
 			else
 			{
@@ -909,65 +1035,65 @@ public class HomeActivity extends Activity implements OnTouchListener, OnClickLi
 
 				if(event.getAction() == MotionEvent.ACTION_CANCEL)
 				{
-					Log.d("fallout4", "Cancel");
-					if(v.getId() == R.id.buttonTopLeft)
-					{
-						((ImageButton)v).setImageResource(R.drawable.home_button_icon1);
-					}
-					if(v.getId() == R.id.buttonTopRight)
-					{
-						((ImageButton)v).setImageResource(R.drawable.home_button_icon3);
-					}
-					if(v.getId() == R.id.buttonDownLeft)
-					{
-						((ImageButton)v).setImageResource(R.drawable.home_button_icon2);
-					}
-					if(v.getId() == R.id.buttonDownRight)
-					{
-						((ImageButton)v).setImageResource(R.drawable.home_button_icon4);
-					}
+					//					Log.d("fallout4", "Cancel");
+					//					if(v.getId() == R.id.buttonTopLeft)
+					//					{
+					//						((ImageButton)v).setImageResource(R.drawable.home_button_icon1);
+					//					}
+					//					if(v.getId() == R.id.buttonTopRight)
+					//					{
+					//						((ImageButton)v).setImageResource(R.drawable.home_button_icon3);
+					//					}
+					//					if(v.getId() == R.id.buttonDownLeft)
+					//					{
+					//						((ImageButton)v).setImageResource(R.drawable.home_button_icon2);
+					//					}
+					//					if(v.getId() == R.id.buttonDownRight)
+					//					{
+					//						((ImageButton)v).setImageResource(R.drawable.home_button_icon4);
+					//					}
 				}
 
 				if(event.getAction() == 0){
 					Log.d("fallout4", "Down");
 					//rect = new Rect(v.getLeft(), v.getTop(), v.getRight(), v.getBottom());
-					if(v.getId() == R.id.buttonTopLeft)
-					{
-						((ImageButton)v).setImageResource(R.drawable.home_button_icon1_alt);
-					}
-					if(v.getId() == R.id.buttonTopRight)
-					{
-						((ImageButton)v).setImageResource(R.drawable.home_button_icon3_alt);
-					}
-					if(v.getId() == R.id.buttonDownLeft)
-					{
-						((ImageButton)v).setImageResource(R.drawable.home_button_icon2_alt);
-					}
-					if(v.getId() == R.id.buttonDownRight)
-					{
-						((ImageButton)v).setImageResource(R.drawable.home_button_icon4_alt);
-					}
+					//					if(v.getId() == R.id.buttonTopLeft)
+					//					{
+					//						((ImageButton)v).setImageResource(R.drawable.home_button_icon1_alt);
+					//					}
+					//					if(v.getId() == R.id.buttonTopRight)
+					//					{
+					//						((ImageButton)v).setImageResource(R.drawable.home_button_icon3_alt);
+					//					}
+					//					if(v.getId() == R.id.buttonDownLeft)
+					//					{
+					//						((ImageButton)v).setImageResource(R.drawable.home_button_icon2_alt);
+					//					}
+					//					if(v.getId() == R.id.buttonDownRight)
+					//					{
+					//						((ImageButton)v).setImageResource(R.drawable.home_button_icon4_alt);
+					//					}
 
 				}
 				else if (event.getAction() == 1) 
 				{
 					Log.d("fallout4", "Up");
-					if(v.getId() == R.id.buttonTopLeft)
-					{
-						((ImageButton)v).setImageResource(R.drawable.home_button_icon1);
-					}
-					if(v.getId() == R.id.buttonTopRight)
-					{
-						((ImageButton)v).setImageResource(R.drawable.home_button_icon3);
-					}
-					if(v.getId() == R.id.buttonDownLeft)
-					{
-						((ImageButton)v).setImageResource(R.drawable.home_button_icon2);
-					}
-					if(v.getId() == R.id.buttonDownRight)
-					{
-						((ImageButton)v).setImageResource(R.drawable.home_button_icon4);
-					}
+					//					if(v.getId() == R.id.buttonTopLeft)
+					//					{
+					//						((ImageButton)v).setImageResource(R.drawable.home_button_icon1);
+					//					}
+					//					if(v.getId() == R.id.buttonTopRight)
+					//					{
+					//						((ImageButton)v).setImageResource(R.drawable.home_button_icon3);
+					//					}
+					//					if(v.getId() == R.id.buttonDownLeft)
+					//					{
+					//						((ImageButton)v).setImageResource(R.drawable.home_button_icon2);
+					//					}
+					//					if(v.getId() == R.id.buttonDownRight)
+					//					{
+					//						((ImageButton)v).setImageResource(R.drawable.home_button_icon4);
+					//					}
 				}
 				else if (event.getAction() == 2) {
 					Log.d("fallout4", "Scroll");
@@ -976,27 +1102,27 @@ public class HomeActivity extends Activity implements OnTouchListener, OnClickLi
 				if(event.getAction() == MotionEvent.ACTION_MOVE){
 					Log.d("fallout4", "Move");
 					if(!rect.contains(v.getLeft() + (int) event.getX(), v.getTop() + (int) event.getY())){
-						if(v.getId() == R.id.buttonTopLeft)
-						{
-							((ImageButton)v).setImageResource(R.drawable.home_button_icon1);
-						}
-						if(v.getId() == R.id.buttonTopRight)
-						{
-							((ImageButton)v).setImageResource(R.drawable.home_button_icon3);
-						}
-						if(v.getId() == R.id.buttonDownLeft)
-						{
-							((ImageButton)v).setImageResource(R.drawable.home_button_icon2);
-						}
-						if(v.getId() == R.id.buttonDownRight)
-						{
-							((ImageButton)v).setImageResource(R.drawable.home_button_icon4);
-						}
+						//						if(v.getId() == R.id.buttonTopLeft)
+						//						{
+						//							((ImageButton)v).setImageResource(R.drawable.home_button_icon1);
+						//						}
+						//						if(v.getId() == R.id.buttonTopRight)
+						//						{
+						//							((ImageButton)v).setImageResource(R.drawable.home_button_icon3);
+						//						}
+						//						if(v.getId() == R.id.buttonDownLeft)
+						//						{
+						//							((ImageButton)v).setImageResource(R.drawable.home_button_icon2);
+						//						}
+						//						if(v.getId() == R.id.buttonDownRight)
+						//						{
+						//							((ImageButton)v).setImageResource(R.drawable.home_button_icon4);
+						//						}
 					}
 				}
 
 				if(gdt.onTouchEvent(event))
-					return true;
+					return false;
 				else
 					return true;
 			}
@@ -1022,7 +1148,7 @@ public class HomeActivity extends Activity implements OnTouchListener, OnClickLi
 					if (e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE
 							&& Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
 						//Right To Left();
-						return true;
+						return false;
 					} else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE
 							&& Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
 						//Left To Right();
@@ -1052,17 +1178,11 @@ public class HomeActivity extends Activity implements OnTouchListener, OnClickLi
 
 			}
 
-			@Override
-			public boolean onDown(MotionEvent event) { 
-				Log.d(DEBUG_TAG,"onDown: " + event.toString()); 
-				onDownEv();
-				return true;
-			}
+
 		}
 
 		public abstract void onTopToBottom();
 		public abstract void onSingleCLick();
-		public abstract void onDownEv();
 
 
 	}
@@ -1093,149 +1213,62 @@ public class HomeActivity extends Activity implements OnTouchListener, OnClickLi
 		final ImageButton topDer = (ImageButton) findViewById(R.id.buttonTopRight);
 		ImageButton downDer = (ImageButton) findViewById(R.id.buttonDownRight);
 
-
-		topDer.setOnTouchListener(new OnFlingGestureListener() {
-
-			@Override
-			public void onTopToBottom() {
-				if (viewActionsContentView.isContentShown()) 
-				{
-					swipeLayout.open();
-				}				
-			}
+		OnClickListener myClickListener = new OnClickListener() {
 
 			@Override
-			public void onSingleCLick() {
-				// TODO Auto-generated method stub
+			public void onClick(View v) {
 				if (!viewActionsContentView.isContentShown()) 
 				{
 					viewActionsContentView.showContent();
 				}
-				else
+				else if(isDrawerOpen == false)
 				{
-					//Toast.makeText(cont, "Top - Derecha", Toast.LENGTH_SHORT).show();
-					Intent intent = new Intent(HomeActivity.this, EjercicioActivity.class);
-					intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-					startActivity(intent);
+					if (v.getId() == R.id.buttonTopLeft)
+					{
+						Intent intent = new Intent(HomeActivity.this, DietaActivity.class);
+						intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+						startActivity(intent);
+					}
+					if (v.getId() == R.id.buttonTopRight)
+					{
+						Intent intent = new Intent(HomeActivity.this, EjercicioActivity.class);
+						intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+						startActivity(intent);
+					}
+					if (v.getId() == R.id.buttonDownLeft)
+					{
+						Intent intent = new Intent(HomeActivity.this, CalendarioActivity.class);
+						intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+						startActivity(intent);
+					}
+					if (v.getId() == R.id.buttonDownRight)
+					{
+						Intent intent = new Intent(HomeActivity.this, ComparativeActivity.class);
+						intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+						startActivity(intent);
+					}
+					// TODO Auto-generated method stub
 				}
 			}
+		};
 
-			@Override
-			public void onDownEv() {
-				// TODO Auto-generated method stub
+		topLeft.setOnClickListener(myClickListener);
+		topDer.setOnClickListener(myClickListener);
+		downLeft.setOnClickListener(myClickListener);
+		downDer.setOnClickListener(myClickListener);
 
-			}
-		});
-
-		topLeft.setOnTouchListener(new OnFlingGestureListener() {
-
-			@Override
-			public void onTopToBottom() {
-				if (viewActionsContentView.isContentShown()) 
-				{
-					Log.d("monster", "Top to Bottom");
-					swipeLayout.open();
-				}				
-			}
-
-			@Override
-			public void onSingleCLick() {
-				// TODO Auto-generated method stub
-				if (!viewActionsContentView.isContentShown()) 
-				{
-					viewActionsContentView.showContent();
-				}
-				else
-				{
-					//Toast.makeText(cont, "Top - Izquierda", Toast.LENGTH_SHORT).show();
-					Intent intent = new Intent(HomeActivity.this, DietaActivity.class);
-					intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-					startActivity(intent);
-				}
-			}
-
-			@Override
-			public void onDownEv() {
-				// TODO Auto-generated method stub
-				//topLeft.setImageResource(R.drawable.home_button_icon_alt);
-			}
-		});
-
-		downLeft.setOnTouchListener(new OnFlingGestureListener() {
-
-			@Override
-			public void onTopToBottom() {
-				if (viewActionsContentView.isContentShown()) 
-				{
-					swipeLayout.open();
-				}				
-			}
-
-			@Override
-			public void onSingleCLick() {
-				// TODO Auto-generated method stub
-				if (!viewActionsContentView.isContentShown()) 
-				{
-					viewActionsContentView.showContent();
-				}
-				else
-				{
-					//Toast.makeText(cont, "Top - Izquierda", Toast.LENGTH_SHORT).show();
-					Intent intent = new Intent(HomeActivity.this, CalendarioActivity.class);
-					intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-					startActivity(intent);
-				}
-			}
-
-			@Override
-			public void onDownEv() {
-				// TODO Auto-generated method stub
-
-			}
-		});
-
-		downDer.setOnTouchListener(new OnFlingGestureListener() {
-
-			@Override
-			public void onTopToBottom() {
-				if (viewActionsContentView.isContentShown()) 
-				{
-					swipeLayout.open();
-				}				
-			}
-
-			@Override
-			public void onSingleCLick() {
-				// TODO Auto-generated method stub
-				if (!viewActionsContentView.isContentShown()) 
-				{
-					viewActionsContentView.showContent();
-				}
-				else
-				{
-					//Toast.makeText(cont, "Top - Izquierda", Toast.LENGTH_SHORT).show();
-					Intent intent = new Intent(HomeActivity.this, ComparativeActivity.class);
-					intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-					startActivity(intent);
-				}
-			}
-
-			@Override
-			public void onDownEv() {
-				// TODO Auto-generated method stub
-
-			}
-		});
 
 	}
 
 	private boolean isAfterHours()
 	{
 		Calendar c = Calendar.getInstance();
-		if(c.get(Calendar.HOUR_OF_DAY) != 13)
-			return true;
+		if(c.get(Calendar.HOUR_OF_DAY) == 13 && (c.get(Calendar.MINUTE) == 21))
+		{ Log.d("moj", "Is after hours " + String.valueOf(false));
+		return true;}
 		else
-			return false;
+		{ Log.d("moj", "Is after hours " + String.valueOf(true ));
+		return false;}
 
 	}
 
@@ -1249,7 +1282,7 @@ public class HomeActivity extends Activity implements OnTouchListener, OnClickLi
 		setData(lista.size(), 80, lista );
 		mChart.invalidate();
 		mChart.animateX(lista.size() * 250);
-		
+
 		RecomendationDialog recomedn_dialog = new RecomendationDialog(cont);
 		recomedn_dialog.show(getFragmentManager(), "Dieta Completed");
 	}

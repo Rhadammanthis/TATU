@@ -1,66 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.miyoideal"
+    package="com.cceo.miyoideal"
     android:versionCode="1"
     android:versionName="1.0" >
 
     <uses-sdk
-
         android:minSdkVersion="14"
         android:targetSdkVersion="19" />
-
 
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.USE_CREDENTIALS" />
+
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
 
+    <uses-permission android:name="com.android.vending.BILLING" />
+    
+    <meta-data android:name="com.google.android.gms.version" android:value="@integer/google_play_services_version" />
+
     <application
         android:allowBackup="true"
-        android:icon="@drawable/ic_launcher"
+        android:icon="@drawable/aplication_icon"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
             android:name=".MainActivity"
-            android:label="@string/app_name" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" android:configChanges="keyboardHidden|orientation" android:windowSoftInputMode="stateHidden" >
         </activity>
         <activity
             android:name=".HomeActivity"
-            android:label="@string/title_activity_home" >
+            android:label="@string/title_activity_home"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".MiPerfilActivity"
-            android:label="@string/title_activity_mi_perfil" >
+            android:label="@string/title_activity_mi_perfil"
+            android:screenOrientation="portrait" android:configChanges="keyboardHidden|orientation" android:windowSoftInputMode="stateHidden">
         </activity>
         <activity
             android:name=".EjercicioActivity"
-            android:label="@string/title_activity_ejercicio" >
+            android:label="@string/title_activity_ejercicio"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".CalendarioActivity"
-            android:label="@string/title_activity_calendario" >
+            android:label="@string/title_activity_calendario"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".DietaActivity"
-            android:label="@string/title_activity_dieta" >
+            android:label="@string/title_activity_dieta"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".ShareActivity"
-            android:label="@string/title_activity_camera" >
+            android:label="@string/title_activity_camera"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".SelecDieta"
-            android:label="@string/title_activity_selec_dieta" >
+            android:label="@string/title_activity_selec_dieta"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".ComparativeActivity"
-            android:label="@string/title_activity_comparative" >
+            android:label="@string/title_activity_comparative"
+            android:screenOrientation="portrait" >
         </activity>
 
         <service android:name=".extra.MyService" >
@@ -87,29 +97,49 @@
 
         <activity
             android:name=".DisclaimerActivity"
-            android:label="@string/title_activity_disclaimer" >
+            android:label="@string/title_activity_disclaimer"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".TutorialActivity"
-            android:label="@string/title_activity_tutorial" >
+            android:label="@string/title_activity_tutorial"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".EstadisticasActivity"
-            android:label="@string/title_activity_estadisticas" >
+            android:label="@string/title_activity_estadisticas"
+            android:screenOrientation="portrait" >
         </activity>
-        <activity android:name="com.facebook.FacebookActivity"
-          android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
-          android:theme="@android:style/Theme.Translucent.NoTitleBar"
-          android:label="@string/app_name"/>
-        <provider android:authorities="com.facebook.app.FacebookContentProvider1597893253758886"
-          android:name="com.facebook.FacebookContentProvider"
-          android:exported="true" />
-	    <meta-data
+        <activity
+            android:name="com.facebook.FacebookActivity"
+            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+
+        <provider
+            android:name="com.facebook.FacebookContentProvider"
+            android:authorities="com.facebook.app.FacebookContentProvider407344942787747"
+            android:exported="true" />
+
+        <meta-data
             android:name="io.fabric.ApiKey"
             android:value="fdc9dc18a1f62e0c9837ee2e4a063bd06b64f10f" />
-	    <!-- 
+        <!--
 	    <meta-data 
 	        android:name="com.google.android.gms.version"
-        	android:value="@integer/google_play_services_version" /> -->
+        	android:value="@integer/google_play_services_version" />
+        -->
+        <activity
+            android:name=".LogInActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
+
 </manifest>

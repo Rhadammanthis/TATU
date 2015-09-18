@@ -7,15 +7,20 @@
 
     <ImageButton
         android:id="@+id/calendarLeftB"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="30dip"
+        android:layout_height="30dip"
+        android:background="@null"
+        android:scaleType="fitCenter"
+        
         android:layout_alignParentLeft="true"
         android:src="@drawable/abc_ab_bottom_solid_dark_holo" />
 
     <ImageButton
         android:id="@+id/calendarRightB"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="30dip"
+        android:layout_height="30dip"
+        android:background="@null"
+        android:scaleType="fitCenter"
         android:layout_alignParentRight="true"
         android:src="@drawable/abc_ab_bottom_solid_dark_holo" />
 

@@ -26,7 +26,7 @@
         android:layout_width="match_parent">
 
         <TextView
-            android:id="@+id/textView1"
+            android:id="@+id/ejercicio_banner_tx"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingTop="10dip"
@@ -40,11 +40,14 @@
 
         <CheckBox
             android:id="@+id/ejercicio_checkB"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="37dip"
+            android:layout_height="37dip"
+            android:scaleY="0.7"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="15dp"
+            android:layout_marginRight="11dp"
+            android:button="@null"
+            android:background="@drawable/selector_checkbox"
             android:text="" />
         
     </RelativeLayout>

@@ -34,6 +34,7 @@ import com.cceo.DAO.DAO_Dieta;
 import com.cceo.DTO.DTO_Dieta;
 import com.cceo.miyoideal.*;
 import com.cceo.miyoideal.extra.API;
+import com.cceo.miyoideal.extra.Font;
 
 public class CalendarCard extends RelativeLayout {
 
@@ -62,6 +63,7 @@ public class CalendarCard extends RelativeLayout {
 	public RelativeLayout all;
 	private boolean shoudlRecordDate = true;
 	private java.util.Date initDate;
+	private Font font;
 
 	public CalendarCard(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
@@ -86,7 +88,7 @@ public class CalendarCard extends RelativeLayout {
 	public void init(final Context ctx) {
 		if (isInEditMode()) return;
 		
-		
+		font = new Font();
 
 		if(new API(ctx).IsDietaSet() && duracionDieta == 0)
 			duracionDieta = (Integer.parseInt(new DAO_Dieta(ctx).getDieta(new API(ctx).getID_Dieta()).getDuracion()));
@@ -109,6 +111,7 @@ public class CalendarCard extends RelativeLayout {
 		all = (RelativeLayout)layout.findViewById(R.id.calendarCardID);
 		cardTitle = (TextView)layout.findViewById(R.id.cardTitle);
 		cardTitle.setTextColor(Color.WHITE);
+		font.changeFontRaleway(con, cardTitle);
 		cardGrid = (LinearLayout)layout.findViewById(R.id.cardGrid);
 
 		try
@@ -131,24 +134,31 @@ public class CalendarCard extends RelativeLayout {
 		cal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
 		((TextView)layout.findViewById(R.id.cardDay1)).setText(cal.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, Locale.getDefault()));
 		((TextView)layout.findViewById(R.id.cardDay1)).setTextColor(Color.WHITE);
+		font.changeFontRaleway(con, ((TextView)layout.findViewById(R.id.cardDay1)));
 		cal.add(Calendar.DAY_OF_WEEK, 1);
 		((TextView)layout.findViewById(R.id.cardDay2)).setText(cal.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, Locale.getDefault()));
 		((TextView)layout.findViewById(R.id.cardDay2)).setTextColor(Color.WHITE);
+		font.changeFontRaleway(con, ((TextView)layout.findViewById(R.id.cardDay2)));
 		cal.add(Calendar.DAY_OF_WEEK, 1);
 		((TextView)layout.findViewById(R.id.cardDay3)).setText(cal.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, Locale.getDefault()));
 		((TextView)layout.findViewById(R.id.cardDay3)).setTextColor(Color.WHITE);
+		font.changeFontRaleway(con, ((TextView)layout.findViewById(R.id.cardDay3)));
 		cal.add(Calendar.DAY_OF_WEEK, 1);
 		((TextView)layout.findViewById(R.id.cardDay4)).setText(cal.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, Locale.getDefault()));
 		((TextView)layout.findViewById(R.id.cardDay4)).setTextColor(Color.WHITE);
+		font.changeFontRaleway(con, ((TextView)layout.findViewById(R.id.cardDay4)));
 		cal.add(Calendar.DAY_OF_WEEK, 1);
 		((TextView)layout.findViewById(R.id.cardDay5)).setText(cal.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, Locale.getDefault()));
 		((TextView)layout.findViewById(R.id.cardDay5)).setTextColor(Color.WHITE);
+		font.changeFontRaleway(con, ((TextView)layout.findViewById(R.id.cardDay5)));
 		cal.add(Calendar.DAY_OF_WEEK, 1);
 		((TextView)layout.findViewById(R.id.cardDay6)).setText(cal.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, Locale.getDefault()));
 		((TextView)layout.findViewById(R.id.cardDay6)).setTextColor(Color.WHITE);
+		font.changeFontRaleway(con, ((TextView)layout.findViewById(R.id.cardDay6)));
 		cal.add(Calendar.DAY_OF_WEEK, 1);
 		((TextView)layout.findViewById(R.id.cardDay7)).setText(cal.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, Locale.getDefault()));
 		((TextView)layout.findViewById(R.id.cardDay7)).setTextColor(Color.WHITE);
+		font.changeFontRaleway(con, ((TextView)layout.findViewById(R.id.cardDay7)));
 
 		LayoutInflater la = LayoutInflater.from(ctx);
 		for(int y=0; y<cardGrid.getChildCount(); y++) {
@@ -191,7 +201,9 @@ public class CalendarCard extends RelativeLayout {
 					today++;
 
 				((TextView)v.getChildAt(0)).setText(item.getDayOfMonth().toString());
+				((TextView)v.getChildAt(0)).setTextSize(8 * getResources().getDisplayMetrics().density);
 				((TextView)v.getChildAt(0)).setTextColor(Color.WHITE);
+				font.changeFontRaleway(con, ((TextView)v.getChildAt(0)));
 
 				//hide non-current-month cells
 				int day = Integer.parseInt(((TextView)v.getChildAt(0)).getText().toString());
@@ -230,6 +242,7 @@ public class CalendarCard extends RelativeLayout {
 
 					//save reference to a global variable
 					currentCell =  (CheckedTextView) v.getChildAt(0);
+					Log.d("mastodon", "Called at init: " + ((TextView)currentCell).getText());
 
 					h = v.getChildAt(0).getLayoutParams().height;	
 					w = v.getChildAt(0).getLayoutParams().width;
@@ -381,6 +394,7 @@ public class CalendarCard extends RelativeLayout {
 
 					//save reference to a global variable
 					currentCell =  (CheckedTextView) v.getChildAt(0);
+					Log.d("mastodon", "Called at initMonth: " + ((TextView)currentCell).getText());
 
 					h = v.getChildAt(0).getLayoutParams().height;	
 					w = v.getChildAt(0).getLayoutParams().width;
@@ -667,9 +681,11 @@ public class CalendarCard extends RelativeLayout {
 
 		//updates new cell style
 		((TextView)v.getChildAt(1)).setTextColor(Color.BLACK);
+		v.getChildAt(1).bringToFront();
 
 
 		((TextView)currentCell).setTextColor(Color.WHITE);
+		font.changeFontRaleway(con, ((TextView)currentCell));
 
 		//save new cell as current
 		currentCell = (CheckedTextView) v.getChildAt(1);
@@ -706,16 +722,11 @@ public class CalendarCard extends RelativeLayout {
 		@Override
 		protected void onDraw(Canvas canvas) 
 		{
-			final float scale = con.getResources().getDisplayMetrics().density;
-			int dist = (int) (30 * scale + 0.5f);
+			float scale = con.getResources().getDisplayMetrics().density;
+
 			super.onDraw(canvas);
 			Paint paint = new Paint();
 			paint.setStyle(Paint.Style.FILL);
-			paint.setColor(Color.RED);
-
-
-			//canvas.drawColor(Color.WHITE);
-
 			paint.setColor(Color.WHITE);
 			canvas.drawCircle((int) (19 * scale + 0.5f), (int) (20 * scale + 0.5f), (int) (13 * scale + 0.5f), paint);
 		}

@@ -16,6 +16,7 @@ import com.cceo.miyoideal.extra.API;
 import com.cceo.miyoideal.extra.CalendarioChildFactory;
 import com.cceo.miyoideal.extra.DietaChild;
 import com.cceo.miyoideal.extra.DietaChildFactory;
+import com.cceo.miyoideal.extra.Font;
 import com.cceo.miyoideal.extra.ImageAsyncTask;
 import com.cceo.miyoideal.extra.MenuFragment;
 import com.cceo.miyoideal.extra.MyArrayAdapter;
@@ -65,6 +66,9 @@ public class CalendarioActivity extends Activity {
 	private Context ctx;
 	int size;
 
+	private ImageButton rightButton;
+	private ImageButton leftButton;
+	
 	int styleMain;
 	int styleDetail;
 	int styleDarkest;
@@ -78,6 +82,8 @@ public class CalendarioActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.baseline3);
+		this.getActionBar().setDisplayHomeAsUpEnabled(true);
+		getActionBar().setIcon(R.drawable.actionbar_icon_white);
 
 		Display display = getWindowManager().getDefaultDisplay();
 		Point size = new Point();
@@ -95,13 +101,15 @@ public class CalendarioActivity extends Activity {
 		viewActionsContentView = (ActionsContentView) findViewById(R.id.calendario_actionsContentView);
 		linearLayout = (LinearLayout) findViewById(R.id.calendarLinearLayout);		
 		bodyLayout = (LinearLayout) findViewById(R.id.calendarioBody);
+		rightButton = (ImageButton) findViewById(R.id.calendarRightB);
+		leftButton = (ImageButton) findViewById(R.id.calendarLeftB);
 		ScrollView calendarScroll = (ScrollView) findViewById(R.id.calendarScrollView);
 
 		viewActionsList = (ListView) findViewById(R.id.actions_simple);
 		setUpMenu();
 
 		//updates style according to user selected theme
-		updateStyle();
+				updateStyle();
 
 		//init calendar widget
 		mCalendarCard = (CalendarCard)findViewById(R.id.calendarCard6);
@@ -155,8 +163,8 @@ public class CalendarioActivity extends Activity {
 
 		//linearLayout.addView(factory.GenerateChildEjercicio("Uno 1", "asjhgdlgd ladjgajaldal bd lsjdblsbdlsnv dbasv dv sd"));
 
-		ImageButton der = (ImageButton) findViewById(R.id.calendarRightB);
-		der.setOnClickListener(new View.OnClickListener() {
+		
+		rightButton.setOnClickListener(new View.OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
@@ -198,9 +206,9 @@ public class CalendarioActivity extends Activity {
 			}
 		});
 
-		ImageButton izq = (ImageButton) findViewById(R.id.calendarLeftB);
-		izq.setOnTouchListener(new DrawerCloseListener());
-		izq.setOnClickListener(new View.OnClickListener() {
+		
+		leftButton.setOnTouchListener(new DrawerCloseListener());
+		leftButton.setOnClickListener(new View.OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
@@ -253,9 +261,22 @@ public class CalendarioActivity extends Activity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		//If the Logo clicked
-		Intent intent = new Intent(this, HomeActivity.class);
-		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		startActivity(intent);
+		switch (item.getItemId()) 
+		{
+			case android.R.id.home:
+				if(viewActionsContentView.isContentShown())
+					viewActionsContentView.showActions();
+				else
+					viewActionsContentView.showContent();
+			return true;
+
+			default:
+				Intent intent = new Intent(this, HomeActivity.class);
+				intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+				startActivity(intent);
+			break;
+		}
+
 		return super.onOptionsItemSelected(item);
 	}
 
@@ -300,6 +321,10 @@ public class CalendarioActivity extends Activity {
 			
 			TextView facebook_name = (TextView) findViewById(R.id.tvLOL_simple);
 			facebook_name.setText(new API(ctx).getFacebookName());
+			
+			Font f = new Font();					
+			f.changeFontRaleway(ctx, facebook_name);
+
 		}
 	}
 
@@ -434,6 +459,9 @@ public class CalendarioActivity extends Activity {
 			styleDark = res.getColor(R.color.MASCULINO_DARKER);
 			styleBright = res.getColor(R.color.MASCULINO_BRIGHTER);
 			styleBrightest = res.getColor(R.color.MASCULINO_BRIGHTEST);
+			
+			rightButton.setImageResource(R.drawable.flechader_mas);
+			leftButton.setImageResource(R.drawable.flechaizq_mas);
 		}
 		if(style.equals("femenino"))
 		{
@@ -443,6 +471,9 @@ public class CalendarioActivity extends Activity {
 			styleDark = res.getColor(R.color.FEMENINO_DARKER);
 			styleBright = res.getColor(R.color.FEMENINO_BRIGHTER);
 			styleBrightest = res.getColor(R.color.FEMENINO_BRIGHTEST);
+			
+			rightButton.setImageResource(R.drawable.flechader_fem);
+			leftButton.setImageResource(R.drawable.flechaizq_fem);
 		}
 		if(style.equals("neutral"))
 		{
@@ -452,6 +483,9 @@ public class CalendarioActivity extends Activity {
 			styleDark = res.getColor(R.color.NEUTRAL_DARKER);
 			styleBright = res.getColor(R.color.NEUTRAL_BRIGHTER);
 			styleBrightest = res.getColor(R.color.NEUTRAL_BRIGHTEST);
+			
+			rightButton.setImageResource(R.drawable.flechader_neu);
+			leftButton.setImageResource(R.drawable.flechaizq_neut);
 		}
 
 	}
@@ -623,6 +657,7 @@ public class CalendarioActivity extends Activity {
 		}
 		else
 		{
+			mCalendarCard.updateSelectedCellStyle("1");
 			Toast.makeText(ctx, "No hay datos para este dia", Toast.LENGTH_SHORT).show();
 		}
 

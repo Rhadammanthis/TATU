@@ -1,5 +1,10 @@
 package com.cceo.miyoideal;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ContentValues;
@@ -9,8 +14,10 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Point;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Display;
@@ -21,6 +28,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -33,10 +41,13 @@ import com.cceo.DB.SQLiteDietaDB;
 import com.cceo.DB.SQLiteEstadisticas;
 import com.cceo.DB.SQLiteFactory;
 import com.cceo.DB.SQLiteProgramaDB;
+import com.cceo.DB.SQLiteTutorialControl;
 import com.cceo.DB.SQLiteUserDB;
 import com.cceo.miyoideal.R;
 import com.cceo.miyoideal.extra.API;
 import com.cceo.miyoideal.extra.DialyNotificationReceiver;
+import com.cceo.miyoideal.extra.DietaCompleteNotification;
+import com.cceo.miyoideal.extra.Font;
 import com.cceo.miyoideal.extra.ImageAsyncTask;
 import com.facebook.FacebookSdk;
 //import com.google.android.gms.plus.Plus;
@@ -52,7 +63,7 @@ public class MainActivity extends Activity implements SQLiteFactory{
 	private static final String TWITTER_SECRET = "qtSPokpJDNzJlIoOKq4rftqW0ibXRXlJYy8vZGjINcSm3yveBe";
 	
 	//layout components
-	private Button button;
+	private ImageButton button;
 	private Spinner spinnerNivel;
 	private Spinner spinnerSexo;
 
@@ -71,6 +82,7 @@ public class MainActivity extends Activity implements SQLiteFactory{
 	private int styleDetail;
 	
 	private static ImageView profilePic;
+	private Bitmap bit;
 
 
 	@Override
@@ -82,10 +94,13 @@ public class MainActivity extends Activity implements SQLiteFactory{
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		this.getActionBar().setDisplayHomeAsUpEnabled(true);
+		getActionBar().setIcon(R.drawable.abc_ab_bottom_solid_dark_holo);
 		TwitterAuthConfig authConfig = new TwitterAuthConfig(TWITTER_KEY, TWITTER_SECRET);
 		Fabric.with(this, new Twitter(authConfig));
 		FacebookSdk.sdkInitialize(getApplicationContext());
-		profilePic = (ImageView) findViewById(R.id.main_image);
+		bit = null;
+		
 		
 		setContentView(R.layout.activity_main);
 		this.setTitle("Diagnostico");
@@ -99,8 +114,10 @@ public class MainActivity extends Activity implements SQLiteFactory{
 		height = size.y;	
 		
 		updateStyle();
+		setFont();
 
-		button = (Button) findViewById(R.id.button1);
+		profilePic = (ImageView) findViewById(R.id.main_image);
+		button = (ImageButton) findViewById(R.id.button1);
 
 		spinnerNivel = (Spinner) findViewById(R.id.spinnerMain);
 		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
@@ -153,12 +170,12 @@ public class MainActivity extends Activity implements SQLiteFactory{
 					initDietaDB();
 					initControlDB();
 					initProgramaDB();
+					initTutorialControl();
 										
 					Spinner sexo = (Spinner) main.getChildAt(1);
 					EditText edad = (EditText) main.getChildAt(2);
 					EditText talla = (EditText) main.getChildAt(3);
 					EditText peso = (EditText) main.getChildAt(4);
-					Spinner nivel = (Spinner) main.getChildAt(5);
 					
 					initEstadisticasDB(peso.getText().toString(), talla.getText().toString());
 					userDB.getWritableDatabase();
@@ -167,7 +184,7 @@ public class MainActivity extends Activity implements SQLiteFactory{
 					values.put("nombre", "Hugo");
 					values.put("peso", peso.getText().toString());
 					values.put("talla", talla.getText().toString());
-					values.put("nivel", nivel.getSelectedItem().toString());
+					values.put("nivel", spinnerNivel.getSelectedItem().toString());
 					values.put("sexo", sexo.getSelectedItem().toString());
 					values.put("edad", edad.getText().toString());
 					
@@ -181,6 +198,9 @@ public class MainActivity extends Activity implements SQLiteFactory{
 					SQLiteControl db = new SQLiteControl(con);
 					db.getWritableDatabase().update("control", cv, "id_control "+"="+1, null);
 					db.close();
+					
+					DialyNotificationReceiver dialyNotification = new DialyNotificationReceiver();
+					dialyNotification.setAlarm(con);
 					
 					Intent intent = new Intent(MainActivity.this, HomeActivity.class);
 					Log.d("grafica", "ya hay usuario");
@@ -206,18 +226,86 @@ public class MainActivity extends Activity implements SQLiteFactory{
 //		DialyNotificationReceiver dialyNotification = new DialyNotificationReceiver();
 //		dialyNotification.setAlarm(this);
 		
-//		if(!new API(con).getFacebookID().equals(""))
-//		{
-//			ImageAsyncTask programming = new ImageAsyncTask("main", null);
-//			programming.setId(new API(con).getFacebookID());
-//			programming.execute();
-//		}
+		if(!new API(con).getFacebookID().equals(""))
+		{
+
+			//new thead to update UI
+			Thread logoTimer = new Thread() {
+
+				public void run() {
+					try {
+						bit = getUserPic(new API(con).getFacebookID());
+						
+
+					} finally {
+						//special thead to update UI
+						runOnUiThread(new Runnable() {
+							
+							@Override
+							public void run() {
+								// TODO Auto-generated method stub
+								profilePic.setImageBitmap(API.getRoundedShape(bit));
+							}
+						});
+						
+					}
+				}
+
+			};
+			logoTimer.start();
+			
+		}
+		//if User has yet to sign to Facebook, we use the Facebook profile pic placeholder
+		else
+		{
+			profilePic.setBackgroundResource(R.drawable.com_facebook_profile_picture_blank_square);
+		}
 		
 	}
 	
+	private void setFont() {
+		// TODO Auto-generated method stub
+		Font f = new Font();
+		LinearLayout main = (LinearLayout) findViewById(R.id.mainLinerLayout);
+		TextView textView = (TextView) findViewById(R.id.diagnostico_textView);
+		Spinner sexo = (Spinner) main.getChildAt(1);
+		EditText edad = (EditText) main.getChildAt(2);
+		EditText talla = (EditText) main.getChildAt(3);
+		EditText peso = (EditText) main.getChildAt(4);
+		
+		f.changeFontRaleway(con, peso);
+		f.changeFontRaleway(con, talla);
+		f.changeFontRaleway(con, edad);
+		f.changeFontRaleway(con, textView);
+	}
+
+
 	public static void setFacebokProfilePic(Bitmap bitMap)
 	{		
-		//profilePic.setImageBitmap(API.getRoundedShape(bitMap));
+		if(bitMap != null && profilePic!=null)
+			profilePic.setImageResource(R.drawable.abc_ic_cab_done_holo_light);
+	}
+	
+	public Bitmap getUserPic(String userID) {
+		Bitmap bitmap = null;
+	    final String nomimg = "https://graph.facebook.com/"+userID+"/picture?type=large";
+	    URL imageURL = null;
+
+	    try {
+	        imageURL = new URL(nomimg);
+	    } catch (MalformedURLException e) {
+	        e.printStackTrace();
+	    }
+
+	    try {
+	    	InputStream in = (InputStream) imageURL.getContent();
+	        bitmap = BitmapFactory.decodeStream(in);
+
+	    } catch (IOException e) {
+
+	        e.printStackTrace();
+	    }
+	    return bitmap;
 	}
 
 	@Override
@@ -439,6 +527,8 @@ public class MainActivity extends Activity implements SQLiteFactory{
 		values.put("notif", "0");
 		values.put("fb_id", "");
 		values.put("fb_name", "");
+		values.put("peso_inicial", "0");
+		values.put("dieta_iteration", "0");
 		db.getWritableDatabase().insert("control", null, values);
 
 		db.close();
@@ -593,5 +683,25 @@ public class MainActivity extends Activity implements SQLiteFactory{
 		long i = db.getWritableDatabase().insert("estadisticas", null, values);
 		Log.d("Main Activity Result insert", i+" ");
 		
+	}
+
+
+	@Override
+	public void initTutorialControl() {
+		// TODO Auto-generated method stub
+		// TODO Auto-generated method stub
+		SQLiteTutorialControl db = new SQLiteTutorialControl(this);
+		db.getWritableDatabase();
+		
+		Log.d("db", "Control " + db.getDatabaseName());
+
+		ContentValues values = new ContentValues();
+		values.put("id_tutorialcontrol", "1");
+		values.put("tutorial", "0");
+		values.put("button_tutorial", "0");
+
+		db.getWritableDatabase().insert("tutorialcontrol", null, values);
+
+		db.close();
 	}
 }
