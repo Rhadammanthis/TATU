@@ -16,10 +16,12 @@ import android.view.View;
 public class RecomendationDialog extends DialogFragment{
 	
 	public Context con;
+	public int recomend;
 	
-	public RecomendationDialog(Context con) {
+	public RecomendationDialog(Context con, int recomend) {
 		// TODO Auto-generated constructor stub
 		this.con = con;
+		this.recomend = recomend;
 	}
 	
 	@Override
@@ -31,8 +33,21 @@ public class RecomendationDialog extends DialogFragment{
 		AlertDialog.Builder builder = new AlertDialog.Builder(con);
 		CharSequence[] items = new CharSequence[1];
 		items[0] = "Hola";
-		builder.setMessage("Ahora prueba una de estas!")
-		.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+		switch (recomend) {
+		case 0:
+			builder.setMessage("Ni arriba ni abajo");
+			break;
+		case 1:
+			builder.setMessage("Parece que hay que trabajar mas");
+			break;
+		case 2:
+			builder.setMessage("Bien hecho");
+			break;
+
+		default:
+			break;
+		}
+		builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
 			
 			@Override
 			public void onClick(DialogInterface dialog, int which) {

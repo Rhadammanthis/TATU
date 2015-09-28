@@ -89,6 +89,7 @@ import com.cceo.miyoideal.extra.Fragment_ImagePager;
 import com.cceo.miyoideal.extra.ImageAsyncTask;
 import com.cceo.miyoideal.extra.MyArrayAdapter;
 import com.cceo.miyoideal.extra.MyLinearLayout;
+import com.cceo.miyoideal.extra.OnDismissListener;
 import com.cceo.miyoideal.extra.RecomendationDialog;
 import com.daimajia.swipe.SwipeLayout;
 import com.daimajia.swipe.SwipeLayout.DragEdge;
@@ -112,7 +113,7 @@ import com.github.mikephil.charting.utils.XLabels;
 import com.github.mikephil.charting.utils.XLabels.XLabelPosition;
 import com.github.mikephil.charting.utils.YLabels;
 
-public class HomeActivity extends Activity implements OnTouchListener, OnClickListener, DialogInterface.OnDismissListener{
+public class HomeActivity extends Activity implements OnTouchListener, OnClickListener, OnDismissListener{
 
 	//global variables;
 	private int width;
@@ -795,32 +796,12 @@ public class HomeActivity extends Activity implements OnTouchListener, OnClickLi
 		}
 		else
 		{
-//			DietaCompletedDialog dialog = new DietaCompletedDialog(cont);
-//			dialog.show(getFragmentManager(), "Dieta Completed");
-			Intent intent = new Intent(HomeActivity.this, EstadisticasActivity.class);
-			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-			startActivity(intent);
+			DietaCompletedDialog dialog = new DietaCompletedDialog(cont);
+			dialog.show(getFragmentManager(), "Dieta Completed");
+//			Intent intent = new Intent(HomeActivity.this, EstadisticasActivity.class);
+//			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//			startActivity(intent);
 
-			//			DietaCompletedDialog dialog = new DietaCompletedDialog(cont);
-			//			dialog.show(getFragmentManager(), "Dieta Completed");
-			//			
-			//			Fragment_ImagePager recomedn_dialog = new Fragment_ImagePager(cont);
-			//			recomedn_dialog.show(getFragmentManager(), "Dieta Completed");
-//			DietaCompletedDialog dialog = new DietaCompletedDialog(cont);
-//			dialog.show(getFragmentManager(), "Dieta Completed");
-//						dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-//			
-//							@Override
-//							public void onDismiss(DialogInterface dialog) {
-//								// TODO Auto-generated method stub
-//								List<DTO_DietaCompletada> lista = new DAO_DietaCompletada(cont).getLastFiveDietaCompleta();
-//								BarEntry e = new BarEntry(Float.valueOf(lista.get(lista.size()-1).getPeso()), lista.size()-1);
-//								set1.addEntry(e);
-//								setData(lista.size(), 80, lista );
-//								mChart.invalidate();
-//								mChart.animateX(lista.size() * 250);
-//							}
-//						});
 
 
 		}
@@ -1272,8 +1253,9 @@ public class HomeActivity extends Activity implements OnTouchListener, OnClickLi
 
 	}
 
+
 	@Override
-	public void onDismiss(final DialogInterface dialog) {
+	public void OnDismiss(DialogInterface dialog, int recomendation) {
 		// TODO Auto-generated method stub
 		//Toast.makeText(cont, "Dismiss", Toast.LENGTH_SHORT).show();
 		List<DTO_DietaCompletada> lista = new DAO_DietaCompletada(cont).getLastFiveDietaCompleta();
@@ -1283,7 +1265,7 @@ public class HomeActivity extends Activity implements OnTouchListener, OnClickLi
 		mChart.invalidate();
 		mChart.animateX(lista.size() * 250);
 
-		RecomendationDialog recomedn_dialog = new RecomendationDialog(cont);
+		RecomendationDialog recomedn_dialog = new RecomendationDialog(cont, recomendation);
 		recomedn_dialog.show(getFragmentManager(), "Dieta Completed");
 	}
 

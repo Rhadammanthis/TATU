@@ -39,6 +39,8 @@ public class DietaCompletedDialog extends DialogFragment{
 	private ImageButton facebook;
 	private ImageButton twitter;
 	
+	public int recomend = 0;
+	
 	public DietaCompletedDialog(Context context) {
 	
 		// TODO Auto-generated constructor stub
@@ -115,8 +117,9 @@ public class DietaCompletedDialog extends DialogFragment{
     public void onDismiss(final DialogInterface dialog) {
         super.onDismiss(dialog);
         final Activity activity = getActivity();
-        if (activity instanceof DialogInterface.OnDismissListener) {
-            ((DialogInterface.OnDismissListener) activity).onDismiss(dialog);
+        if (activity instanceof OnDismissListener) {
+        	
+            ((OnDismissListener) activity).OnDismiss(dialog, recomend);
         }
     }
     
@@ -175,6 +178,10 @@ public class DietaCompletedDialog extends DialogFragment{
             				// TODO Auto-generated method stub
                             //EditText peso = (EditText) v.findViewById(R.id.pesoEditText_Share);
                             //EditText talla = (EditText) v.findViewById(R.id.tallaEditText_Share);
+                        	
+                        	//prepare recomendation
+                        	recomend = getRecommendationType(Float.valueOf(new DAO_Usuario(getActivity()).getUsuario().getPeso()), 
+                        			Float.valueOf(peso.getText().toString()));
 
                             Calendar c = Calendar.getInstance();
                             SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yy");
@@ -224,6 +231,26 @@ public class DietaCompletedDialog extends DialogFragment{
 		{  
 			return false;  
 		}  
+	}
+	
+	/**
+	 * Checks which recommendation is to be given
+	 * @param initWeight int
+	 * @param finalWeight int
+	 * @return 1 if gained weight, 0 if same weight and 2 if weight lost 
+	 */
+	public int getRecommendationType(float initWeight, float finalWeight)
+	{
+		int recomendation = 0;
+		
+		if(initWeight == finalWeight)
+			recomendation = 0;
+		else if(initWeight < finalWeight)
+			recomendation = 1;
+		else
+			recomendation = 2;
+		
+		return recomendation;
 	}
 
 
