@@ -212,10 +212,13 @@ public class MiPerfilActivity extends FragmentActivity implements DialogInterfac
 		peso.setText(usuario.getPeso());
 		TextView talla = (TextView) findViewById(R.id.tallaActual_);	
 		talla.setText(usuario.getTalla());
+		TextView estatura = (TextView) findViewById(R.id.estaturaActual_);	
+		estatura.setText(usuario.getEestatura());
 
 		Font font = new Font();
 		font.changeFontRaleway(con, peso);
 		font.changeFontRaleway(con, talla);
+		font.changeFontRaleway(con, estatura);
 
 		motivacion.setText(new API(con).getMotivacion());
 		motivacion.setOnTouchListener(new DrawerCloseListener());

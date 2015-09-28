@@ -190,6 +190,7 @@ public class DietaCompletedDialog extends DialogFragment{
                                 //clear control information
                                 new API(con).clearDieta();
                                 new DAO_Usuario(con).updatePesoActual(peso.getText().toString());
+                                new DAO_Usuario(con).updateTalla(talla.getText().toString());
 
                                 dismiss();
                             }

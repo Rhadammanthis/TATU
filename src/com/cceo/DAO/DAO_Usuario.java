@@ -31,7 +31,7 @@ public class DAO_Usuario {
 		{
 			usuario = new DTO_Usuario(cursor.getString(0), cursor.getString(1), 
 					cursor.getString(2), cursor.getString(3), cursor.getString(4), 
-					cursor.getString(5), cursor.getString(6));
+					cursor.getString(5), cursor.getString(6), cursor.getString(7));
 		
 		}
 		
@@ -52,6 +52,16 @@ public class DAO_Usuario {
 	{
 		ContentValues cv = new ContentValues();
 		cv.put("peso", pesoActual);
+
+		SQLiteUserDB db = new SQLiteUserDB(con);
+		db.getWritableDatabase().update("usuario", cv, "id_usuario "+"="+1, null);
+		db.close();
+	}
+	
+	public void updateTalla(String talla)
+	{
+		ContentValues cv = new ContentValues();
+		cv.put("talla", talla);
 
 		SQLiteUserDB db = new SQLiteUserDB(con);
 		db.getWritableDatabase().update("usuario", cv, "id_usuario "+"="+1, null);

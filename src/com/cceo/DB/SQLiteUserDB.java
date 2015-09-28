@@ -16,7 +16,8 @@ public class SQLiteUserDB extends SQLiteOpenHelper{
             "talla" + " TEXT, " +
             "nivel" + " TEXT, " +
             "sexo" + " TEXT, " +
-            "edad" + " TEXT);";
+            "edad" + " TEXT, " +
+            "estatura" + " TEXT);";
 
 	public SQLiteUserDB(Context context) {
 		super(context, USER_TABLE_NAME, null, DATABASE_VERSION);

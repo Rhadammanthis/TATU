@@ -39,7 +39,16 @@
             android:id="@+id/editPeso"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Estatura"
+            android:hint="Estatura en cm"
+            android:inputType="numberDecimal"
+            android:textColor="#FFFFFF"
+            android:textColorHint="#FFFFFF" />
+        
+        <EditText
+            android:id="@+id/editTalla"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Talla en cm"
             android:inputType="numberDecimal"
             android:textColor="#FFFFFF"
             android:textColorHint="#FFFFFF" />
@@ -48,7 +57,7 @@
             android:id="@+id/editTratamiento"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Peso"
+            android:hint="Peso en kg"
             android:inputType="numberDecimal"
             android:textColor="#FFFFFF"
             android:textColorHint="#FFFFFF" />

@@ -174,16 +174,18 @@ public class MainActivity extends Activity implements SQLiteFactory{
 										
 					Spinner sexo = (Spinner) main.getChildAt(1);
 					EditText edad = (EditText) main.getChildAt(2);
-					EditText talla = (EditText) main.getChildAt(3);
-					EditText peso = (EditText) main.getChildAt(4);
+					EditText estatura = (EditText) main.getChildAt(3);
+					EditText peso = (EditText) main.getChildAt(5);
+					EditText talla = (EditText) main.getChildAt(4);
 					
-					initEstadisticasDB(peso.getText().toString(), talla.getText().toString());
+					initEstadisticasDB(peso.getText().toString(), estatura.getText().toString());
 					userDB.getWritableDatabase();
 					Log.d("db", userDB.getDatabaseName());
 					values.put("id_usuario", "1");
 					values.put("nombre", "Hugo");
 					values.put("peso", peso.getText().toString());
 					values.put("talla", talla.getText().toString());
+					values.put("estatura", estatura.getText().toString());
 					values.put("nivel", spinnerNivel.getSelectedItem().toString());
 					values.put("sexo", sexo.getSelectedItem().toString());
 					values.put("edad", edad.getText().toString());
