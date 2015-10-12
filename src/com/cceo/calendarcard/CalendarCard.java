@@ -70,6 +70,8 @@ public class CalendarCard extends RelativeLayout {
 	private int colorDay;
 	private String monthDay;
 
+	private int calendarNewMonth = 0;
+
 	public CalendarCard(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
 		init(context);
@@ -275,7 +277,8 @@ public class CalendarCard extends RelativeLayout {
 	public void iniMonth(final Context ctx, Calendar cal) {
 		if (isInEditMode()) return;
 
-		monthDay = String.valueOf(cal.get(Calendar.MONTH));
+		calendarNewMonth = cal.get(Calendar.MONTH);
+		//monthDay = String.valueOf(cal.get(Calendar.MONTH));
 
 		final float scale = ctx.getResources().getDisplayMetrics().density;
 		pixels = (int) (210 * scale + 0.5f);
@@ -681,17 +684,37 @@ public class CalendarCard extends RelativeLayout {
 			{
 				if(!((TextView)temp.getChildAt(1)).getText().toString().equals(""))
 				{
-					if (Integer.valueOf(((TextView)temp.getChildAt(1)).getText().toString()) >= Integer.valueOf(init)
-							&& Integer.valueOf(((TextView)temp.getChildAt(1)).getText().toString()) <= Integer.valueOf(end)) 
+					if(Integer.valueOf(init) < Integer.valueOf(end))
 					{
-						if(cal.get(Calendar.MONTH) == Integer.valueOf(month))
+						if (Integer.valueOf(((TextView)temp.getChildAt(1)).getText().toString()) >= Integer.valueOf(init)
+								&& Integer.valueOf(((TextView)temp.getChildAt(1)).getText().toString()) <= Integer.valueOf(end)) 
 						{
-							if(Integer.valueOf(((TextView)temp.getChildAt(1)).getText().toString()) != dayOfMonth)
+							if(cal.get(Calendar.MONTH) == Integer.valueOf(month))
 							{
-								CircleViewColor cirlcoe = new CircleViewColor(con,color);
-								temp.addView(cirlcoe);
-								temp.getChildAt(0).bringToFront();
-								Log.d("star", String.valueOf(temp.getChildCount()));
+								if(Integer.valueOf(((TextView)temp.getChildAt(1)).getText().toString()) != dayOfMonth)
+								{
+									CircleViewColor cirlcoe = new CircleViewColor(con,color);
+									temp.addView(cirlcoe);
+									temp.getChildAt(0).bringToFront();
+									Log.d("star", String.valueOf(temp.getChildCount()));
+								}
+							}
+						}
+					}
+					else
+					{
+						if (Integer.valueOf(((TextView)temp.getChildAt(1)).getText().toString()) >= Integer.valueOf(init)
+								&& Integer.valueOf(((TextView)temp.getChildAt(1)).getText().toString()) <= 31) 
+						{
+							if(cal.get(Calendar.MONTH) == Integer.valueOf(month))
+							{
+								if(Integer.valueOf(((TextView)temp.getChildAt(1)).getText().toString()) != dayOfMonth)
+								{
+									CircleViewColor cirlcoe = new CircleViewColor(con,color);
+									temp.addView(cirlcoe);
+									temp.getChildAt(0).bringToFront();
+									Log.d("star", String.valueOf(temp.getChildCount()));
+								}
 							}
 						}
 					}
@@ -702,17 +725,37 @@ public class CalendarCard extends RelativeLayout {
 			{
 				if(!((TextView)temp.getChildAt(0)).getText().toString().equals(""))
 				{
-					if (Integer.valueOf(((TextView)temp.getChildAt(0)).getText().toString()) >= Integer.valueOf(init)
-							&& Integer.valueOf(((TextView)temp.getChildAt(0)).getText().toString()) <= Integer.valueOf(end)) 
+					if(Integer.valueOf(init) < Integer.valueOf(end))
 					{
-						if(cal.get(Calendar.MONTH) == Integer.valueOf(month))
+						if (Integer.valueOf(((TextView)temp.getChildAt(0)).getText().toString()) >= Integer.valueOf(init)
+								&& Integer.valueOf(((TextView)temp.getChildAt(0)).getText().toString()) <= Integer.valueOf(end)) 
 						{
-							if(Integer.valueOf(((TextView)temp.getChildAt(0)).getText().toString()) != dayOfMonth)
+							if(cal.get(Calendar.MONTH) == Integer.valueOf(month))
 							{
-								CircleViewColor cirlcoe = new CircleViewColor(con,color);
-								temp.addView(cirlcoe);
-								temp.getChildAt(0).bringToFront();
-								Log.d("star", String.valueOf(temp.getChildCount()));
+								if(Integer.valueOf(((TextView)temp.getChildAt(0)).getText().toString()) != dayOfMonth)
+								{
+									CircleViewColor cirlcoe = new CircleViewColor(con,color);
+									temp.addView(cirlcoe);
+									temp.getChildAt(0).bringToFront();
+									Log.d("star", String.valueOf(temp.getChildCount()));
+								}
+							}
+						}
+					}
+					else
+					{
+						if (Integer.valueOf(((TextView)temp.getChildAt(0)).getText().toString()) >= Integer.valueOf(init)
+								&& Integer.valueOf(((TextView)temp.getChildAt(0)).getText().toString()) <= 31) 
+						{
+							if(cal.get(Calendar.MONTH) == Integer.valueOf(month))
+							{
+								if(Integer.valueOf(((TextView)temp.getChildAt(0)).getText().toString()) != dayOfMonth)
+								{
+									CircleViewColor cirlcoe = new CircleViewColor(con,color);
+									temp.addView(cirlcoe);
+									temp.getChildAt(0).bringToFront();
+									Log.d("star", String.valueOf(temp.getChildCount()));
+								}
 							}
 						}
 					}
@@ -724,6 +767,7 @@ public class CalendarCard extends RelativeLayout {
 	public void drawDietaDays(String except)
 	{
 		Calendar cal = Calendar.getInstance();
+		//	cal.add(Calendar.MONTH, 1);
 		int dayOfMonth = Integer.valueOf(except);
 
 		for(CheckableLayout temp : cells)
@@ -733,17 +777,57 @@ public class CalendarCard extends RelativeLayout {
 			{
 				if(!((TextView)temp.getChildAt(1)).getText().toString().equals(""))
 				{
-					if (Integer.valueOf(((TextView)temp.getChildAt(1)).getText().toString()) >= Integer.valueOf(initialDay)
-							&& Integer.valueOf(((TextView)temp.getChildAt(1)).getText().toString()) <= Integer.valueOf(finalDay)) 
+					if(Integer.valueOf(initialDay) < Integer.valueOf(finalDay))
 					{
-						if(cal.get(Calendar.MONTH) == Integer.valueOf(monthDay))
+						if(calendarNewMonth == Integer.valueOf(monthDay))
 						{
-							if(Integer.valueOf(((TextView)temp.getChildAt(1)).getText().toString()) != dayOfMonth)
+							if (Integer.valueOf(((TextView)temp.getChildAt(1)).getText().toString()) >= Integer.valueOf(initialDay)
+									&& Integer.valueOf(((TextView)temp.getChildAt(1)).getText().toString()) <= Integer.valueOf(finalDay)) 
 							{
-								CircleViewColor cirlcoe = new CircleViewColor(con, colorDay);
-								temp.addView(cirlcoe);
-								temp.getChildAt(0).bringToFront();
-								Log.d("star", String.valueOf(temp.getChildCount()));
+								//if(cal.get(Calendar.MONTH) == Integer.valueOf(monthDay))
+								//	{
+								if(Integer.valueOf(((TextView)temp.getChildAt(1)).getText().toString()) != dayOfMonth)
+								{
+									CircleViewColor cirlcoe = new CircleViewColor(con, colorDay);
+									temp.addView(cirlcoe);
+									temp.getChildAt(0).bringToFront();
+									Log.d("star", String.valueOf(temp.getChildCount()));
+								}
+								//}
+							}
+						}
+					}
+					else
+					{
+						if(calendarNewMonth == Integer.valueOf(monthDay))
+						{
+							if (Integer.valueOf(((TextView)temp.getChildAt(1)).getText().toString()) >= Integer.valueOf(initialDay)
+									&& Integer.valueOf(((TextView)temp.getChildAt(1)).getText().toString()) <= 31) 
+							{
+								if(Integer.valueOf(((TextView)temp.getChildAt(1)).getText().toString()) != dayOfMonth)
+								{
+									CircleViewColor cirlcoe = new CircleViewColor(con, colorDay);
+									temp.addView(cirlcoe);
+									temp.getChildAt(0).bringToFront();
+									Log.d("star", String.valueOf(temp.getChildCount()));
+								}
+							}
+						}
+						else
+						{
+							if(calendarNewMonth > Integer.valueOf(monthDay))
+							{
+								if (Integer.valueOf(((TextView)temp.getChildAt(1)).getText().toString()) >= 1
+										&& Integer.valueOf(((TextView)temp.getChildAt(1)).getText().toString()) <= Integer.valueOf(finalDay)) 
+								{
+									if(Integer.valueOf(((TextView)temp.getChildAt(1)).getText().toString()) != dayOfMonth)
+									{
+										CircleViewColor cirlcoe = new CircleViewColor(con, colorDay);
+										temp.addView(cirlcoe);
+										temp.getChildAt(0).bringToFront();
+										Log.d("star", String.valueOf(temp.getChildCount()));
+									}
+								}
 							}
 						}
 					}
@@ -754,17 +838,57 @@ public class CalendarCard extends RelativeLayout {
 			{
 				if(!((TextView)temp.getChildAt(0)).getText().toString().equals(""))
 				{
-					if (Integer.valueOf(((TextView)temp.getChildAt(0)).getText().toString()) >= Integer.valueOf(initialDay)
-							&& Integer.valueOf(((TextView)temp.getChildAt(0)).getText().toString()) <= Integer.valueOf(finalDay)) 
+					if(Integer.valueOf(initialDay) < Integer.valueOf(finalDay))
 					{
-						if(cal.get(Calendar.MONTH) == Integer.valueOf(monthDay))
+						if(calendarNewMonth == Integer.valueOf(monthDay))
 						{
-							if(Integer.valueOf(((TextView)temp.getChildAt(0)).getText().toString()) != dayOfMonth)
+							if (Integer.valueOf(((TextView)temp.getChildAt(0)).getText().toString()) >= Integer.valueOf(initialDay)
+									&& Integer.valueOf(((TextView)temp.getChildAt(0)).getText().toString()) <= Integer.valueOf(finalDay)) 
 							{
-								CircleViewColor cirlcoe = new CircleViewColor(con,colorDay);
-								temp.addView(cirlcoe);
-								temp.getChildAt(0).bringToFront();
-								Log.d("star", String.valueOf(temp.getChildCount()));
+								//	if(cal.get(Calendar.MONTH) == Integer.valueOf(monthDay))
+								//	{
+								if(Integer.valueOf(((TextView)temp.getChildAt(0)).getText().toString()) != dayOfMonth)
+								{
+									CircleViewColor cirlcoe = new CircleViewColor(con,colorDay);
+									temp.addView(cirlcoe);
+									temp.getChildAt(0).bringToFront();
+									Log.d("star", String.valueOf(temp.getChildCount()));
+								}
+								//}
+							}
+						}
+					}
+					else
+					{
+						if(calendarNewMonth == Integer.valueOf(monthDay))
+						{
+							if (Integer.valueOf(((TextView)temp.getChildAt(0)).getText().toString()) >= Integer.valueOf(initialDay)
+									&& Integer.valueOf(((TextView)temp.getChildAt(0)).getText().toString()) <= 31) 
+							{
+								if(Integer.valueOf(((TextView)temp.getChildAt(0)).getText().toString()) != dayOfMonth)
+								{
+									CircleViewColor cirlcoe = new CircleViewColor(con,colorDay);
+									temp.addView(cirlcoe);
+									temp.getChildAt(0).bringToFront();
+									Log.d("star", String.valueOf(temp.getChildCount()));
+								}
+							}
+						}
+						else
+						{
+							if(calendarNewMonth > Integer.valueOf(monthDay))
+							{
+								if (Integer.valueOf(((TextView)temp.getChildAt(0)).getText().toString()) >= 1
+										&& Integer.valueOf(((TextView)temp.getChildAt(0)).getText().toString()) <= Integer.valueOf(finalDay)) 
+								{
+									if(Integer.valueOf(((TextView)temp.getChildAt(0)).getText().toString()) != dayOfMonth)
+									{
+										CircleViewColor cirlcoe = new CircleViewColor(con,colorDay);
+										temp.addView(cirlcoe);
+										temp.getChildAt(0).bringToFront();
+										Log.d("star", String.valueOf(temp.getChildCount()));
+									}
+								}
 							}
 						}
 					}
