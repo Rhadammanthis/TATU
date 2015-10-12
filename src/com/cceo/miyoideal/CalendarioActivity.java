@@ -1,5 +1,6 @@
 package com.cceo.miyoideal;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -9,6 +10,7 @@ import java.util.Locale;
 import shared.ui.actionscontentview.ActionsContentView;
 
 import com.cceo.DAO.DAO_Componente;
+import com.cceo.DAO.DAO_Dieta;
 import com.cceo.DTO.*;
 import com.cceo.calendarcard.*;
 import com.cceo.miyoideal.R;
@@ -114,11 +116,18 @@ public class CalendarioActivity extends Activity {
 		//init calendar widget
 		mCalendarCard = (CalendarCard)findViewById(R.id.calendarCard6);
 		mCalendarCard.getLayoutParams().height = height/2;
+		
+		
 
 		//load today's dieta components, if dieta is set
 		if(new API(ctx).IsDietaSet())
 		{
 			initTodayDieta();
+			
+			//colors dieta duration
+			mCalendarCard.drawDietaDays(String.valueOf(getDietaBegining()), String.valueOf(getDietaEnd()),styleDetail, String.valueOf(getDietaMonth()));
+			Log.d("Fever", "Begining " + String.valueOf(getDietaBegining()));
+			Log.d("Fever", "End" + String.valueOf(getDietaEnd()));
 		}
 
 		linearLayout.setOnTouchListener(new DrawerCloseListener());
@@ -154,12 +163,11 @@ public class CalendarioActivity extends Activity {
 						String dayOfMonth = item.getDayOfMonth().toString();
 						mCalendarCard.updateSelectedCellStyle(dayOfMonth);
 					}
+
 				}
 
 			}
 		});
-
-		CalendarioChildFactory factory = new CalendarioChildFactory(this);
 
 		//linearLayout.addView(factory.GenerateChildEjercicio("Uno 1", "asjhgdlgd ladjgajaldal bd lsjdblsbdlsnv dbasv dv sd"));
 
@@ -201,6 +209,16 @@ public class CalendarioActivity extends Activity {
 
 						populateDietaList(1, newDate);
 					}
+				}
+				else
+				{
+					if(Calendar.getInstance().get(Calendar.MONTH) == cal.get(Calendar.MONTH))
+					{
+						Calendar cal = Calendar.getInstance();
+						int dayOfMonth = cal.get(Calendar.DAY_OF_MONTH);
+						mCalendarCard.updateSelectedCellStyle(String.valueOf(dayOfMonth));
+					}
+					
 				}
 
 			}
@@ -245,9 +263,20 @@ public class CalendarioActivity extends Activity {
 						populateDietaList(1, newDate);
 					}
 				}
+				else
+				{
+					if(Calendar.getInstance().get(Calendar.MONTH) == cal.get(Calendar.MONTH))
+					{
+						Calendar cal = Calendar.getInstance();
+						int dayOfMonth = cal.get(Calendar.DAY_OF_MONTH);
+						mCalendarCard.updateSelectedCellStyle(String.valueOf(dayOfMonth));
+					}
+					
+				}
 			}
 		});
 
+		
 	}
 
 	@Override
@@ -695,6 +724,58 @@ public class CalendarioActivity extends Activity {
 			return false;
 		}
 
+	}
+	
+	private int getDietaBegining()
+	{
+		Calendar c = Calendar.getInstance();
+		SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yy");
+		java.util.Date initalDate = null;
+		String lol = new API(ctx).getDia();
+		try {
+			initalDate = df.parse(new API(ctx).getDia());
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		c.setTime(initalDate);
+		return c.get(Calendar.DATE);
+	}
+	
+	private int getDietaMonth()
+	{
+		Calendar c = Calendar.getInstance();
+		SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yy");
+		java.util.Date initalDate = null;
+		String lol = new API(ctx).getDia();
+		try {
+			initalDate = df.parse(new API(ctx).getDia());
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		c.setTime(initalDate);
+		return c.get(Calendar.MONTH);
+	}
+	
+	private int getDietaEnd()
+	{
+		Calendar c = Calendar.getInstance();
+		SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yy");
+		java.util.Date initalDate = null;
+		String lol = new API(ctx).getDia();
+		try {
+			initalDate = df.parse(new API(ctx).getDia());
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		c.setTime(initalDate);
+		String dietaDuration = new DAO_Dieta(ctx).getDieta(new API(ctx).getID_Dieta()).getDuracion();
+		c.add(Calendar.DATE, Integer.valueOf(dietaDuration));
+		String todayDate = df.format(c.getTime());
+		
+		return c.get(Calendar.DATE);
 	}
 
 }

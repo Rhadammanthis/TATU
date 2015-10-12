@@ -65,6 +65,11 @@ public class CalendarCard extends RelativeLayout {
 	private java.util.Date initDate;
 	private Font font;
 
+	private String initialDay;
+	private String finalDay;
+	private int colorDay;
+	private String monthDay;
+
 	public CalendarCard(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
 		init(context);
@@ -87,7 +92,7 @@ public class CalendarCard extends RelativeLayout {
 
 	public void init(final Context ctx) {
 		if (isInEditMode()) return;
-		
+
 		font = new Font();
 
 		if(new API(ctx).IsDietaSet() && duracionDieta == 0)
@@ -213,9 +218,7 @@ public class CalendarCard extends RelativeLayout {
 				}
 				if(day > 22 && !monthBegun)
 				{
-					//v.setVisibility(View.INVISIBLE);
 					((TextView)v.getChildAt(0)).setText("");
-
 				}
 				if(day == 28 && monthBegun)
 				{
@@ -234,6 +237,12 @@ public class CalendarCard extends RelativeLayout {
 				//Color today's day white, and change text color to black
 				if(((TextView)v.getChildAt(0)).getText().equals(String.valueOf(dayOfMonth)))
 				{
+
+					Log.d("rapture", "Children: " + String.valueOf(v.getChildCount()));
+					for (int i = 0; i < v.getChildCount(); i++) {
+						Log.d("rapture",v.getChildAt(i).getClass().toString());
+					}
+
 					shoudlRecordDate = false;
 					celParam = (LayoutParams) v.getChildAt(0).getLayoutParams();
 					((TextView)v.getChildAt(0)).setTextColor(Color.BLACK);
@@ -265,6 +274,8 @@ public class CalendarCard extends RelativeLayout {
 
 	public void iniMonth(final Context ctx, Calendar cal) {
 		if (isInEditMode()) return;
+
+		monthDay = String.valueOf(cal.get(Calendar.MONTH));
 
 		final float scale = ctx.getResources().getDisplayMetrics().density;
 		pixels = (int) (210 * scale + 0.5f);
@@ -653,6 +664,115 @@ public class CalendarCard extends RelativeLayout {
 		}
 	}
 
+	public void drawDietaDays(String init, String end, int color, String month)
+	{
+		initialDay = init;
+		finalDay = end;
+		colorDay = color;
+		monthDay = month;
+
+		Calendar cal = Calendar.getInstance();
+		int dayOfMonth = cal.get(Calendar.DAY_OF_MONTH);
+
+		for(CheckableLayout temp : cells)
+		{
+
+			if(temp.getChildCount() > 1)
+			{
+				if(!((TextView)temp.getChildAt(1)).getText().toString().equals(""))
+				{
+					if (Integer.valueOf(((TextView)temp.getChildAt(1)).getText().toString()) >= Integer.valueOf(init)
+							&& Integer.valueOf(((TextView)temp.getChildAt(1)).getText().toString()) <= Integer.valueOf(end)) 
+					{
+						if(cal.get(Calendar.MONTH) == Integer.valueOf(month))
+						{
+							if(Integer.valueOf(((TextView)temp.getChildAt(1)).getText().toString()) != dayOfMonth)
+							{
+								CircleViewColor cirlcoe = new CircleViewColor(con,color);
+								temp.addView(cirlcoe);
+								temp.getChildAt(0).bringToFront();
+								Log.d("star", String.valueOf(temp.getChildCount()));
+							}
+						}
+					}
+				}
+
+			}
+			else
+			{
+				if(!((TextView)temp.getChildAt(0)).getText().toString().equals(""))
+				{
+					if (Integer.valueOf(((TextView)temp.getChildAt(0)).getText().toString()) >= Integer.valueOf(init)
+							&& Integer.valueOf(((TextView)temp.getChildAt(0)).getText().toString()) <= Integer.valueOf(end)) 
+					{
+						if(cal.get(Calendar.MONTH) == Integer.valueOf(month))
+						{
+							if(Integer.valueOf(((TextView)temp.getChildAt(0)).getText().toString()) != dayOfMonth)
+							{
+								CircleViewColor cirlcoe = new CircleViewColor(con,color);
+								temp.addView(cirlcoe);
+								temp.getChildAt(0).bringToFront();
+								Log.d("star", String.valueOf(temp.getChildCount()));
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	public void drawDietaDays(String except)
+	{
+		Calendar cal = Calendar.getInstance();
+		int dayOfMonth = Integer.valueOf(except);
+
+		for(CheckableLayout temp : cells)
+		{
+
+			if(temp.getChildCount() > 1)
+			{
+				if(!((TextView)temp.getChildAt(1)).getText().toString().equals(""))
+				{
+					if (Integer.valueOf(((TextView)temp.getChildAt(1)).getText().toString()) >= Integer.valueOf(initialDay)
+							&& Integer.valueOf(((TextView)temp.getChildAt(1)).getText().toString()) <= Integer.valueOf(finalDay)) 
+					{
+						if(cal.get(Calendar.MONTH) == Integer.valueOf(monthDay))
+						{
+							if(Integer.valueOf(((TextView)temp.getChildAt(1)).getText().toString()) != dayOfMonth)
+							{
+								CircleViewColor cirlcoe = new CircleViewColor(con, colorDay);
+								temp.addView(cirlcoe);
+								temp.getChildAt(0).bringToFront();
+								Log.d("star", String.valueOf(temp.getChildCount()));
+							}
+						}
+					}
+				}
+
+			}
+			else
+			{
+				if(!((TextView)temp.getChildAt(0)).getText().toString().equals(""))
+				{
+					if (Integer.valueOf(((TextView)temp.getChildAt(0)).getText().toString()) >= Integer.valueOf(initialDay)
+							&& Integer.valueOf(((TextView)temp.getChildAt(0)).getText().toString()) <= Integer.valueOf(finalDay)) 
+					{
+						if(cal.get(Calendar.MONTH) == Integer.valueOf(monthDay))
+						{
+							if(Integer.valueOf(((TextView)temp.getChildAt(0)).getText().toString()) != dayOfMonth)
+							{
+								CircleViewColor cirlcoe = new CircleViewColor(con,colorDay);
+								temp.addView(cirlcoe);
+								temp.getChildAt(0).bringToFront();
+								Log.d("star", String.valueOf(temp.getChildCount()));
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
 	public void updateSelectedCellStyle(String num)
 	{
 		CheckableLayout v = new CheckableLayout(con);
@@ -660,23 +780,82 @@ public class CalendarCard extends RelativeLayout {
 		if(((TextView)currentCell).getText().equals(num))
 			return;
 
+		int insti =0;
 		for(CheckableLayout temp : cells)
 		{
+			Log.d("wars", "Cell" + String.valueOf(insti));
+			for (int i = 0; i < temp.getChildCount(); i++) {
+				Log.d("wars",temp.getChildAt(i).getClass().toString());
+			}
+			insti++;
+		}
+
+		for(CheckableLayout temp : cells)
+		{
+			//			for (int i = 0; i < temp.getChildCount(); i++) {
+			//				Log.d("wars",temp.getChildAt(i).getClass().toString());
+			//			}
 			if(temp.getChildCount()>1)
 			{
 				Log.d("chien", "Children per Cell: " + String.valueOf(temp.getChildCount()));
+				for (int i = 0; i < temp.getChildCount(); i++) {
+					Log.d("chien","Child: " + temp.getChildAt(i).getClass().toString());
+				}
 				temp.removeViewAt(0);
-			}
-			Log.d("chien", ((TextView)temp.getChildAt(0)).getText().toString());
-			if (((TextView)temp.getChildAt(0)).getText().equals(num)) 
-			{
-				v = temp;
-				CircleView cirlcoe = new CircleView(con);
-				temp.addView(cirlcoe);
-				temp.getChildAt(0).bringToFront();
-				Log.d("chien", String.valueOf(temp.getChildCount()));
 
 			}
+			for (int i = 0; i < temp.getChildCount(); i++) {
+				Log.d("chien","Child after: " + temp.getChildAt(i).getClass().toString());
+			}
+			//Log.d("chien", ((TextView)temp.getChildAt(0)).getText().toString());
+			if(temp.getChildCount() > 1)
+			{
+				if (((TextView)temp.getChildAt(1)).getText().equals(num)) 
+				{
+					//					int remove = 0;
+					//					for (int i = 0; i < temp.getChildCount(); i++) 
+					//					{
+					//						if(temp.getChildAt(i).getClass() == CircleViewColor.class)
+					//						{
+					//							remove = i;
+					//						}
+					//					}
+					//					temp.removeViewAt(remove);
+
+					v = temp;
+					CircleView cirlcoe = new CircleView(con);
+					temp.addView(cirlcoe);
+					temp.getChildAt(0).bringToFront();
+					Log.d("chien", String.valueOf(temp.getChildCount()));
+
+				}
+			}
+			else
+			{
+				if (((TextView)temp.getChildAt(0)).getText().equals(num)) 
+				{
+					//					int remove = 0;
+					//					for (int i = 0; i < temp.getChildCount(); i++) 
+					//					{
+					//						if(temp.getChildAt(i).getClass() == CircleViewColor.class)
+					//						{
+					//							remove = i;
+					//						}
+					//					}
+					//					temp.removeViewAt(remove);
+
+					v = temp;
+					CircleView cirlcoe = new CircleView(con);
+					temp.addView(cirlcoe);
+					temp.getChildAt(0).bringToFront();
+					//Log.d("chien", String.valueOf(temp.getChildCount()));
+
+				}
+			}
+		}
+
+		for (int i = 0; i < v.getChildCount(); i++) {
+			Log.d("KATE",v.getChildAt(i).getClass().toString());
 		}
 
 		//updates new cell style
@@ -694,6 +873,11 @@ public class CalendarCard extends RelativeLayout {
 		if(!new API(con).IsDietaSet())
 		{
 			Toast.makeText(con, "Selecciona una dieta", Toast.LENGTH_SHORT).show();
+		}
+
+		if(new API(con).IsDietaSet())
+		{
+			drawDietaDays(((TextView)currentCell).getText().toString());
 		}
 	}
 
@@ -728,6 +912,34 @@ public class CalendarCard extends RelativeLayout {
 			Paint paint = new Paint();
 			paint.setStyle(Paint.Style.FILL);
 			paint.setColor(Color.WHITE);
+			canvas.drawCircle((int) (19 * scale + 0.5f), (int) (20 * scale + 0.5f), (int) (13 * scale + 0.5f), paint);
+		}
+
+	}
+
+	private class CircleViewColor extends View
+	{
+		private int color;
+
+		public CircleViewColor(Context context, AttributeSet attrs) {
+			super(context, attrs);
+			// TODO Auto-generated constructor stub
+		}
+
+		public CircleViewColor(Context context, int color){
+			super(context);
+			this.color = color;
+		}
+
+		@Override
+		protected void onDraw(Canvas canvas) 
+		{
+			float scale = con.getResources().getDisplayMetrics().density;
+
+			super.onDraw(canvas);
+			Paint paint = new Paint();
+			paint.setStyle(Paint.Style.FILL);
+			paint.setColor(color);
 			canvas.drawCircle((int) (19 * scale + 0.5f), (int) (20 * scale + 0.5f), (int) (13 * scale + 0.5f), paint);
 		}
 

@@ -21,6 +21,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.cceo.DAO.DAO_Componente;
 import com.cceo.DAO.DAO_Dieta;
 import com.cceo.DAO.DAO_Dieta_Iteration;
 import com.cceo.DAO.DAO_Ejercicio;
@@ -148,6 +149,10 @@ public class SelectDialogue extends DialogFragment {
 			builder.setMessage("Ya tienes un programa de dieta ¿Deseas cambiar?")
 			.setPositiveButton("Si", new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
+					
+					//reset all dieta checkboxes to not selected
+					new DAO_Componente(con).setAllToNo(new API(con).getID_Dieta());
+					
 					Calendar c = Calendar.getInstance();
 					SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yy");
 					todaysDate = df.format(c.getTime());

@@ -79,4 +79,51 @@ public class DAO_Componente {
 		
 		db.close();
 	}
+	
+	/**
+	 * Sets the 'activo' field of all inserts to 'no'
+	 */
+	public void setAllToNo(String id_dieta)
+	{
+		List<DTO_Componente> list_dieta = new ArrayList<DTO_Componente>();
+		SQLiteComponenteDB db = new SQLiteComponenteDB(con);
+		db.getReadableDatabase();
+		
+		String query = "SELECT * FROM " + "componente" + " WHERE " + "id_dieta" + " =  \"" + id_dieta + "\"";		
+		Cursor cursor = db.getReadableDatabase().rawQuery(query, null);
+		
+		if(cursor.moveToFirst())
+		{
+			do
+			{
+				DTO_Componente temp = new DTO_Componente();
+				temp.setId_componente(cursor.getString(0));
+				temp.setId_dieta(cursor.getString(1));
+				temp.setDia(cursor.getString(2));
+				temp.setAlimento(cursor.getString(3));
+				temp.setActivo(cursor.getString(4));
+				temp.setDescripcion(cursor.getString(5));
+				
+				list_dieta.add(temp);
+			}
+			while((cursor.moveToNext()));			
+		}	
+		
+		db.close();
+		
+		SQLiteComponenteDB bd = new SQLiteComponenteDB(con);
+		bd.getReadableDatabase();
+		
+		for(DTO_Componente temp : list_dieta)
+		{		
+			
+			ContentValues values=new ContentValues();
+			values.put("activo", "no");
+			
+			int id = bd.getWritableDatabase().update("componente", values, "id_componente =  \"" + temp.getId_componente() +"\"", null);		
+			
+		}
+		
+		bd.close();
+	}
 }

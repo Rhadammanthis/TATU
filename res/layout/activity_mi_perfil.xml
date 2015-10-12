@@ -201,6 +201,7 @@
             android:layout_height="120dip"
             android:layout_gravity="center_horizontal"
             android:ems="10"
+            android:gravity="center"
             android:hint="Escribe aquí tus motivaciones"
             android:windowSoftInputMode="stateHidden"
             android:inputType="textMultiLine"

@@ -123,7 +123,7 @@ public class EjercicioActivity extends Activity {
 			} catch (ParseException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}
+			}	
 			String todayDate = df.format(c.getTime());	
 			distance = getDateDiffString(initalDate,c.getTime());
 

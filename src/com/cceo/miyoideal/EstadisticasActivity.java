@@ -1,21 +1,30 @@
 package com.cceo.miyoideal;
 
+import shared.ui.actionscontentview.ActionsContentView;
+
 import com.cceo.DAO.DAO_Estadisticas;
 import com.cceo.DTO.DTO_Estadisticas;
 import com.cceo.miyoideal.R;
 import com.cceo.miyoideal.extra.API;
+import com.cceo.miyoideal.extra.Font;
+import com.cceo.miyoideal.extra.MenuFragment;
+import com.cceo.miyoideal.extra.MyArrayAdapter;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -37,15 +46,19 @@ public class EstadisticasActivity extends Activity{
 	private int styleMain;
 	private int styleDetail;
 	
+	private ActionsContentView viewActionsContentView;
+	private ListView viewActionsList;
+	
 	private Context con;
 	
 	public void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_estadisticas);
+		setContentView(R.layout.baseline_estadisticas);
 		this.getActionBar().setDisplayHomeAsUpEnabled(true);
 		getActionBar().setIcon(R.drawable.actionbar_icon_white);
 		con = this;
 		
+		setUpMenu();
 		updateStyle();
 		
 		DAO_Estadisticas daoEstadisticas = new DAO_Estadisticas(this);
@@ -106,6 +119,128 @@ public class EstadisticasActivity extends Activity{
 			styleDetail = res.getColor(R.color.NEUTRAL_DETAIL);
 		}
 
+	}
+	
+	private void setUpMenu()
+	{
+		viewActionsContentView = (ActionsContentView) findViewById(R.id.estadisticas_actionsContentView);
+
+		viewActionsList = (ListView) findViewById(R.id.actions_simple);
+
+		final String[] values = new String[] { 
+				"Mi Perfil", 	//0 
+				"Mi Dieta", 	//1
+				"Mi Ejercicio", //2
+				"Calendario", 	//3
+				"Preguntanos",	//4
+				"Comparte", 	//5
+				"Tips y Sujerencias",	//6 
+				"Seleccionar Dieta", 	//7
+				"Comparativa", 	//8
+				"Disclaimer",	//9
+		"Tutorial"};	//10
+
+		final MyArrayAdapter adapter = new MyArrayAdapter(this,
+				android.R.layout.simple_list_item_1, values);
+
+		viewActionsList.setAdapter(adapter);
+		viewActionsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> adapter, View v, int position,
+					long flags) {
+				showActivity(position);
+
+			}
+		});
+
+		if(!new API(con).getFacebookID().equals(""))
+		{
+			MenuFragment fragment = (MenuFragment) getFragmentManager().findFragmentById(R.id.simple_menu_fragment);
+			fragment.setFacebookId(new API(con).getFacebookID());
+			fragment.runImageAsyncTask();
+
+			TextView facebook_name = (TextView) findViewById(R.id.tvLOL_simple);
+			facebook_name.setText(new API(con).getFacebookName());
+
+			Font f = new Font();					
+			f.changeFontRaleway(con, facebook_name);
+		}
+	}
+
+	private void showActivity(int position) 
+	{
+		final Intent intent;
+		switch (position) {
+		case 0:
+			intent = new Intent(EstadisticasActivity.this, MiPerfilActivity.class);
+			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(intent);
+			break;
+		case 1:
+			intent = new Intent(EstadisticasActivity.this, DietaActivity.class);
+			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(intent);
+			break;
+		case 2:
+			intent = new Intent(EstadisticasActivity.this, EjercicioActivity.class);
+			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(intent);
+			break;
+		case 3:
+			intent = new Intent(EstadisticasActivity.this, CalendarioActivity.class);
+			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(intent);
+			break;
+		case 4:
+			Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.google.com"));
+			browserIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(browserIntent);
+			break;
+		case 5:
+			intent = new Intent(EstadisticasActivity.this, ShareActivity.class);
+			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(intent);
+			break;
+		case 6:
+			intent = getOpenFacebookIntent(con);
+			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(intent);
+			break;
+		case 7:
+			intent = new Intent(EstadisticasActivity.this, SelecDieta.class);
+			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(intent);
+			break;
+		case 8:
+			intent = new Intent(EstadisticasActivity.this, ComparativeActivity.class);
+			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(intent);
+			break;
+		case 9:
+			intent = new Intent(EstadisticasActivity.this, DisclaimerActivity.class);
+			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(intent);
+			break;
+		case 10:
+			intent = new Intent(EstadisticasActivity.this, TutorialActivity.class);
+			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(intent);
+			break;
+
+
+		default:
+			return;
+		}
+	}
+	
+	public static Intent getOpenFacebookIntent(Context context) {
+
+		try {
+			context.getPackageManager().getPackageInfo("com.facebook.katana", 0);
+			return new Intent(Intent.ACTION_VIEW, Uri.parse("fb://page/1398816470330009"));
+		} catch (Exception e) {
+			return new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.facebook.com/miyoideal"));
+		}
 	}
 
 	//set's specific color to certain components in the layout so it achieves the desired style.

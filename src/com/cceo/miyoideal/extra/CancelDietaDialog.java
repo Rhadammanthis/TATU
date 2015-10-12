@@ -3,6 +3,7 @@ package com.cceo.miyoideal.extra;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
+import com.cceo.DAO.DAO_Componente;
 import com.cceo.DAO.DAO_Dieta;
 import com.cceo.DAO.DAO_Ejercicio;
 import com.cceo.DB.SQLiteControl;
@@ -50,6 +51,9 @@ public class CancelDietaDialog extends DialogFragment{
 		builder.setMessage("¿Estás seguro que deseas cancelar la dieta actual?")
 		.setPositiveButton("Si", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int id) {
+				
+				//reset all dieta checkboxes to not selected
+				new DAO_Componente(con).setAllToNo(new API(con).getID_Dieta());
 
 				//clears dieta information;
 				new API(con).clearDieta();

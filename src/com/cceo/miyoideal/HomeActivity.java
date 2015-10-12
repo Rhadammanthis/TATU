@@ -176,6 +176,7 @@ public class HomeActivity extends Activity implements OnTouchListener, OnClickLi
 		setContentView(R.layout.baseline4);
 		this.getActionBar().setDisplayHomeAsUpEnabled(true);
 		getActionBar().setIcon(R.drawable.actionbar_icon_white);
+		getActionBar().setTitle("");
 
 
 		cont = this;

@@ -33,10 +33,15 @@ import java.util.Arrays;
 
 import org.json.JSONObject;
 
+import shared.ui.actionscontentview.ActionsContentView;
+
 import com.cceo.DB.SQLiteControl;
 import com.cceo.miyoideal.R;
 import com.cceo.miyoideal.extra.API;
+import com.cceo.miyoideal.extra.Font;
 import com.cceo.miyoideal.extra.ImageAsyncTask;
+import com.cceo.miyoideal.extra.MenuFragment;
+import com.cceo.miyoideal.extra.MyArrayAdapter;
 import com.cceo.miyoideal.extra.PhotoManager;
 
 import android.app.Activity;
@@ -60,10 +65,13 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.provider.MediaStore;
 import io.fabric.sdk.android.Fabric;
@@ -100,6 +108,9 @@ public class ShareActivity extends Activity implements View.OnClickListener {
 	private ShareDialog shareDialog;
 	//Facebook Share Button
 	ShareButton shareFacebookButton;
+	
+	private ActionsContentView viewActionsContentView;
+	private ListView viewActionsList;
 
 
 	//Style variables
@@ -112,11 +123,12 @@ public class ShareActivity extends Activity implements View.OnClickListener {
 	@Override
 	public void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_share);
+		setContentView(R.layout.baseline_compartir);
 		this.getActionBar().setDisplayHomeAsUpEnabled(true);
 		getActionBar().setIcon(R.drawable.actionbar_icon_white);
 
 		con = this;
+		setUpMenu();
 		updateStyle();
 
 		FacebookSdk.sdkInitialize(getApplicationContext());
@@ -287,6 +299,123 @@ public class ShareActivity extends Activity implements View.OnClickListener {
 		super.onResume();
 		// Actualiza el estado del botón +1 cada vez que se enfoque la actividad.
 		// mPlusOneButton.initialize(GOOGLE_PLUS_URL, 0);
+	}
+	
+	private void setUpMenu()
+	{
+		viewActionsContentView = (ActionsContentView) findViewById(R.id.compartir_actionsContentView);
+
+		viewActionsList = (ListView) findViewById(R.id.actions_simple);
+
+		final String[] values = new String[] { 
+				"Mi Perfil", 	//0 
+				"Mi Dieta", 	//1
+				"Mi Ejercicio", //2
+				"Calendario", 	//3
+				"Preguntanos",	//4
+				//"Comparte", 	
+				"Tips y Sujerencias",	//5 
+				"Seleccionar Dieta", 	//6
+				"Comparativa", 	//7
+				"Disclaimer",	//8
+		"Tutorial"};	//9
+
+		final MyArrayAdapter adapter = new MyArrayAdapter(this,
+				android.R.layout.simple_list_item_1, values);
+
+		viewActionsList.setAdapter(adapter);
+		viewActionsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> adapter, View v, int position,
+					long flags) {
+				showActivity(position);
+
+			}
+		});
+
+		if(!new API(con).getFacebookID().equals(""))
+		{
+			MenuFragment fragment = (MenuFragment) getFragmentManager().findFragmentById(R.id.simple_menu_fragment);
+			fragment.setFacebookId(new API(con).getFacebookID());
+			fragment.runImageAsyncTask();
+
+			TextView facebook_name = (TextView) findViewById(R.id.tvLOL_simple);
+			facebook_name.setText(new API(con).getFacebookName());
+
+			Font f = new Font();					
+			f.changeFontRaleway(con, facebook_name);
+		}
+	}
+
+	private void showActivity(int position) 
+	{
+		final Intent intent;
+		switch (position) {
+		case 0:
+			intent = new Intent(ShareActivity.this, MiPerfilActivity.class);
+			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(intent);
+			break;
+		case 1:
+			intent = new Intent(ShareActivity.this, DietaActivity.class);
+			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(intent);
+			break;
+		case 2:
+			intent = new Intent(ShareActivity.this, EjercicioActivity.class);
+			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(intent);
+			break;
+		case 3:
+			intent = new Intent(ShareActivity.this, CalendarioActivity.class);
+			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(intent);
+			break;
+		case 4:
+			Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.google.com"));
+			browserIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(browserIntent);
+			break;
+		case 5:
+			intent = getOpenFacebookIntent(con);
+			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(intent);
+			break;
+		case 6:
+			intent = new Intent(ShareActivity.this, SelecDieta.class);
+			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(intent);
+			break;
+		case 7:
+			intent = new Intent(ShareActivity.this, ComparativeActivity.class);
+			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(intent);
+			break;
+		case 8:
+			intent = new Intent(ShareActivity.this, DisclaimerActivity.class);
+			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(intent);
+			break;
+		case 9:
+			intent = new Intent(ShareActivity.this, TutorialActivity.class);
+			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(intent);
+			break;
+
+
+		default:
+			return;
+		}
+	}
+	
+	public static Intent getOpenFacebookIntent(Context context) {
+
+		try {
+			context.getPackageManager().getPackageInfo("com.facebook.katana", 0);
+			return new Intent(Intent.ACTION_VIEW, Uri.parse("fb://page/1398816470330009"));
+		} catch (Exception e) {
+			return new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.facebook.com/miyoideal"));
+		}
 	}
 
 	@Override

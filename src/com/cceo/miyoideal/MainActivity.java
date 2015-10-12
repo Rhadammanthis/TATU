@@ -105,6 +105,8 @@ public class MainActivity extends Activity implements SQLiteFactory{
 		setContentView(R.layout.activity_main);
 		this.setTitle("Diagnostico");
 		con = this;
+		
+		initControlDB();
 
 		//Calculates Screen size
 		Display display = getWindowManager().getDefaultDisplay();
@@ -168,7 +170,6 @@ public class MainActivity extends Activity implements SQLiteFactory{
 				{				
 					initComponenteDB();
 					initDietaDB();
-					initControlDB();
 					initProgramaDB();
 					initTutorialControl();
 										
@@ -224,9 +225,7 @@ public class MainActivity extends Activity implements SQLiteFactory{
 			}
 		});	
 		
-		//Set the notification receiver 
-//		DialyNotificationReceiver dialyNotification = new DialyNotificationReceiver();
-//		dialyNotification.setAlarm(this);
+
 		
 		if(!new API(con).getFacebookID().equals(""))
 		{
