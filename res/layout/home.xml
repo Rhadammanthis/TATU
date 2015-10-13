@@ -42,23 +42,23 @@
             android:background="#f0f0f0" >
 
             <TextView
-                android:id="@+id/textView1"
+                android:id="@+id/tvSlideText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentTop="true"
-                android:layout_marginTop="39dp"
-                android:text="KG Para Peso Ideal"
+                android:layout_marginTop="80dip"
+                android:layout_centerHorizontal="true"
+                android:text="Para llegar a mi Yo Ideal"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textColor="#ffffff" />
 
             <TextView
+                android:layout_marginTop="8dip"
                 android:id="@+id/homePesoDif"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignBaseline="@+id/textView1"
-                android:layout_alignBottom="@+id/textView1"
-                android:layout_alignParentRight="true"
+                android:layout_below="@+id/tvSlideText"
+                android:layout_centerHorizontal="true"
+                android:textSize="25sp"
                 android:text="0kg"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="#ffffff" />
@@ -67,17 +67,21 @@
                 android:id="@+id/textView5"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/textView1"
-                android:layout_marginTop="26dp"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@+id/homePesoDif"
+                android:layout_marginTop="16dp"
                 android:text="Motivacíon"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textColor="#ffffff" />
 
             <TextView
+                android:layout_marginTop="8dip"
                 android:id="@+id/homeMotivacionBody"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
+                android:layout_centerHorizontal="true"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/textView5"
+                android:textSize="25sp"
                 android:text="Poder ir a la playa y poder usar el traje de baño que me gusta. Comer un chingo de brocoli y tomar muchita agua."
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="#ffffff" />
