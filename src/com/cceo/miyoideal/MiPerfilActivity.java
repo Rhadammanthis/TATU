@@ -2,6 +2,8 @@ package com.cceo.miyoideal;
 
 import java.util.Arrays;
 
+import javax.crypto.spec.IvParameterSpec;
+
 import org.json.JSONObject;
 
 import com.cceo.DAO.DAO_DietaCompletada;
@@ -11,6 +13,7 @@ import com.cceo.DTO.DTO_Usuario;
 import com.cceo.miyoideal.R;
 import com.cceo.miyoideal.extra.API;
 import com.cceo.miyoideal.extra.Font;
+import com.cceo.miyoideal.extra.ImageAsyncTask;
 import com.cceo.miyoideal.extra.MenuFragment;
 import com.cceo.miyoideal.extra.MyArrayAdapter;
 import com.cceo.miyoideal.extra.PerfilNumberPicker;
@@ -36,6 +39,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
@@ -54,6 +58,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.NumberPicker;
@@ -85,6 +90,9 @@ public class MiPerfilActivity extends FragmentActivity implements DialogInterfac
 	private int styleMain;
 	private int styleDetail;
 	private int styleDark;
+	
+	private static ImageView ivProfilePic;
+	private TextView tvProfileName;
 
 	//facebook login
 	public CallbackManager callbackManager;
@@ -97,7 +105,11 @@ public class MiPerfilActivity extends FragmentActivity implements DialogInterfac
 		setContentView(R.layout.baseline2);
 		this.getActionBar().setDisplayHomeAsUpEnabled(true);
 		getActionBar().setIcon(R.drawable.actionbar_icon_white);
-		con = this;
+		con = this;		
+		
+		ivProfilePic = (ImageView) findViewById(R.id.ivPerfilProfilePic);
+		tvProfileName = (TextView) findViewById(R.id.tvPerfilName);
+		runImageAsyncTask();
 
 		setUpMenu();
 
@@ -130,7 +142,7 @@ public class MiPerfilActivity extends FragmentActivity implements DialogInterfac
 
 		//update view's style
 		updateStyle();
-
+		
 		changeFont();
 
 		setPesoIdealValue();
@@ -258,14 +270,14 @@ public class MiPerfilActivity extends FragmentActivity implements DialogInterfac
 	private void changeFont() {
 		// TODO Auto-generated method stub
 		Font font = new Font();
-		TextView tv_1 = (TextView) findViewById(R.id.miPerfil_1);
+		//TextView tv_1 = (TextView) findViewById(R.id.miPerfil_1);
 		TextView tv_2 = (TextView) findViewById(R.id.miPerfil_2);
 		TextView tv_3 = (TextView) findViewById(R.id.miPerfil_3);
 		TextView tv_4 = (TextView) findViewById(R.id.miPerfil_4);
 		TextView tv_5 = (TextView) findViewById(R.id.miPerfil_5);
 		TextView tv_6 = (TextView) findViewById(R.id.miPerfil_6);
 
-		font.changeFontRaleway(con, tv_1);
+		//font.changeFontRaleway(con, tv_1);
 		font.changeFontRaleway(con, tv_2);
 		font.changeFontRaleway(con, tv_3);
 		font.changeFontRaleway(con, tv_4);
@@ -273,6 +285,7 @@ public class MiPerfilActivity extends FragmentActivity implements DialogInterfac
 		font.changeFontRaleway(con, tv_6);
 		font.changeFontRaleway(con, motivacion);
 		font.changeFontRaleway(con, pesoIdeal);
+		font.changeFontRaleway(con, tvProfileName);
 	}
 
 	@Override
@@ -478,6 +491,8 @@ public class MiPerfilActivity extends FragmentActivity implements DialogInterfac
 
 		EditText mot = (EditText) findViewById(R.id.miPerfilMotivaciones);
 		mot.setHintTextColor(Color.WHITE);
+		
+		scroll.setScrollY(0);
 
 	}
 
@@ -523,6 +538,22 @@ public class MiPerfilActivity extends FragmentActivity implements DialogInterfac
 			return false;
 		}
 
+	}
+	
+	public void runImageAsyncTask()
+	{
+		//profile_pic.setBackgroundResource(R.drawable.com_facebook_profile_picture_blank_portrait);
+		ImageAsyncTask programming = new ImageAsyncTask("profile", ivProfilePic);
+		programming.setId(new API(con).getFacebookID());
+		programming.execute();
+		
+		tvProfileName.setText(new API(con).getFacebookName());
+	}
+	
+	public static void setFacebokProfilePic(Bitmap bitMap)
+	{		
+		if(bitMap != null)
+			ivProfilePic.setImageBitmap(API.getRoundedShape(bitMap));
 	}
 
 }

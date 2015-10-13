@@ -7,6 +7,7 @@ import java.net.URL;
 
 import com.cceo.miyoideal.HomeActivity;
 import com.cceo.miyoideal.MainActivity;
+import com.cceo.miyoideal.MiPerfilActivity;
 import com.cceo.miyoideal.ShareActivity;
 
 import android.graphics.Bitmap;
@@ -64,7 +65,9 @@ public class ImageAsyncTask extends AsyncTask<String, Integer,String>{
 	protected void onPostExecute(String result) {
 		// TODO Auto-generated method stub
 		super.onPostExecute(result);
-
+		
+		if(parent.equals("profile"))
+			MiPerfilActivity.setFacebokProfilePic(bitmap);
 		
 		if(parent.equals("main"))
 			MainActivity.setFacebokProfilePic(bitmap);

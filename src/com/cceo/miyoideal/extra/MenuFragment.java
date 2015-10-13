@@ -43,10 +43,6 @@ public class MenuFragment extends Fragment{
 
 	public void runImageAsyncTask()
 	{
-		//		ImageAsynkTaskSimple programming = new ImageAsynkTaskSimple("simple", profile_pic);
-		//		programming.setId(facebook_id);
-		//		programming.execute();
-
 		//profile_pic.setBackgroundResource(R.drawable.com_facebook_profile_picture_blank_portrait);
 		ImageAsyncTask programming = new ImageAsyncTask("simple", profile_pic);
 		programming.setId(facebook_id);
