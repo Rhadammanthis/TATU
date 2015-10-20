@@ -20,22 +20,22 @@
             android:layout_height="wrap_content" >
 
             <ImageView
-                android:layout_centerHorizontal="true"
                 android:id="@+id/ivPerfilProfilePic"
                 android:layout_width="80dip"
-                android:layout_height="80dip" />
-            
-            <TextView 
-                android:layout_marginTop="8dip"
+                android:layout_height="80dip"
+                android:layout_centerHorizontal="true" />
+
+            <TextView
                 android:id="@+id/tvPerfilName"
-                android:layout_below="@+id/ivPerfilProfilePic"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:layout_below="@+id/ivPerfilProfilePic"
                 android:layout_centerHorizontal="true"
+                android:layout_marginTop="8dip"
+                android:text="Hugo"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="#ffffff"
-                android:textSize="30sp"
-                android:text="Hugo"/>
+                android:textSize="30sp" />
         </RelativeLayout>
 
         <RelativeLayout
@@ -147,13 +147,43 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
-                android:text="Mi Peso Deseado"
+                android:text="Mi Peso Ideal"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="#ffffff"
                 android:textSize="20sp" />
 
             <TextView
                 android:id="@+id/pesoIdeal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:text="0"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="#ffffff"
+                android:textSize="20sp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/tallaDeseadoRL"
+            android:layout_width="match_parent"
+            android:layout_height="60dip"
+            android:paddingLeft="40dip"
+            android:paddingRight="40dip" >
+
+            <TextView
+                android:id="@+id/miPerfil_44"
+                android:layout_width="200dip"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:text="Mi Talla Ideal"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="#ffffff"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/tallaIdeal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
@@ -222,7 +252,6 @@
             android:textColorHint="#dfdede"
             android:windowSoftInputMode="stateHidden" >
 
-            <requestFocus />
         </EditText>
     </LinearLayout>
 

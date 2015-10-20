@@ -42,6 +42,7 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Rect;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
@@ -74,7 +75,9 @@ public class MiPerfilActivity extends FragmentActivity implements DialogInterfac
 	//layout components
 	private Spinner spinnerNivel;
 	private RelativeLayout pesoDeseadoRL;
+	private RelativeLayout tallaDeseadoRL;
 	private TextView pesoIdeal;
+	private TextView tallaIdeal;
 	private LinearLayout mainLayout;
 	private ScrollView scroll;
 	private View bar;
@@ -98,6 +101,8 @@ public class MiPerfilActivity extends FragmentActivity implements DialogInterfac
 	public CallbackManager callbackManager;
 	private LoginButton loginButton;
 	private SQLiteControl db;
+	
+	private int type;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -134,6 +139,7 @@ public class MiPerfilActivity extends FragmentActivity implements DialogInterfac
 		spinnerNivel.setOnItemSelectedListener(this);
 
 		pesoIdeal = (TextView) findViewById(R.id.pesoIdeal);
+		tallaIdeal = (TextView) findViewById(R.id.tallaIdeal);
 		mainLayout = (LinearLayout) findViewById(R.id.miPerfilMainLayout);
 		scroll = (ScrollView) findViewById(R.id.miPerfilScroll);
 		scroll.setOnTouchListener(new DrawerCloseListener());
@@ -148,7 +154,76 @@ public class MiPerfilActivity extends FragmentActivity implements DialogInterfac
 		setPesoIdealValue();
 
 		final FragmentManager manager = this.getFragmentManager();
+		
+		tallaDeseadoRL = (RelativeLayout) findViewById(R.id.tallaDeseadoRL);
+		tallaDeseadoRL.setOnTouchListener(new DrawerCloseListener());
+		tallaDeseadoRL.setOnClickListener(new View.OnClickListener() {
 
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+
+				//				PerfilNumberPicker dialog = new PerfilNumberPicker(con);
+				//				dialog.show(manager, "Picker");
+
+			}
+		});
+
+		tallaDeseadoRL.setOnTouchListener(new View.OnTouchListener() {
+
+			private boolean shouldCancel = false;
+
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				// TODO Auto-generated method stub
+
+
+				switch(event.getAction())
+				{
+				case MotionEvent.ACTION_DOWN:
+					tallaDeseadoRL.setBackgroundColor(styleDark);
+
+					rect = new Rect(v.getLeft(), v.getTop(), v.getRight(), v.getBottom());
+
+					shouldCancel = false;
+
+					break;
+				case MotionEvent.ACTION_MOVE:
+					//					Toast.makeText(context, "lol", Toast.LENGTH_SHORT).show();
+					if(!rect.contains(v.getLeft() + (int) event.getX(), v.getTop() + (int) event.getY()))
+					{
+						// User moved outside bounds
+						shouldCancel = true;
+						tallaDeseadoRL.setBackgroundColor(styleMain); 
+					}
+					break;
+				case MotionEvent.ACTION_CANCEL:
+					tallaDeseadoRL.setBackgroundColor(styleMain); 
+					break;
+				case MotionEvent.ACTION_UP:
+					//set color back to default
+					tallaDeseadoRL.setBackgroundColor(styleMain); 
+
+					if (!shouldCancel) 
+					{
+						SelectDialogue temp1;
+						//Checks whether dieta is available
+						if (!new API(con).IsDietaSet()) {
+							PerfilNumberPicker dialog = new PerfilNumberPicker(con, 1);
+							dialog.show(manager, "Picker");
+						} else {
+							PerfilNumberPicker dialog = new PerfilNumberPicker(con, 1);
+							dialog.show(manager, "Picker");
+						}
+
+						shouldCancel = false;
+					}
+					break;
+				}
+				return false;
+			}
+		});
+		
 		pesoDeseadoRL = (RelativeLayout) findViewById(R.id.pesoDeseadoRL);
 		pesoDeseadoRL.setOnTouchListener(new DrawerCloseListener());
 		pesoDeseadoRL.setOnClickListener(new View.OnClickListener() {
@@ -203,10 +278,10 @@ public class MiPerfilActivity extends FragmentActivity implements DialogInterfac
 						SelectDialogue temp1;
 						//Checks whether dieta is available
 						if (!new API(con).IsDietaSet()) {
-							PerfilNumberPicker dialog = new PerfilNumberPicker(con);
+							PerfilNumberPicker dialog = new PerfilNumberPicker(con, 0);
 							dialog.show(manager, "Picker");
 						} else {
-							PerfilNumberPicker dialog = new PerfilNumberPicker(con);
+							PerfilNumberPicker dialog = new PerfilNumberPicker(con, 0);
 							dialog.show(manager, "Picker");
 						}
 
@@ -285,6 +360,7 @@ public class MiPerfilActivity extends FragmentActivity implements DialogInterfac
 		font.changeFontRaleway(con, tv_6);
 		font.changeFontRaleway(con, motivacion);
 		font.changeFontRaleway(con, pesoIdeal);
+		font.changeFontRaleway(con, tallaIdeal);
 		font.changeFontRaleway(con, tvProfileName);
 	}
 
@@ -302,10 +378,12 @@ public class MiPerfilActivity extends FragmentActivity implements DialogInterfac
 				|| new API(con).getPesoIdeal().equals(""))
 		{
 			pesoIdeal.setText("0");
+			tallaIdeal.setText("0");
 		}
 		else 
 		{
 			pesoIdeal.setText(new API(con).getPesoIdeal());
+			tallaIdeal.setText(new API(con).getTallaIdeal());
 		}
 
 	}
@@ -348,17 +426,17 @@ public class MiPerfilActivity extends FragmentActivity implements DialogInterfac
 		viewActionsList = (ListView) findViewById(R.id.actions_simple);
 
 		final String[] values = new String[] { 
-				//"Mi Perfil", 	//0 
-				"Mi Dieta", 	//1
-				"Mi Ejercicio", //2
-				"Calendario", 	//3
-				"Preguntanos",	//4
-				"Comparte", 	//5
-				"Tips y Sujerencias",	//6 
-				"Seleccionar Dieta", 	//7
-				"Comparativa", 	//8
-				"Disclaimer",	//9
-		"Tutorial"};	//10
+			//	"Mi Perfil", 	//0 
+				"Mi Dieta", 	//0
+				"Mi Ejercicio", //1
+				"Calendario", 	//2
+				"Seleccionar Dieta",	//3
+				"Antes y Despues", 	//4
+				"Comparte",	//5
+				"Tip del Día", 	//6
+				"Preguntanos", 	//7
+				"Tutorial",	//8
+		"Disclaimer"};	//9
 
 		final MyArrayAdapter adapter = new MyArrayAdapter(this,
 				android.R.layout.simple_list_item_1, values);
@@ -406,28 +484,41 @@ public class MiPerfilActivity extends FragmentActivity implements DialogInterfac
 			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(intent);
 			break;
+		case 3:
+			intent = new Intent(MiPerfilActivity.this, SelecDieta.class);
+			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(intent);
+			break;
 		case 4:
+			intent = new Intent(MiPerfilActivity.this, ComparativeActivity.class);
+			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(intent);
+
+			break;
+		case 5:
 			intent = new Intent(MiPerfilActivity.this, ShareActivity.class);
 			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(intent);
 			break;
 		case 6:
-			intent = new Intent(MiPerfilActivity.this, SelecDieta.class);
-			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-			startActivity(intent);
+			//tip del dia (blog)
+			Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.google.com"));
+			browserIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(browserIntent);
 			break;
 		case 7:
-			intent = new Intent(MiPerfilActivity.this, ComparativeActivity.class);
+			//preguntanos
+			intent = getOpenFacebookIntent(con);
 			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(intent);
 			break;
 		case 8:
-			intent = new Intent(MiPerfilActivity.this, DisclaimerActivity.class);
+			intent = new Intent(MiPerfilActivity.this, TutorialActivity.class);
 			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-			startActivity(intent);
+			startActivity(intent);			
 			break;
 		case 9:
-			intent = new Intent(MiPerfilActivity.this, TutorialActivity.class);
+			intent = new Intent(MiPerfilActivity.this, DisclaimerActivity.class);
 			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(intent);
 			break;
@@ -437,16 +528,30 @@ public class MiPerfilActivity extends FragmentActivity implements DialogInterfac
 			return;
 		}
 	}
+	
+	public static Intent getOpenFacebookIntent(Context context) {
+
+		try {
+			context.getPackageManager().getPackageInfo("com.facebook.katana", 0);
+			return new Intent(Intent.ACTION_VIEW, Uri.parse("fb://page/1398816470330009"));
+		} catch (Exception e) {
+			return new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.facebook.com/miyoideal"));
+		}
+	}
 
 	@Override
 	public void onDismiss(DialogInterface dialog) {
 		// TODO Auto-generated method stub
-		pesoIdeal.setText(new API(con).getPesoIdeal());
+		//Toast.makeText(con, "Talla: "+new API(con).getTallaIdeal(), Toast.LENGTH_SHORT).show();
+		if (type == 0)
+			pesoIdeal.setText(new API(con).getPesoIdeal());
+		else
+			tallaIdeal.setText(new API(con).getTallaIdeal());
 	}
 
-	public void onUserSelectValue(String value) {
+	public void onUserSelectValue(int value) {
 		// TODO Auto-generated method stub
-		Log.d("chino", "number 2" + value);
+		this.type = value;
 	}
 
 	//Saves selected style colors to local variables
@@ -492,7 +597,7 @@ public class MiPerfilActivity extends FragmentActivity implements DialogInterfac
 		EditText mot = (EditText) findViewById(R.id.miPerfilMotivaciones);
 		mot.setHintTextColor(Color.WHITE);
 		
-		scroll.setScrollY(0);
+		scroll.fullScroll(ScrollView.FOCUS_UP);
 
 	}
 

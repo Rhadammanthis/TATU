@@ -357,6 +357,27 @@ public class API {
 		}
 	}
 	
+	public String getTallaIdeal()
+	{
+		try
+		{
+			if(cursor.moveToFirst())
+			{
+				cursor.moveToFirst();
+				return cursor.getString(12);
+			}
+			else
+			{
+				return null;
+			}
+		}
+		catch(Exception ex)
+		{
+			db.close();
+			return null;
+		}
+	}
+	
 	public static Bitmap getRoundedShape(Bitmap scaleBitmapImage) {
 	    int targetWidth = 400;
 	    int targetHeight = 400;

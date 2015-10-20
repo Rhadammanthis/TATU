@@ -312,13 +312,12 @@ public class ShareActivity extends Activity implements View.OnClickListener {
 				"Mi Dieta", 	//1
 				"Mi Ejercicio", //2
 				"Calendario", 	//3
-				"Preguntanos",	//4
-				//"Comparte", 	
-				"Tips y Sujerencias",	//5 
-				"Seleccionar Dieta", 	//6
-				"Comparativa", 	//7
-				"Disclaimer",	//8
-		"Tutorial"};	//9
+				"Seleccionar Dieta",	//4
+				"Antes y Despues", 	//5
+				"Tip del Día", 	//6
+				"Preguntanos", 	//7
+				"Tutorial",	//8
+		"Disclaimer"};	//9
 
 		final MyArrayAdapter adapter = new MyArrayAdapter(this,
 				android.R.layout.simple_list_item_1, values);
@@ -372,37 +371,38 @@ public class ShareActivity extends Activity implements View.OnClickListener {
 			startActivity(intent);
 			break;
 		case 4:
-			Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.google.com"));
-			browserIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-			startActivity(browserIntent);
-			break;
-		case 5:
-			intent = getOpenFacebookIntent(con);
-			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-			startActivity(intent);
-			break;
-		case 6:
 			intent = new Intent(ShareActivity.this, SelecDieta.class);
 			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(intent);
 			break;
-		case 7:
+		case 5:
 			intent = new Intent(ShareActivity.this, ComparativeActivity.class);
+			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(intent);
+
+			break;
+		case 6:
+			//tip del dia (blog)
+			Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.google.com"));
+			browserIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(browserIntent);
+			break;
+		case 7:
+			//preguntanos
+			intent = getOpenFacebookIntent(con);
 			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(intent);
 			break;
 		case 8:
+			intent = new Intent(ShareActivity.this, TutorialActivity.class);
+			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(intent);			
+			break;
+		case 9:
 			intent = new Intent(ShareActivity.this, DisclaimerActivity.class);
 			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(intent);
 			break;
-		case 9:
-			intent = new Intent(ShareActivity.this, TutorialActivity.class);
-			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-			startActivity(intent);
-			break;
-
-
 		default:
 			return;
 		}

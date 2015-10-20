@@ -137,6 +137,8 @@ public class CalendarCard extends RelativeLayout {
 		cardTitle.setText(getMonthForInt(cal.get(Calendar.MONTH)));
 		//cardTitle.setText(new SimpleDateFormat("MMM yyyy", Locale.getDefault()).format(dateDisplay.getTime()));
 		((RelativeLayout.LayoutParams)(cardTitle.getLayoutParams())).setMargins(0, 0, 0, (int) (7 * scale + 0.5f));
+		
+		calendarNewMonth = cal.get(Calendar.MONTH);
 
 		cal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
 		((TextView)layout.findViewById(R.id.cardDay1)).setText(cal.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, Locale.getDefault()));
@@ -583,9 +585,7 @@ public class CalendarCard extends RelativeLayout {
 				}
 				if(style.equals("femenino"))
 				{
-					//cell.setBackgroundResource(R.drawable.selected_cell);
 					cell.setBackgroundResource(R.drawable.border_female);
-					//cell.setBackgroundResource(R.drawable.selected_cell);
 				}
 				if(style.equals("neutral"))
 				{

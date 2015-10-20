@@ -101,15 +101,15 @@ public class DisclaimerActivity extends Activity {
 		final String[] values = new String[] { 
 				"Mi Perfil", 	//0 
 				"Mi Dieta", 	//1
-				"Mi Ejercicio",	//2 
+				"Mi Ejercicio", //2
 				"Calendario", 	//3
-				"Preguntanos",	//4
-				"Comparte", 	//5
-				"Tips y Sujerencias",	//6 
-				"Seleccionar Dieta", 	//7
-				"Comparativa", 	//8
-				//"Disclaimer",	
-		"Tutorial"};	//9
+				"Seleccionar Dieta",	//4
+				"Antes y Despues", 	//5
+				"Comparte",	//6 
+				"Tip del Día", 	//7
+				"Preguntanos", 	//8
+				"Tutorial",	//9
+				};	
 
 		final MyArrayAdapter adapter = new MyArrayAdapter(this,
 				android.R.layout.simple_list_item_1, values);
@@ -163,37 +163,43 @@ public class DisclaimerActivity extends Activity {
 			startActivity(intent);
 			break;
 		case 4:
-			Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.google.com"));
-			browserIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-			startActivity(browserIntent);
-			break;
-		case 5:
-			intent = new Intent(DisclaimerActivity.this, ShareActivity.class);
-			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-			startActivity(intent);
-			break;
-		case 6:
-			intent = getOpenFacebookIntent(con);
-			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-			startActivity(intent);
-			break;
-		case 7:
 			intent = new Intent(DisclaimerActivity.this, SelecDieta.class);
 			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(intent);
 			break;
-		case 8:
+		case 5:
 			intent = new Intent(DisclaimerActivity.this, ComparativeActivity.class);
+			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(intent);
+
+			break;
+		case 6:
+			intent = new Intent(DisclaimerActivity.this, ShareActivity.class);
+			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(intent);
+			break;
+		case 7:
+			//tip del dia (blog)
+			Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.google.com"));
+			browserIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(browserIntent);
+			break;
+		case 8:
+			//preguntanos
+			intent = getOpenFacebookIntent(DisclaimerActivity.this);
 			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(intent);
 			break;
 		case 9:
 			intent = new Intent(DisclaimerActivity.this, TutorialActivity.class);
 			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(intent);			
+			break;
+		case 10:
+			intent = new Intent(DisclaimerActivity.this, DisclaimerActivity.class);
+			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(intent);
 			break;
-
-
 		default:
 			return;
 		}

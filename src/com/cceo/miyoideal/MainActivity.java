@@ -530,6 +530,7 @@ public class MainActivity extends Activity implements SQLiteFactory{
 		values.put("fb_name", "");
 		values.put("peso_inicial", "0");
 		values.put("dieta_iteration", "0");
+		values.put("talla_ideal", "0");
 		db.getWritableDatabase().insert("control", null, values);
 
 		db.close();

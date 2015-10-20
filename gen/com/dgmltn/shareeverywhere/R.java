@@ -60,9 +60,9 @@ public final class R {
 		public static final int title = 0x7f080064;
 	}
 	public static final class layout {
-		public static final int sv__share_view = 0x7f030057;
-		public static final int sv__share_view_impl = 0x7f030058;
-		public static final int sv__share_view_list_item = 0x7f030059;
+		public static final int sv__share_view = 0x7f030058;
+		public static final int sv__share_view_impl = 0x7f030059;
+		public static final int sv__share_view_list_item = 0x7f03005a;
 	}
 	public static final class string {
 		public static final int Choose_an_application = 0x7f070078;

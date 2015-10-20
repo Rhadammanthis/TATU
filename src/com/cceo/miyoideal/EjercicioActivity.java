@@ -298,15 +298,14 @@ public class EjercicioActivity extends Activity {
 		final String[] values = new String[] { 
 				"Mi Perfil", 	//0 
 				"Mi Dieta", 	//1
-				//"Mi Ejercicio", 
 				"Calendario", 	//2
-				"Preguntanos",	//3
-				"Comparte", 	//4
-				"Tips y Sujerencias",	//5 
-				"Seleccionar Dieta", 	//6
-				"Comparativa", 	//7
-				"Disclaimer",	//8
-		"Tutorial"};	//9
+				"Seleccionar Dieta",	//3
+				"Antes y Despues", 	//4
+				"Comparte",	//5
+				"Tip del Día", 	//6
+				"Preguntanos", 	//7
+				"Tutorial",	//8
+		"Disclaimer"};	//9
 
 		final MyArrayAdapter adapter = new MyArrayAdapter(this,
 				android.R.layout.simple_list_item_1, values);
@@ -355,46 +354,48 @@ public class EjercicioActivity extends Activity {
 			startActivity(intent);
 			break;
 		case 3:
-			Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.google.com"));
-			browserIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-			startActivity(browserIntent);
-			break;
-		case 4:
-			intent = new Intent(EjercicioActivity.this, ShareActivity.class);
-			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-			startActivity(intent);
-			break;
-		case 5:
-			intent = getOpenFacebookIntent(con);
-			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-			startActivity(intent);
-			break;
-		case 6:
 			intent = new Intent(EjercicioActivity.this, SelecDieta.class);
 			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(intent);
 			break;
-		case 7:
+		case 4:
 			intent = new Intent(EjercicioActivity.this, ComparativeActivity.class);
+			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(intent);
+
+			break;
+		case 5:
+			intent = new Intent(EjercicioActivity.this, ShareActivity.class);
+			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(intent);
+			break;
+		case 6:
+			//tip del dia (blog)
+			Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.google.com"));
+			browserIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(browserIntent);
+			break;
+		case 7:
+			//preguntanos
+			intent = getOpenFacebookIntent(con);
 			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(intent);
 			break;
 		case 8:
+			intent = new Intent(EjercicioActivity.this, TutorialActivity.class);
+			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(intent);			
+			break;
+		case 9:
 			intent = new Intent(EjercicioActivity.this, DisclaimerActivity.class);
 			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(intent);
 			break;
-		case 9:
-			intent = new Intent(EjercicioActivity.this, TutorialActivity.class);
-			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-			startActivity(intent);
-			break;
-
-
 		default:
 			return;
 		}
 	}
+	
 	//returns distance between days of  two Date objects
 	public long getDateDiffString(java.util.Date date, java.util.Date date2)
 	{

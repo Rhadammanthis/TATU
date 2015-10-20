@@ -27,12 +27,21 @@ public class PerfilNumberPicker extends DialogFragment{
 	private EditText np;
 	private boolean shouldRecord = false;
 	String get_id, get_name, get_gender, get_email, get_birthday, get_locale, get_location;
+	private String title;
+	private int type;
 
-	public PerfilNumberPicker(Context context) {
-
+	public PerfilNumberPicker(Context context, int type) {
 		// TODO Auto-generated constructor stub
-
 		con = context;
+		
+		this.type = type;
+		
+		//if type is 0, is peso
+		//if type is 1. is talla		
+		if(type ==0)
+			title = "Selecciona tu peso ideal";
+		else
+			title = "Selecciona tu talla ideal";
 
 	}
 
@@ -43,11 +52,22 @@ public class PerfilNumberPicker extends DialogFragment{
 		{
 			ContentValues cv = new ContentValues();
 			Log.d("chino", "np val " + np.getText().toString());
-			cv.put("peso_ideal", String.valueOf(np.getText().toString()));
-
-			SQLiteControl db = new SQLiteControl(con);
-			db.getWritableDatabase().update("control", cv, "id_control "+"="+1, null);
-			db.close();
+			
+			if(type == 0)
+			{
+				cv.put("peso_ideal", String.valueOf(np.getText().toString()));
+				SQLiteControl db = new SQLiteControl(con);
+				String.valueOf(db.getWritableDatabase().update("control", cv, "id_control "+"="+1, null));
+				db.close();
+			}
+			else
+			{
+				cv.put("talla_ideal", String.valueOf(np.getText().toString()));
+				SQLiteControl db = new SQLiteControl(con);
+				db.getWritableDatabase().update("control", cv, "id_control "+"="+1, null);
+				db.close();
+			}
+			
 		}
 
 		final Activity activity = getActivity();
@@ -79,7 +99,7 @@ public class PerfilNumberPicker extends DialogFragment{
 				String value = np.getText().toString();
 		        Log.d("chino", "value " + value);
 		        MiPerfilActivity callingActivity = (MiPerfilActivity) getActivity();
-		        callingActivity.onUserSelectValue(value);
+		        callingActivity.onUserSelectValue(type);
 		        dialog.dismiss();
 				
 				/*ContentValues cv = new ContentValues();
@@ -97,7 +117,7 @@ public class PerfilNumberPicker extends DialogFragment{
 				PerfilNumberPicker.this.getDialog().cancel();
 			}
 		})
-		.setTitle("Selecciona tu peso deseado")
+		.setTitle(title)
 		.setMessage("Please Enter Quantity");      
 
 		//return new AlertDialog.Builder(getActivity()).setTitle(R.string.app_name).setMessage("Please Enter Quantity")

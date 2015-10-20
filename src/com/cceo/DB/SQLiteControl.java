@@ -21,7 +21,8 @@ public class SQLiteControl extends SQLiteOpenHelper{
 					"fb_id" + " TEXT, " +
 					"fb_name" + " TEXT, " +
 					"peso_inicial" + " TEXT, " +
-					"dieta_iteration" + " TEXT);";
+					"dieta_iteration" + " TEXT, " +
+					"talla_ideal" + " TEXT);";
 
 
 

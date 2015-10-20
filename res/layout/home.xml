@@ -59,6 +59,7 @@
                 android:layout_below="@+id/tvSlideText"
                 android:layout_centerHorizontal="true"
                 android:textSize="25sp"
+                android:textStyle="bold"
                 android:text="0kg"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="#ffffff" />
@@ -77,9 +78,10 @@
             <TextView
                 android:layout_marginTop="8dip"
                 android:id="@+id/homeMotivacionBody"
-                android:layout_width="wrap_content"
+                android:layout_width="260dip"
                 android:layout_centerHorizontal="true"
                 android:layout_height="wrap_content"
+                android:textStyle="bold"
                 android:layout_below="@+id/textView5"
                 android:textSize="25sp"
                 android:text="Poder ir a la playa y poder usar el traje de baño que me gusta. Comer un chingo de brocoli y tomar muchita agua."

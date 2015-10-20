@@ -465,13 +465,13 @@ public class HomeActivity extends Activity implements OnTouchListener, OnClickLi
 				"Mi Dieta", 	//1
 				"Mi Ejercicio", //2
 				"Calendario", 	//3
-				"Preguntanos",	//4
-				"Comparte", 	//5
-				"Tips y Sujerencias",	//6 
-				"Seleccionar Dieta", 	//7
-				"Comparativa", 	//8
-				"Disclaimer",	//9
-		"Tutorial"};	//10
+				"Seleccionar Dieta",	//4
+				"Antes y Despues", 	//5
+				"Comparte",	//6 
+				"Tip del Día", 	//7
+				"Preguntanos", 	//8
+				"Tutorial",	//9
+		"Disclaimer"};	//10
 
 		final MyArrayAdapter adapter = new MyArrayAdapter(this,
 				android.R.layout.simple_list_item_1, values);
@@ -727,42 +727,43 @@ public class HomeActivity extends Activity implements OnTouchListener, OnClickLi
 			startActivity(intent);
 			break;
 		case 4:
-			Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.google.com"));
-			browserIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-			startActivity(browserIntent);
-			break;
-		case 5:
-			intent = new Intent(HomeActivity.this, ShareActivity.class);
-			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-			startActivity(intent);
-			break;
-		case 6:
-			intent = getOpenFacebookIntent(cont);
-			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-			startActivity(intent);
-			break;
-		case 7:
 			intent = new Intent(HomeActivity.this, SelecDieta.class);
 			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(intent);
 			break;
-		case 8:
+		case 5:
 			intent = new Intent(HomeActivity.this, ComparativeActivity.class);
+			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(intent);
+
+			break;
+		case 6:
+			intent = new Intent(HomeActivity.this, ShareActivity.class);
+			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(intent);
+			break;
+		case 7:
+			//tip del dia (blog)
+			Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.google.com"));
+			browserIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(browserIntent);
+			break;
+		case 8:
+			//preguntanos
+			intent = getOpenFacebookIntent(cont);
 			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(intent);
 			break;
 		case 9:
+			intent = new Intent(HomeActivity.this, TutorialActivity.class);
+			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(intent);			
+			break;
+		case 10:
 			intent = new Intent(HomeActivity.this, DisclaimerActivity.class);
 			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(intent);
 			break;
-		case 10:
-			intent = new Intent(HomeActivity.this, TutorialActivity.class);
-			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-			startActivity(intent);
-			break;
-
-
 		default:
 			return;
 		}
