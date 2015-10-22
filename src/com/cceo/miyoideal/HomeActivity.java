@@ -6,6 +6,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -13,6 +14,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import shared.ui.actionscontentview.ActionsContentView;
 import android.R.style;
@@ -85,6 +87,7 @@ import com.cceo.miyoideal.extra.API;
 import com.cceo.miyoideal.extra.DialyNotificationReceiver;
 import com.cceo.miyoideal.extra.DietaCompletedDialog;
 import com.cceo.miyoideal.extra.Font;
+import com.cceo.miyoideal.extra.FragmentNotificationDetail;
 import com.cceo.miyoideal.extra.Fragment_ImagePager;
 import com.cceo.miyoideal.extra.ImageAsyncTask;
 import com.cceo.miyoideal.extra.MyArrayAdapter;
@@ -128,11 +131,13 @@ public class HomeActivity extends Activity implements OnTouchListener, OnClickLi
 	private Context cont;
 	private CheckBox checkBoxNotif;
 	private RelativeLayout layoutNotif;
-	private RelativeLayout backLayout;
+	private LinearLayout backLayout;
 	private RelativeLayout frontLayout;
 	private RelativeLayout bodyLayout;
 	private static ImageView menu_profile_pic;
 	private ImageView home_down;
+	private TextView tvDaysLeft;
+	private Font font;
 
 	//Control variables
 	private boolean shoudlOpenDrawer = true;
@@ -180,6 +185,29 @@ public class HomeActivity extends Activity implements OnTouchListener, OnClickLi
 
 
 		cont = this;
+		
+        Bundle intent_extras = getIntent().getExtras();
+        if (intent_extras != null && intent_extras.containsKey("message"))
+        {
+        	String message = intent_extras.getString("message");
+        	String title = intent_extras.getString("title");
+        	
+        	FragmentNotificationDetail recomedn_dialog = new FragmentNotificationDetail(cont, title, message);
+    		recomedn_dialog.show(getFragmentManager(), "Dieta Completed");
+        }
+		
+//		String newStringN = "rien";
+//		if (savedInstanceState == null) {
+//		    Bundle extras = getIntent().getExtras();
+//		    if(extras == null) {
+//		        newStringN= "rien";
+//		    } else {
+//		        newStringN= extras.getString("com.cceo.miyoideal.extra.DialyNotificationReceiver");
+//		    }
+//		} else {
+//		    newStringN= (String) savedInstanceState.getSerializable("com.cceo.miyoideal.extra.DialyNotificationReceiver");
+//		}
+//		
 
 
 		try {
@@ -198,9 +226,10 @@ public class HomeActivity extends Activity implements OnTouchListener, OnClickLi
 		} catch (NoSuchAlgorithmException e) {
 		}
 
+		font = new Font();
 
 		//bind layout views to local objects
-		backLayout = (RelativeLayout) findViewById(R.id.backLayout);
+		backLayout = (LinearLayout) findViewById(R.id.backLayout);
 		frontLayout = (RelativeLayout) findViewById(R.id.frontLayout);
 		linearLayout1 = (LinearLayout) findViewById(R.id.linearLayout1);
 		button_MiPerfil = (ImageButton) findViewById(R.id.abajoButtonlol);
@@ -212,6 +241,10 @@ public class HomeActivity extends Activity implements OnTouchListener, OnClickLi
 		layoutNotif = (RelativeLayout) findViewById(R.id.notifRelativeLayout);
 		menu_profile_pic = (ImageView) findViewById(R.id.menu_profile_pic);
 		home_down = (ImageView) findViewById(R.id.home_down);
+		tvDaysLeft = (TextView) findViewById(R.id.homeDaysLeft);
+		
+		tvDaysLeft.setText(getDaysLeft() + " días");
+		font.changeFontRaleway(cont, tvDaysLeft);
 
 		//Tutorial reminder. Runs just the first time the apps runs
 		SharedPreferences runCheck = PreferenceManager.getDefaultSharedPreferences(cont);
@@ -292,11 +325,13 @@ public class HomeActivity extends Activity implements OnTouchListener, OnClickLi
 		//Set peso difference
 		TextView pesodif = (TextView) findViewById(R.id.homePesoDif);
 		pesodif.setText(getPesoDif());
+		font.changeFontRaleway(cont, pesodif);
 
 		//Set Motivacion
 		TextView motivacion = (TextView) findViewById(R.id.homeMotivacionBody);
 		motivacion.setText(new API(cont).getMotivacion());
-
+		font.changeFontRaleway(cont, motivacion);
+		
 		//set show mode.
 		swipeLayout.setShowMode(SwipeLayout.ShowMode.LayDown);
 
@@ -313,10 +348,15 @@ public class HomeActivity extends Activity implements OnTouchListener, OnClickLi
 				newString= extras.getString("intent_origin");
 			}
 		} else {
-			newString= (String) savedInstanceState.getSerializable("intent_origin");
+			//newString= (String) savedInstanceState.getSerializable("intent_origin");
 		}
+		
+		if(newString == null)
+			newString = "";
+		
+		String compare = new DAO_TutorialControl(cont).buttonTutorialShown();
 
-		if(new DAO_TutorialControl(cont).buttonTutorialShown().equals("0") && newString.equals("select"))
+		if(compare.equals("0") && newString.equals("select"))
 		{
 			new CountDownTimer(1000, 1000) {
 
@@ -362,7 +402,57 @@ public class HomeActivity extends Activity implements OnTouchListener, OnClickLi
 				return false;
 			}
 		});
+		
+		//change font
+		TextView tvSlide = (TextView) findViewById(R.id.tvSlideText);
+		TextView tv5 = (TextView) findViewById(R.id.textView5);
+		TextView tvDL= (TextView) findViewById(R.id.tvDaysLeft);
+		
+		font.changeFontRaleway(cont, tvSlide);
+		font.changeFontRaleway(cont, tv5);
+		font.changeFontRaleway(cont, tvDL);
 
+	}
+
+	private String getDaysLeft() {
+		// TODO Auto-generated method stub
+		Calendar c = Calendar.getInstance();
+		SimpleDateFormat dfa = new SimpleDateFormat("dd-MM-yyyy");
+		java.util.Date finalDate = null;
+		String lol = new API(cont).getDia();
+		try {
+			finalDate = dfa.parse(new API(cont).getGoalDate());
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}			
+		
+		long distance = -1;
+		
+		if(finalDate != null)
+			distance = getDateDiffString(c.getTime(), finalDate);
+		distance = distance + 1;
+		
+		return String.valueOf(distance);
+	}
+	
+	//returns distance between days of  two Date objects
+	public long getDateDiffString(java.util.Date date, java.util.Date date2)
+	{
+		long timeOne = date.getTime();
+		long timeTwo = date2.getTime();
+		long oneDay = 1000 * 60 * 60 * 24;
+		long delta = (timeTwo - timeOne) / oneDay;
+
+//		int dia_Date1 = Integer.valueOf((String)android.text.format.DateFormat.format("dd", date)), 
+//				dia_Date2 = Integer.valueOf((String)android.text.format.DateFormat.format("dd", date2));
+//
+//		String lol = String.valueOf(timeOne/oneDay);
+
+		if(date2.before(date))
+			return -1;
+		else
+			return delta;
 	}
 
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {

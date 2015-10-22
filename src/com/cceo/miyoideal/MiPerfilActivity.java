@@ -12,10 +12,12 @@ import com.cceo.DB.SQLiteControl;
 import com.cceo.DTO.DTO_Usuario;
 import com.cceo.miyoideal.R;
 import com.cceo.miyoideal.extra.API;
+import com.cceo.miyoideal.extra.DatePickerFragment;
 import com.cceo.miyoideal.extra.Font;
 import com.cceo.miyoideal.extra.ImageAsyncTask;
 import com.cceo.miyoideal.extra.MenuFragment;
 import com.cceo.miyoideal.extra.MyArrayAdapter;
+import com.cceo.miyoideal.extra.OnDatePickerDismissListener;
 import com.cceo.miyoideal.extra.PerfilNumberPicker;
 import com.cceo.miyoideal.extra.SelectDialogue;
 import com.facebook.AccessToken;
@@ -33,6 +35,7 @@ import com.facebook.login.widget.LoginButton;
 import shared.ui.actionscontentview.ActionsContentView;
 import android.app.Activity;
 import android.app.Dialog;
+import android.app.DialogFragment;
 import android.app.FragmentManager;
 import android.content.ContentValues;
 import android.content.Context;
@@ -58,6 +61,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -70,14 +74,16 @@ import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
-public class MiPerfilActivity extends FragmentActivity implements DialogInterface.OnDismissListener, OnItemSelectedListener{
+public class MiPerfilActivity extends FragmentActivity implements DialogInterface.OnDismissListener, OnItemSelectedListener, OnDatePickerDismissListener{
 
 	//layout components
 	private Spinner spinnerNivel;
 	private RelativeLayout pesoDeseadoRL;
 	private RelativeLayout tallaDeseadoRL;
+	private RelativeLayout goalDateRL;
 	private TextView pesoIdeal;
 	private TextView tallaIdeal;
+	private TextView tvGoalDate;
 	private LinearLayout mainLayout;
 	private ScrollView scroll;
 	private View bar;
@@ -93,7 +99,7 @@ public class MiPerfilActivity extends FragmentActivity implements DialogInterfac
 	private int styleMain;
 	private int styleDetail;
 	private int styleDark;
-	
+
 	private static ImageView ivProfilePic;
 	private TextView tvProfileName;
 
@@ -101,7 +107,7 @@ public class MiPerfilActivity extends FragmentActivity implements DialogInterfac
 	public CallbackManager callbackManager;
 	private LoginButton loginButton;
 	private SQLiteControl db;
-	
+
 	private int type;
 
 	@Override
@@ -111,7 +117,8 @@ public class MiPerfilActivity extends FragmentActivity implements DialogInterfac
 		this.getActionBar().setDisplayHomeAsUpEnabled(true);
 		getActionBar().setIcon(R.drawable.actionbar_icon_white);
 		con = this;		
-		
+
+		tvGoalDate = (TextView) findViewById(R.id.goalDate);
 		ivProfilePic = (ImageView) findViewById(R.id.ivPerfilProfilePic);
 		tvProfileName = (TextView) findViewById(R.id.tvPerfilName);
 		runImageAsyncTask();
@@ -148,13 +155,13 @@ public class MiPerfilActivity extends FragmentActivity implements DialogInterfac
 
 		//update view's style
 		updateStyle();
-		
+
 		changeFont();
 
 		setPesoIdealValue();
 
 		final FragmentManager manager = this.getFragmentManager();
-		
+
 		tallaDeseadoRL = (RelativeLayout) findViewById(R.id.tallaDeseadoRL);
 		tallaDeseadoRL.setOnTouchListener(new DrawerCloseListener());
 		tallaDeseadoRL.setOnClickListener(new View.OnClickListener() {
@@ -215,6 +222,69 @@ public class MiPerfilActivity extends FragmentActivity implements DialogInterfac
 							PerfilNumberPicker dialog = new PerfilNumberPicker(con, 1);
 							dialog.show(manager, "Picker");
 						}
+
+						shouldCancel = false;
+					}
+					break;
+				}
+				return false;
+			}
+		});
+		
+		goalDateRL = (RelativeLayout) findViewById(R.id.goalDateRL);
+		goalDateRL.setOnTouchListener(new DrawerCloseListener());
+		goalDateRL.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+
+				//				PerfilNumberPicker dialog = new PerfilNumberPicker(con);
+				//				dialog.show(manager, "Picker");
+
+			}
+		});
+		goalDateRL.setOnTouchListener(new View.OnTouchListener() {
+
+			private boolean shouldCancel = false;
+
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				// TODO Auto-generated method stub
+
+
+				switch(event.getAction())
+				{
+				case MotionEvent.ACTION_DOWN:
+					goalDateRL.setBackgroundColor(styleDark);
+
+					rect = new Rect(v.getLeft(), v.getTop(), v.getRight(), v.getBottom());
+
+					shouldCancel = false;
+
+					break;
+				case MotionEvent.ACTION_MOVE:
+					//					Toast.makeText(context, "lol", Toast.LENGTH_SHORT).show();
+					if(!rect.contains(v.getLeft() + (int) event.getX(), v.getTop() + (int) event.getY()))
+					{
+						// User moved outside bounds
+						shouldCancel = true;
+						goalDateRL.setBackgroundColor(styleMain); 
+					}
+					break;
+				case MotionEvent.ACTION_CANCEL:
+					goalDateRL.setBackgroundColor(styleMain); 
+					break;
+				case MotionEvent.ACTION_UP:
+					//set color back to default
+					goalDateRL.setBackgroundColor(styleMain); 
+
+					if (!shouldCancel) 
+					{
+						SelectDialogue temp1;
+						//Checks whether dieta is available
+						DialogFragment newFragment = new DatePickerFragment(MiPerfilActivity.this);
+						newFragment.show(getFragmentManager(), "datePicker");
 
 						shouldCancel = false;
 					}
@@ -321,25 +391,33 @@ public class MiPerfilActivity extends FragmentActivity implements DialogInterfac
 			}
 		});
 		//		
-				motivacion.setOnEditorActionListener(new OnEditorActionListener() {
-					
-			        @Override
-			        public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-			        	if (event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
-			        		Toast.makeText(con, "Enter", Toast.LENGTH_SHORT).show();
-			                if (!event.isShiftPressed()) {
-			                   // the user is done typing. 
+		motivacion.setOnEditorActionListener(new OnEditorActionListener() {
 
-			                   return true; // consume.
-			                }                
-			            }
-			            return false;
-			        }
-				});
+			@Override
+			public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+				if (event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
+					Toast.makeText(con, "Enter", Toast.LENGTH_SHORT).show();
+					if (!event.isShiftPressed()) {
+						// the user is done typing. 
 
-		//loginButton.setReadPermissions("user_friends","public_profile");
+						return true; // consume.
+					}                
+				}
+				return false;
+			}
+		});
 
-
+//		Button bDate = (Button)findViewById(R.id.miPerfil_bDate);
+//		bDate.setOnClickListener(new OnClickListener() {
+//
+//			@Override
+//			public void onClick(View v) {
+//				// TODO Auto-generated method stub
+//				DialogFragment newFragment = new DatePickerFragment(MiPerfilActivity.this);
+//				newFragment.show(getFragmentManager(), "datePicker");
+//
+//			}
+//		});
 	}
 
 	private void changeFont() {
@@ -349,8 +427,11 @@ public class MiPerfilActivity extends FragmentActivity implements DialogInterfac
 		TextView tv_2 = (TextView) findViewById(R.id.miPerfil_2);
 		TextView tv_3 = (TextView) findViewById(R.id.miPerfil_3);
 		TextView tv_4 = (TextView) findViewById(R.id.miPerfil_4);
+		TextView tv_44 = (TextView) findViewById(R.id.miPerfil_44);
 		TextView tv_5 = (TextView) findViewById(R.id.miPerfil_5);
 		TextView tv_6 = (TextView) findViewById(R.id.miPerfil_6);
+		TextView tv_55 = (TextView) findViewById(R.id.miPerfil_55);
+		TextView tv_mPT = (TextView) findViewById(R.id.miPerfilTalla);
 
 		//font.changeFontRaleway(con, tv_1);
 		font.changeFontRaleway(con, tv_2);
@@ -358,10 +439,14 @@ public class MiPerfilActivity extends FragmentActivity implements DialogInterfac
 		font.changeFontRaleway(con, tv_4);
 		font.changeFontRaleway(con, tv_5);
 		font.changeFontRaleway(con, tv_6);
+		font.changeFontRaleway(con, tv_44);
+		font.changeFontRaleway(con, tv_55);
+		font.changeFontRaleway(con, tv_mPT);
 		font.changeFontRaleway(con, motivacion);
 		font.changeFontRaleway(con, pesoIdeal);
 		font.changeFontRaleway(con, tallaIdeal);
 		font.changeFontRaleway(con, tvProfileName);
+		font.changeFontRaleway(con, tvGoalDate);
 	}
 
 	@Override
@@ -369,22 +454,15 @@ public class MiPerfilActivity extends FragmentActivity implements DialogInterfac
 	{
 		super.onPause();
 
-		
+
 	}
 
 	private void setPesoIdealValue() {
 		// TODO Auto-generated method stub
-		if(new API(con).getPesoIdeal().equals(null)
-				|| new API(con).getPesoIdeal().equals(""))
-		{
-			pesoIdeal.setText("0");
-			tallaIdeal.setText("0");
-		}
-		else 
-		{
-			pesoIdeal.setText(new API(con).getPesoIdeal());
-			tallaIdeal.setText(new API(con).getTallaIdeal());
-		}
+
+		pesoIdeal.setText(new API(con).getPesoIdeal());
+		tallaIdeal.setText(new API(con).getTallaIdeal());
+		tvGoalDate.setText(new API(con).getGoalDate());
 
 	}
 
@@ -426,7 +504,7 @@ public class MiPerfilActivity extends FragmentActivity implements DialogInterfac
 		viewActionsList = (ListView) findViewById(R.id.actions_simple);
 
 		final String[] values = new String[] { 
-			//	"Mi Perfil", 	//0 
+				//	"Mi Perfil", 	//0 
 				"Mi Dieta", 	//0
 				"Mi Ejercicio", //1
 				"Calendario", 	//2
@@ -528,7 +606,7 @@ public class MiPerfilActivity extends FragmentActivity implements DialogInterfac
 			return;
 		}
 	}
-	
+
 	public static Intent getOpenFacebookIntent(Context context) {
 
 		try {
@@ -596,7 +674,7 @@ public class MiPerfilActivity extends FragmentActivity implements DialogInterfac
 
 		EditText mot = (EditText) findViewById(R.id.miPerfilMotivaciones);
 		mot.setHintTextColor(Color.WHITE);
-		
+
 		scroll.fullScroll(ScrollView.FOCUS_UP);
 
 	}
@@ -625,7 +703,7 @@ public class MiPerfilActivity extends FragmentActivity implements DialogInterfac
 		super.onStop();
 		if(viewActionsContentView != null)
 			viewActionsContentView.showContent();
-		
+
 		new API(con).setMotivacion(motivacion.getText().toString());
 
 	}
@@ -644,21 +722,30 @@ public class MiPerfilActivity extends FragmentActivity implements DialogInterfac
 		}
 
 	}
-	
+
 	public void runImageAsyncTask()
 	{
 		//profile_pic.setBackgroundResource(R.drawable.com_facebook_profile_picture_blank_portrait);
 		ImageAsyncTask programming = new ImageAsyncTask("profile", ivProfilePic);
 		programming.setId(new API(con).getFacebookID());
 		programming.execute();
-		
+
 		tvProfileName.setText(new API(con).getFacebookName());
 	}
-	
+
 	public static void setFacebokProfilePic(Bitmap bitMap)
 	{		
 		if(bitMap != null)
 			ivProfilePic.setImageBitmap(API.getRoundedShape(bitMap));
 	}
 
+	//listens for Date Picker Fragment dismissed
+	@Override
+	public void onDismissListener() {
+		// TODO Auto-generated method stub
+		
+		//UPDATE DATE UI
+		tvGoalDate.setText(new API(con).getGoalDate());
+		
+	}
 }

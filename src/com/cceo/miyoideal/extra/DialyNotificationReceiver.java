@@ -17,6 +17,7 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
 
+import com.cceo.miyoideal.HomeActivity;
 import com.cceo.miyoideal.MainActivity;
 import com.cceo.miyoideal.R;
 
@@ -30,6 +31,8 @@ public class DialyNotificationReceiver extends BroadcastReceiver {
 		Log.d("DialyNotification", "Entro notification");
 		if (new API(context).shouldSendNotif() && isTimetoSendNotif()) 
 		{
+			String message = getRandomNotification();
+
 			NotificationCompat.Builder mNotificationBuilder = new NotificationCompat.Builder(
 					context)
 			.setSmallIcon(R.drawable.notification_icon)
@@ -39,10 +42,11 @@ public class DialyNotificationReceiver extends BroadcastReceiver {
 							+ context.getPackageName() + "/"
 							+ R.raw.takeme))
 							.setContentTitle("Notificacion Saludable")
-							.setContentText(getRandomNotification());
+							.setContentText(message);
 			//Implicit intent
-			Intent resultIntent = new Intent(context, MainActivity.class);
-			resultIntent.putExtra("response", true);
+			Intent resultIntent = new Intent(context, HomeActivity.class);
+			resultIntent.putExtra("title", "Notificacion Saludable");
+			resultIntent.putExtra("message", message);
 			//Add to the top of the stack
 			TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
 			stackBuilder.addParentStack(MainActivity.class);
@@ -98,14 +102,14 @@ public class DialyNotificationReceiver extends BroadcastReceiver {
 
 		return strings.get(rad.nextInt(strings.size() - 1));
 	}
-	
+
 	private boolean isTimetoSendNotif()
 	{
 		Calendar c = Calendar.getInstance();
-		if(c.get(Calendar.HOUR_OF_DAY) == 13 && (c.get(Calendar.MINUTE) == 21))
+		if(c.get(Calendar.HOUR_OF_DAY) == 13 && (c.get(Calendar.MINUTE) == 52))
 			return true;
 		else
 			return false;
-	
+
 	}
 }

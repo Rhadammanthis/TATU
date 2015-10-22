@@ -62,39 +62,6 @@ public class Fragment_ImagePager extends DialogFragment
         dialog.getWindow().setBackgroundDrawable(d);
         dialog.getWindow().setContentView(v);
         
-//        final WindowManager.LayoutParams params = dialog.getWindow().getAttributes();
-//        params.width = WindowManager.LayoutParams.WRAP_CONTENT;
-//        params.height = WindowManager.LayoutParams.WRAP_CONTENT;
-//        params.gravity = Gravity.CENTER;
-		
-//		AlertDialog.Builder builder = new AlertDialog.Builder(con,android.R.style.Theme_Translucent_NoTitleBar_Fullscreen);
-//		
-//		
-//		builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
-//			
-//			@Override
-//			public void onClick(DialogInterface dialog, int which) {
-//				// TODO Auto-generated method stub
-//				
-//			}
-//		})
-//		.setTitle("Tut")
-//		.setView(v);
-		
-		//getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(0));
-		
-//		int style=DialogFragment.STYLE_NO_TITLE;
-//        int theme=android.R.style.Theme_Translucent;
-//        setStyle(style, theme);
-//		
-//		Dialog dialog = builder.create();
-//		Drawable d = new ColorDrawable(Color.BLACK);
-//		d.setAlpha(130);
-//		dialog.getWindow().setBackgroundDrawable(d);
-//		return dialog;
-		
-		//return builder.create();
-        
         return dialog;
 	
 	}

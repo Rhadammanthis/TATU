@@ -47,6 +47,16 @@ public class API {
 		db.close();
 	}
 	
+	public void setGoalDate(String goalDate)
+	{
+		ContentValues cv = new ContentValues();
+		cv.put("goal_date", goalDate);
+ 	   
+		SQLiteControl db = new SQLiteControl(con);
+		db.getWritableDatabase().update("control", cv, "id_control "+"="+1, null);
+		db.close();
+	}
+	
 	public void setNotifTrue()
 	{
 		ContentValues cv = new ContentValues();
@@ -365,6 +375,27 @@ public class API {
 			{
 				cursor.moveToFirst();
 				return cursor.getString(12);
+			}
+			else
+			{
+				return null;
+			}
+		}
+		catch(Exception ex)
+		{
+			db.close();
+			return null;
+		}
+	}
+	
+	public String getGoalDate()
+	{
+		try
+		{
+			if(cursor.moveToFirst())
+			{
+				cursor.moveToFirst();
+				return cursor.getString(13);
 			}
 			else
 			{

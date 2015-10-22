@@ -413,10 +413,6 @@ public class EjercicioActivity extends Activity {
 			return -1;
 		else
 			return delta;
-		//		if(dia_Date2 < dia_Date1)
-		//			return -1;
-		//		else
-		//			return delta;
 	}
 
 	private void initProgramaComponentes()

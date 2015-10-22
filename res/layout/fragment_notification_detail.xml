@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:padding="16dip"
+    android:layout_height="match_parent" >
+
+    <RelativeLayout
+        android:background="#ffffff"
+        android:id="@+id/fragment_rlBody"
+        android:layout_width="match_parent"
+        android:padding="8dip"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true" >
+
+        <TextView
+            android:id="@+id/fragment_notif_tvTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Some Large Title"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <TextView
+            android:layout_below="@+id/fragment_notif_tvTitle"
+            android:id="@+id/fragment_notif_tvMessage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Some medium content"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+        
+    </RelativeLayout>
+
+</RelativeLayout>
