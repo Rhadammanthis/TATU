@@ -1347,7 +1347,7 @@ public class HomeActivity extends Activity implements OnTouchListener, OnClickLi
 
 
 	@Override
-	public void OnDismiss(DialogInterface dialog, int recomendation) {
+	public void OnDismiss(DialogInterface dialog, int recomendation, String dieta_key) {
 		// TODO Auto-generated method stub
 		//Toast.makeText(cont, "Dismiss", Toast.LENGTH_SHORT).show();
 		List<DTO_DietaCompletada> lista = new DAO_DietaCompletada(cont).getLastFiveDietaCompleta();
@@ -1357,7 +1357,7 @@ public class HomeActivity extends Activity implements OnTouchListener, OnClickLi
 		mChart.invalidate();
 		mChart.animateX(lista.size() * 250);
 
-		RecomendationDialog recomedn_dialog = new RecomendationDialog(cont, recomendation);
+		RecomendationDialog recomedn_dialog = new RecomendationDialog(cont, recomendation, dieta_key);
 		recomedn_dialog.show(getFragmentManager(), "Dieta Completed");
 	}
 

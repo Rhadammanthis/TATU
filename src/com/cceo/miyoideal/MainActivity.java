@@ -41,6 +41,7 @@ import com.cceo.DB.SQLiteDietaDB;
 import com.cceo.DB.SQLiteEstadisticas;
 import com.cceo.DB.SQLiteFactory;
 import com.cceo.DB.SQLiteProgramaDB;
+import com.cceo.DB.SQLiteRecommendation;
 import com.cceo.DB.SQLiteTutorialControl;
 import com.cceo.DB.SQLiteUserDB;
 import com.cceo.miyoideal.R;
@@ -172,6 +173,7 @@ public class MainActivity extends Activity implements SQLiteFactory{
 					initDietaDB();
 					initProgramaDB();
 					initTutorialControl();
+					initRecommendationDB();
 										
 					Spinner sexo = (Spinner) main.getChildAt(1);
 					EditText edad = (EditText) main.getChildAt(2);
@@ -704,6 +706,29 @@ public class MainActivity extends Activity implements SQLiteFactory{
 		values.put("button_tutorial", "0");
 
 		db.getWritableDatabase().insert("tutorialcontrol", null, values);
+
+		db.close();
+	}
+
+
+	@Override
+	public void initRecommendationDB() {
+		// TODO Auto-generated method stub
+		SQLiteRecommendation db = new SQLiteRecommendation(this);
+		db.getWritableDatabase();
+		
+		Log.d("db", "Control " + db.getDatabaseName());
+
+		ContentValues values = new ContentValues();
+		values.put("id_dieta", "DP1");
+		values.put("recommendation_more_first", "DP2");
+		values.put("recommendation_more_second", "DP3");
+		values.put("recommendation_same_first", "0");
+		values.put("recommendation_same_second", "0");
+		values.put("recommendation_less_first", "0");
+		values.put("recommendation_less_second", "0");
+
+		db.getWritableDatabase().insert("recommendation", null, values);
 
 		db.close();
 	}

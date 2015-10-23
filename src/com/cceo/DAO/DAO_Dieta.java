@@ -41,6 +41,29 @@ public class DAO_Dieta {
 		return dieta;
 	}
 	
+	public DTO_Dieta getDietaByKey(String key)
+	{
+		DTO_Dieta dieta = new DTO_Dieta();
+		
+		SQLiteDietaDB db = new SQLiteDietaDB(con);
+		db.getReadableDatabase();
+		
+		String query = "SELECT * FROM " + "dieta WHERE " + "etiqueta" + " =  \"" + key + "\"";		
+		Cursor cursor = db.getReadableDatabase().rawQuery(query, null);
+		
+		if(cursor.moveToFirst())
+		{
+			dieta.setId_dieta(cursor.getString(0));
+			dieta.setNombre(cursor.getString(1));
+			dieta.setTipo(cursor.getString(2));
+			dieta.setDuracion(cursor.getString(3));	
+			dieta.setEtiqueta(cursor.getString(4));
+			dieta.setDescripcion(cursor.getString(5));
+		}
+		
+		return dieta;
+	}
+	
 	public List<DTO_Dieta> getAllDieta()
 	{
 		List<DTO_Dieta> list_dieta = new ArrayList<DTO_Dieta>();

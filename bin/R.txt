@@ -1114,8 +1114,8 @@ int id progress_bar 0x7f080151
 int id progress_circular 0x7f080005
 int id progress_horizontal 0x7f080006
 int id radio 0x7f080068
-int id recomen_button1 0x7f08013c
-int id recomen_button2 0x7f08013d
+int id recomen_bFirst 0x7f08013c
+int id recomen_bSecond 0x7f08013d
 int id right 0x7f08002f
 int id right_offset 0x7f080033
 int id root_layout 0x7f08014e

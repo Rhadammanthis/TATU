@@ -20,6 +20,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.cceo.DAO.DAO_Dieta;
 import com.cceo.DAO.DAO_DietaCompletada;
 import com.cceo.DAO.DAO_Usuario;
 import com.cceo.DTO.DTO_DietaCompletada;
@@ -40,6 +41,7 @@ public class DietaCompletedDialog extends DialogFragment{
 	private ImageButton twitter;
 	
 	public int recomend = 0;
+	public String dieta_key = "";
 	
 	public DietaCompletedDialog(Context context) {
 	
@@ -119,7 +121,7 @@ public class DietaCompletedDialog extends DialogFragment{
         final Activity activity = getActivity();
         if (activity instanceof OnDismissListener) {
         	
-            ((OnDismissListener) activity).OnDismiss(dialog, recomend);
+            ((OnDismissListener) activity).OnDismiss(dialog, recomend, dieta_key);
         }
     }
     
@@ -130,6 +132,7 @@ public class DietaCompletedDialog extends DialogFragment{
         AlertDialog d = (AlertDialog)getDialog();
         if(d != null)
         {
+        	dieta_key = new DAO_Dieta(con).getDieta(new API(con).getID_Dieta()).getEtiqueta();
         	//twitter share
         	twitter.setOnClickListener(new View.OnClickListener() {
 				

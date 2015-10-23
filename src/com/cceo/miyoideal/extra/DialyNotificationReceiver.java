@@ -106,7 +106,7 @@ public class DialyNotificationReceiver extends BroadcastReceiver {
 	private boolean isTimetoSendNotif()
 	{
 		Calendar c = Calendar.getInstance();
-		if(c.get(Calendar.HOUR_OF_DAY) == 13 && (c.get(Calendar.MINUTE) == 52))
+		if(c.get(Calendar.HOUR_OF_DAY) == 13 && (c.get(Calendar.MINUTE) == 21))
 			return true;
 		else
 			return false;
