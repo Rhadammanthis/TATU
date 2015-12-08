@@ -28,6 +28,7 @@ public class PerfilNumberPicker extends DialogFragment{
 	private boolean shouldRecord = false;
 	String get_id, get_name, get_gender, get_email, get_birthday, get_locale, get_location;
 	private String title;
+	private String subTitle;
 	private int type;
 
 	public PerfilNumberPicker(Context context, int type) {
@@ -39,9 +40,15 @@ public class PerfilNumberPicker extends DialogFragment{
 		//if type is 0, is peso
 		//if type is 1. is talla		
 		if(type ==0)
-			title = "Selecciona tu peso ideal";
+		{
+			title = "Mi Peso Ideal";
+			subTitle = "Peso Ideal en Kg";
+		}
 		else
-			title = "Selecciona tu talla ideal";
+		{	
+			title = "Mi Talla Ideal";
+			subTitle = "Talla de Cintura Ideal en Cm";
+		}
 
 	}
 
@@ -118,7 +125,7 @@ public class PerfilNumberPicker extends DialogFragment{
 			}
 		})
 		.setTitle(title)
-		.setMessage("Please Enter Quantity");      
+		.setMessage(subTitle);      
 
 		//return new AlertDialog.Builder(getActivity()).setTitle(R.string.app_name).setMessage("Please Enter Quantity")
           //      .setPositiveButton("OK", this).setNegativeButton("CANCEL", null).setView(editQuantity).create();

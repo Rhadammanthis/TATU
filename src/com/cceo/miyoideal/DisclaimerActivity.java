@@ -48,7 +48,8 @@ public class DisclaimerActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.baseline_disclaimer);
 		this.getActionBar().setDisplayHomeAsUpEnabled(true);
-		getActionBar().setIcon(R.drawable.actionbar_icon_white);
+		getActionBar().setIcon(R.drawable.menu_white);
+		this.setTitle("		Disclaimer");
 
 		con = this;
 
@@ -107,7 +108,7 @@ public class DisclaimerActivity extends Activity {
 				"Antes y Despues", 	//5
 				"Comparte",	//6 
 				"Tip del Día", 	//7
-				"Preguntanos", 	//8
+				"Pregúntanos", 	//8
 				"Tutorial",	//9
 				};	
 

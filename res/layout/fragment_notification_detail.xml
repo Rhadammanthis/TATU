@@ -5,26 +5,41 @@
     android:layout_height="match_parent" >
 
     <RelativeLayout
-        android:background="#ffffff"
         android:id="@+id/fragment_rlBody"
+        android:background="@drawable/notif_detail_container"
         android:layout_width="match_parent"
         android:padding="8dip"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true" >
 
         <TextView
+            android:layout_marginLeft="-10dip"
             android:id="@+id/fragment_notif_tvTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Some Large Title"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="80dp"
+            android:text="El titulo de lo que biene siendo conocido como la notificacion"
             android:textAppearance="?android:attr/textAppearanceLarge" />
 
+        <ImageView
+            android:id="@+id/fragment_notif_check"
+            android:layout_width="70dip"
+            android:layout_height="70dip"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="23dp"
+            android:src="@drawable/notif_detail_check" />
+
         <TextView
-            android:layout_below="@+id/fragment_notif_tvTitle"
+            android:layout_marginLeft="-10dip"
             android:id="@+id/fragment_notif_tvMessage"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Some medium content"
+            android:layout_alignLeft="@+id/fragment_notif_tvTitle"
+            android:layout_marginTop="150dp"
+            android:text="El textode lo que biene siendo conocido como la notificacion"
             android:textAppearance="?android:attr/textAppearanceMedium" />
         
     </RelativeLayout>

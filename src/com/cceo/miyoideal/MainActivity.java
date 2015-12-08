@@ -35,6 +35,7 @@ import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.cceo.DAO.DAO_Usuario;
 import com.cceo.DB.SQLiteComponenteDB;
 import com.cceo.DB.SQLiteControl;
 import com.cceo.DB.SQLiteDietaDB;
@@ -44,6 +45,7 @@ import com.cceo.DB.SQLiteProgramaDB;
 import com.cceo.DB.SQLiteRecommendation;
 import com.cceo.DB.SQLiteTutorialControl;
 import com.cceo.DB.SQLiteUserDB;
+import com.cceo.DTO.DTO_Usuario;
 import com.cceo.miyoideal.R;
 import com.cceo.miyoideal.extra.API;
 import com.cceo.miyoideal.extra.DialyNotificationReceiver;
@@ -104,7 +106,7 @@ public class MainActivity extends Activity implements SQLiteFactory{
 		
 		
 		setContentView(R.layout.activity_main);
-		this.setTitle("Diagnostico");
+		this.setTitle("Registro");
 		con = this;
 		
 		initControlDB();
@@ -261,6 +263,9 @@ public class MainActivity extends Activity implements SQLiteFactory{
 		//if User has yet to sign to Facebook, we use the Facebook profile pic placeholder
 		else
 		{
+			
+			
+			
 			profilePic.setBackgroundResource(R.drawable.com_facebook_profile_picture_blank_square);
 		}
 		

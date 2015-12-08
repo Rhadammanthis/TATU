@@ -182,15 +182,17 @@ public class DietaCompletedDialog extends DialogFragment{
                             //EditText peso = (EditText) v.findViewById(R.id.pesoEditText_Share);
                             //EditText talla = (EditText) v.findViewById(R.id.tallaEditText_Share);
                         	
-                        	//prepare recomendation
-                        	recomend = getRecommendationType(Float.valueOf(new DAO_Usuario(getActivity()).getUsuario().getPeso()), 
-                        			Float.valueOf(peso.getText().toString()));
+                        	
 
                             Calendar c = Calendar.getInstance();
                             SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yy");
                             
                             if(tryParseFloat(peso.getText().toString()) && tryParseFloat(talla.getText().toString()))
                             {
+                            	//prepare recomendation
+                            	recomend = getRecommendationType(Float.valueOf(new DAO_Usuario(getActivity()).getUsuario().getPeso()), 
+                            			Float.valueOf(peso.getText().toString()));
+                            	
                                 DTO_DietaCompletada dietaCompletada = new DTO_DietaCompletada("", new API(con).getID_Dieta(), 
                                         peso.getText().toString(), talla.getText().toString(), df.format(c.getTime()).toString());
 

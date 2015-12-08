@@ -46,6 +46,20 @@ public class FragmentNotificationDetail extends DialogFragment
 		
 		TextView tvTitle = (TextView) v.findViewById(R.id.fragment_notif_tvTitle);
 		TextView tvMessage = (TextView) v.findViewById(R.id.fragment_notif_tvMessage);
+		ImageView ivCheck = (ImageView) v.findViewById(R.id.fragment_notif_check);
+		
+		ivCheck.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				dismiss();
+			}
+		});
+		
+		Font font = new Font();
+		font.changeFontRaleway(con, tvMessage);
+		font.changeFontRaleway(con, tvTitle);
 		
 		tvTitle.setText(title);
 		tvMessage.setText(message);

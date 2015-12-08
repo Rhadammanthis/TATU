@@ -46,6 +46,8 @@
         android:id="@+id/sideMneuBar2"
         android:layout_width="match_parent"
         android:layout_height="2dip"
+        android:layout_marginBottom="8dip"
+        android:layout_marginTop="8dip"
         android:layout_above="@+id/bNyVare"
         android:layout_marginLeft="10dip"
         android:layout_marginRight="10dip"
@@ -68,10 +70,11 @@
                 android:id="@+id/homeNotifCheckB"
                 android:layout_width="37dip"
                 android:layout_height="37dip"
-                android:layout_marginRight="3dip"
 				android:scaleY="0.7"
+				android:scaleX="0.7"
+				android:layout_marginRight="-3dip"
                 android:layout_alignParentRight="true"
-                android:background="@drawable/selector_checkbox"
+                android:background="@drawable/selector_checkbox_clean"
                 android:button="@null"
                 android:gravity="right" />
 

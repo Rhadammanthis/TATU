@@ -73,6 +73,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.cceo.DAO.DAO_Componente;
 import com.cceo.DAO.DAO_DietaCompletada;
 import com.cceo.DAO.DAO_TutorialControl;
 import com.cceo.DAO.DAO_Usuario;
@@ -180,7 +181,7 @@ public class HomeActivity extends Activity implements OnTouchListener, OnClickLi
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.baseline4);
 		this.getActionBar().setDisplayHomeAsUpEnabled(true);
-		getActionBar().setIcon(R.drawable.actionbar_icon_white);
+		getActionBar().setIcon(R.drawable.menu_white);
 		getActionBar().setTitle("");
 
 
@@ -281,6 +282,8 @@ public class HomeActivity extends Activity implements OnTouchListener, OnClickLi
 			SQLiteControl db = new SQLiteControl(cont);
 			db.getWritableDatabase().update("control", cv, "id_control "+"="+1, null);
 			db.close();
+			
+			new DAO_Componente(cont).setAllToNo(new API(cont).getID_Dieta());
 
 			//Call "Update Info" dialog
 			DietaCompletedDialog dialog = new DietaCompletedDialog(cont);
@@ -559,7 +562,7 @@ public class HomeActivity extends Activity implements OnTouchListener, OnClickLi
 				"Antes y Despues", 	//5
 				"Comparte",	//6 
 				"Tip del Día", 	//7
-				"Preguntanos", 	//8
+				"Pregúntanos", 	//8
 				"Tutorial",	//9
 		"Disclaimer"};	//10
 
@@ -721,6 +724,14 @@ public class HomeActivity extends Activity implements OnTouchListener, OnClickLi
 			f.changeFontRaleway(cont, notif);
 			f.changeFontRaleway(cont, color);			
 		}
+		else
+		{
+			DTO_Usuario user = new DAO_Usuario(cont).getUsuario();
+			if(user.getSexo().equals("Masculino"))
+				menu_profile_pic.setImageResource(R.drawable.com_facebook_profile_picture_blank_square);
+			else
+				menu_profile_pic.setImageResource(R.drawable.female);
+		}
 
 	}
 
@@ -756,21 +767,21 @@ public class HomeActivity extends Activity implements OnTouchListener, OnClickLi
 			styleMain = res.getColor(R.color.MASCULINO_MAIN);
 			styleDetail = res.getColor(R.color.MASCULINO_DETAIL);
 			button_MiPerfil.setImageResource(R.drawable.selector_home_statistics_male);
-			checkBoxNotif.setBackgroundResource(R.drawable.selector_checkbox);
+			//checkBoxNotif.setBackgroundResource(R.drawable.selector_checkbox);
 		}
 		if(style.equals("femenino"))
 		{
 			styleMain = res.getColor(R.color.FEMENINO_MAIN);
 			styleDetail = res.getColor(R.color.FEMENINO_DETAIL);
 			button_MiPerfil.setImageResource(R.drawable.selector_home_statistics_female);
-			checkBoxNotif.setBackgroundResource(R.drawable.selector_checkbox_alt);
+			//checkBoxNotif.setBackgroundResource(R.drawable.selector_checkbox_alt);
 		}
 		if(style.equals("neutral"))
 		{
 			styleMain = res.getColor(R.color.NEUTRAL_MAIN);
 			styleDetail = res.getColor(R.color.NEUTRAL_DETAIL);
 			button_MiPerfil.setImageResource(R.drawable.selector_home_statistics_neutral);
-			checkBoxNotif.setBackgroundResource(R.drawable.selector_checkbox);
+			//checkBoxNotif.setBackgroundResource(R.drawable.selector_checkbox);
 		}
 
 	}
@@ -888,11 +899,11 @@ public class HomeActivity extends Activity implements OnTouchListener, OnClickLi
 		}
 		else
 		{
-			DietaCompletedDialog dialog = new DietaCompletedDialog(cont);
-			dialog.show(getFragmentManager(), "Dieta Completed");
-//			Intent intent = new Intent(HomeActivity.this, EstadisticasActivity.class);
-//			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//			startActivity(intent);
+//			DietaCompletedDialog dialog = new DietaCompletedDialog(cont);
+//			dialog.show(getFragmentManager(), "Dieta Completed");
+			Intent intent = new Intent(HomeActivity.this, EstadisticasActivity.class);
+			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(intent);
 
 
 

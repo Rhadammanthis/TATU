@@ -33,9 +33,10 @@
             android:textColor="#ffffff"
             android:paddingBottom="10dip"
             android:layout_alignParentLeft="true"
+            android:layout_marginRight="40dip"
             android:layout_centerVertical="true"
             android:layout_marginLeft="15dp"
-            android:text="Actividad Física Realizada Hoy"
+            android:text="Listo! He cumplido con mi ejercicio del día!"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <CheckBox
@@ -43,11 +44,12 @@
             android:layout_width="37dip"
             android:layout_height="37dip"
             android:scaleY="0.7"
+            android:scaleX="0.7"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="11dp"
             android:button="@null"
-            android:background="@drawable/selector_checkbox"
+            android:background="@drawable/selector_checkbox_clean"
             android:text="" />
         
     </RelativeLayout>

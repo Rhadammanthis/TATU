@@ -125,7 +125,8 @@ public class ShareActivity extends Activity implements View.OnClickListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.baseline_compartir);
 		this.getActionBar().setDisplayHomeAsUpEnabled(true);
-		getActionBar().setIcon(R.drawable.actionbar_icon_white);
+		getActionBar().setIcon(R.drawable.menu_white);
+		this.setTitle("		Compartir");
 
 		con = this;
 		setUpMenu();
@@ -277,7 +278,7 @@ public class ShareActivity extends Activity implements View.OnClickListener {
 						//						}
 
 
-						Toast.makeText(con, "Log In Succes", Toast.LENGTH_SHORT).show();
+						Toast.makeText(con, "Inicio de sesión exitoso!", Toast.LENGTH_SHORT).show();
 					}
 
 				}).executeAsync();

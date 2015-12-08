@@ -55,7 +55,9 @@ public class EstadisticasActivity extends Activity{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.baseline_estadisticas);
 		this.getActionBar().setDisplayHomeAsUpEnabled(true);
-		getActionBar().setIcon(R.drawable.actionbar_icon_white);
+		getActionBar().setIcon(R.drawable.menu_white);
+		this.setTitle("		Estadísticas");
+		
 		con = this;
 		
 		setUpMenu();
@@ -136,7 +138,7 @@ public class EstadisticasActivity extends Activity{
 				"Antes y Despues", 	//5
 				"Comparte",	//6 
 				"Tip del Día", 	//7
-				"Preguntanos", 	//8
+				"Pregúntanos", 	//8
 				"Tutorial",	//9
 		"Disclaimer"};	//10
 

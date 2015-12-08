@@ -8,7 +8,7 @@
     <item
         android:id="@+id/action_home"
         android:showAsAction="ifRoom"
-        android:icon="@drawable/notification_icon"
+        android:icon="@drawable/aplication_icon"
         android:title="@string/action_home"/>
     
 </menu>

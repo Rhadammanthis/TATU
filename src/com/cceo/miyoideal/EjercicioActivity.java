@@ -86,7 +86,8 @@ public class EjercicioActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.baseline_ejercicio);
 		this.getActionBar().setDisplayHomeAsUpEnabled(true);
-		getActionBar().setIcon(R.drawable.actionbar_icon_white);
+		getActionBar().setIcon(R.drawable.menu_white);
+		this.setTitle("		Mi Ejercicio");
 		
 		con = this;
 		font = new Font();
@@ -303,7 +304,7 @@ public class EjercicioActivity extends Activity {
 				"Antes y Despues", 	//4
 				"Comparte",	//5
 				"Tip del Día", 	//6
-				"Preguntanos", 	//7
+				"Pregúntanos", 	//7
 				"Tutorial",	//8
 		"Disclaimer"};	//9
 
@@ -575,7 +576,7 @@ public class EjercicioActivity extends Activity {
 			styleDark = res.getColor(R.color.MASCULINO_DARKER);
 			styleBright = res.getColor(R.color.MASCULINO_BRIGHTER);
 			styleBrightest = res.getColor(R.color.MASCULINO_BRIGHTEST);
-			checkB.setBackgroundResource(R.drawable.selector_checkbox);
+			//checkB.setBackgroundResource(R.drawable.selector_checkbox);
 		}
 		if(style.equals("femenino"))
 		{
@@ -585,7 +586,7 @@ public class EjercicioActivity extends Activity {
 			styleDark = res.getColor(R.color.FEMENINO_DARKER);
 			styleBright = res.getColor(R.color.FEMENINO_BRIGHTER);
 			styleBrightest = res.getColor(R.color.FEMENINO_BRIGHTEST);
-			checkB.setBackgroundResource(R.drawable.selector_checkbox_alt);
+			//checkB.setBackgroundResource(R.drawable.selector_checkbox_alt);
 		}
 		if(style.equals("neutral"))
 		{
@@ -595,7 +596,7 @@ public class EjercicioActivity extends Activity {
 			styleDark = res.getColor(R.color.NEUTRAL_DARKER);
 			styleBright = res.getColor(R.color.NEUTRAL_BRIGHTER);
 			styleBrightest = res.getColor(R.color.NEUTRAL_BRIGHTEST);
-			checkB.setBackgroundResource(R.drawable.selector_checkbox);
+			//checkB.setBackgroundResource(R.drawable.selector_checkbox);
 		}
 
 	}

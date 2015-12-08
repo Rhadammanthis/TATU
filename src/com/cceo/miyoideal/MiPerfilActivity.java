@@ -115,7 +115,9 @@ public class MiPerfilActivity extends FragmentActivity implements DialogInterfac
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.baseline2);
 		this.getActionBar().setDisplayHomeAsUpEnabled(true);
-		getActionBar().setIcon(R.drawable.actionbar_icon_white);
+		getActionBar().setIcon(R.drawable.menu_white);
+		this.setTitle("		Mi Perfil");
+		
 		con = this;		
 
 		tvGoalDate = (TextView) findViewById(R.id.goalDate);
@@ -512,7 +514,7 @@ public class MiPerfilActivity extends FragmentActivity implements DialogInterfac
 				"Antes y Despues", 	//4
 				"Comparte",	//5
 				"Tip del Día", 	//6
-				"Preguntanos", 	//7
+				"Pregúntanos", 	//7
 				"Tutorial",	//8
 		"Disclaimer"};	//9
 

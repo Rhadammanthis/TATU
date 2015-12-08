@@ -154,27 +154,28 @@ public class DietaChild {
 		FrameLayout.LayoutParams params2 = new FrameLayout.LayoutParams(
 				LayoutParams.WRAP_CONTENT, LayoutParams.FILL_PARENT);
 		params2.gravity=Gravity.RIGHT | Gravity.CENTER_VERTICAL;
-		params2.setMargins(0, 0, (int) (3 * scale + 0.5f), 0); 
+		params2.setMargins(0, 0, (int) (-40 * scale + 0.5f), 0); 
 		checkBox.setLayoutParams(params2);
 		checkBox.getLayoutParams().height = checkBox.getLayoutParams().height + (int) (45 * scale + 0.5f); 
-		checkBox.setPadding(0, 0, 0, (int) (20 * scale + 0.5f));
 		checkBox.setButtonDrawable(null);
-		checkBox.setScaleY(0.70f);
-		checkBox.setScaleX(0.70f);
+		checkBox.setScaleY(0.75f);
+		checkBox.setScaleX(0.25f);
 		
-		String style = new API(context).getStyle();
-		if(style.equals("masculino"))
-		{
-			checkBox.setBackgroundResource(R.drawable.selector_checkbox);
-		}
-		if(style.equals("femenino"))
-		{
-			checkBox.setBackgroundResource(R.drawable.selector_checkbox_alt);
-		}
-		if(style.equals("neutral"))
-		{
-			checkBox.setBackgroundResource(R.drawable.selector_checkbox);
-		}
+		checkBox.setBackgroundResource(R.drawable.selector_checkbox_clean);
+		
+//		String style = new API(context).getStyle();
+//		if(style.equals("masculino"))
+//		{
+//			checkBox.setBackgroundResource(R.drawable.selector_checkbox);
+//		}
+//		if(style.equals("femenino"))
+//		{
+//			checkBox.setBackgroundResource(R.drawable.selector_checkbox_alt);
+//		}
+//		if(style.equals("neutral"))
+//		{
+//			checkBox.setBackgroundResource(R.drawable.selector_checkbox);
+//		}
 		
 		//whether checkbox is checked or not
 		if(activo)
@@ -570,11 +571,11 @@ public class DietaChild {
 		}
 		if(style.equals("femenino"))
 		{
-			text.setTextColor(Color.parseColor("#C35764"));
+			text.setTextColor(Color.parseColor("#BC5361"));
 		}
 		if(style.equals("neutral"))
 		{
-			text.setTextColor(Color.parseColor("#BC5361"));
+			text.setTextColor(Color.parseColor("#00837A"));
 		}
 		text.setText("No hay datos para este día.");
 		text.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);

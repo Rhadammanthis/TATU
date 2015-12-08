@@ -62,7 +62,8 @@ public class ComparativeActivity extends Activity{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.baseline_comparar);
 		this.getActionBar().setDisplayHomeAsUpEnabled(true);
-		getActionBar().setIcon(R.drawable.actionbar_icon_white);
+		getActionBar().setIcon(R.drawable.menu_white);
+		this.setTitle("		Antes y Después");
 		
 		con = this;
 		
@@ -147,6 +148,7 @@ public class ComparativeActivity extends Activity{
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		//If the Logo clicked
+		//Toast.makeText(con, String.valueOf(item.getItemId()), Toast.LENGTH_LONG).show();
 
 		switch (item.getItemId()) 
 		{
@@ -157,7 +159,7 @@ public class ComparativeActivity extends Activity{
 					viewActionsContentView.showContent();
 			return true;
 			
-			case 2131231055:
+			case 2131231079:
 				try {
 				startCamera(CAMERA_CODE);
 			} catch (IOException e) {
@@ -207,7 +209,7 @@ public class ComparativeActivity extends Activity{
 				"Seleccionar Dieta",	//4
 				"Comparte",	//5 
 				"Tip del Día", 	//6
-				"Preguntanos", 	//7
+				"Pregúntanos", 	//7
 				"Tutorial",	//8
 		"Disclaimer"};	//9
 
@@ -344,8 +346,8 @@ public class ComparativeActivity extends Activity{
 				else{
 					//Toast.makeText(this, "No se encontraron fotos para hacer la comparacion", Toast.LENGTH_LONG).show();
 					new AlertDialog.Builder(this) 
-				    	.setTitle("Alerta") 
-				    	.setMessage("No existen fotos, ¡Tomate algunas para observar tu progreso!") 
+				    	.setTitle("Bienvenido") 
+				    	.setMessage("Tómate una foto al terminar cada guía de alimentación para observar tu progreso") 
 				    	.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() { 
 				    		public void onClick(DialogInterface dialog, int which) { 
 				    			// continue with delete
@@ -357,8 +359,8 @@ public class ComparativeActivity extends Activity{
 				}
 			}else{
 				new AlertDialog.Builder(this) 
-		    	.setTitle("Alerta") 
-		    	.setMessage("No existen fotos, ¡Tomate algunas para observar tu progreso!") 
+		    	.setTitle("Bienvenido") 
+		    	.setMessage("Tómate una foto al terminar cada guía de alimentación para observar tu progreso") 
 		    	.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() { 
 		    		public void onClick(DialogInterface dialog, int which) { 
 		    			// continue with delete

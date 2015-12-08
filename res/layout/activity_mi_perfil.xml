@@ -236,6 +236,11 @@
                 android:textColor="#FFFFFF"
                 android:textSize="20sp" />
         </RelativeLayout>
+        
+        <RelativeLayout android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="40dip"
+            android:paddingRight="40dip" >
 
         <EditText
             android:id="@+id/miPerfilMotivaciones"
@@ -253,6 +258,14 @@
             android:windowSoftInputMode="stateHidden" >
 
         </EditText>
+        <TextView android:text="Escribe aquí tus Motivaciones"
+            android:textColor="#FFFFFF"
+            android:alpha=".30"
+            android:textSize="17sp"
+            android:layout_centerInParent="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        </RelativeLayout>
 
         <RelativeLayout
             android:id="@+id/goalDateRL"
@@ -267,7 +280,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
-                android:text="Meta"
+                android:text="Fecha Límite"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="#ffffff"
                 android:textSize="20sp" />

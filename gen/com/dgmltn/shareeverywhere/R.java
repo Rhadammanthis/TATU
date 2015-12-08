@@ -32,24 +32,24 @@ public final class R {
 		public static final int sv__preferred_height = 0x7f0b0071;
 	}
 	public static final class drawable {
-		public static final int sv__border_dark = 0x7f020149;
-		public static final int sv__border_light = 0x7f02014a;
-		public static final int sv__ic_menu_share_holo_dark = 0x7f02014b;
-		public static final int sv__ic_menu_share_holo_light = 0x7f02014c;
-		public static final int sv__list_divider_holo_dark = 0x7f02014d;
-		public static final int sv__list_divider_holo_light = 0x7f02014e;
-		public static final int sv__list_focused_holo = 0x7f02014f;
-		public static final int sv__list_longpressed_holo = 0x7f020150;
-		public static final int sv__list_pressed_holo_dark = 0x7f020151;
-		public static final int sv__list_pressed_holo_light = 0x7f020152;
-		public static final int sv__list_selector_background_transition_holo_dark = 0x7f020153;
-		public static final int sv__list_selector_background_transition_holo_light = 0x7f020154;
-		public static final int sv__list_selector_disabled_holo_dark = 0x7f020155;
-		public static final int sv__list_selector_disabled_holo_light = 0x7f020156;
-		public static final int sv__list_selector_holo_dark = 0x7f020157;
-		public static final int sv__list_selector_holo_light = 0x7f020158;
-		public static final int sv__menu_dropdown_panel_holo_dark = 0x7f020159;
-		public static final int sv__menu_dropdown_panel_holo_light = 0x7f02015a;
+		public static final int sv__border_dark = 0x7f020151;
+		public static final int sv__border_light = 0x7f020152;
+		public static final int sv__ic_menu_share_holo_dark = 0x7f020153;
+		public static final int sv__ic_menu_share_holo_light = 0x7f020154;
+		public static final int sv__list_divider_holo_dark = 0x7f020155;
+		public static final int sv__list_divider_holo_light = 0x7f020156;
+		public static final int sv__list_focused_holo = 0x7f020157;
+		public static final int sv__list_longpressed_holo = 0x7f020158;
+		public static final int sv__list_pressed_holo_dark = 0x7f020159;
+		public static final int sv__list_pressed_holo_light = 0x7f02015a;
+		public static final int sv__list_selector_background_transition_holo_dark = 0x7f02015b;
+		public static final int sv__list_selector_background_transition_holo_light = 0x7f02015c;
+		public static final int sv__list_selector_disabled_holo_dark = 0x7f02015d;
+		public static final int sv__list_selector_disabled_holo_light = 0x7f02015e;
+		public static final int sv__list_selector_holo_dark = 0x7f02015f;
+		public static final int sv__list_selector_holo_light = 0x7f020160;
+		public static final int sv__menu_dropdown_panel_holo_dark = 0x7f020161;
+		public static final int sv__menu_dropdown_panel_holo_light = 0x7f020162;
 	}
 	public static final class id {
 		public static final int activity_chooser_view_content = 0x7f08005d;

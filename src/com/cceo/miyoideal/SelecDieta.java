@@ -76,7 +76,8 @@ public class SelecDieta extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.baseline_selec_dieta);
 		this.getActionBar().setDisplayHomeAsUpEnabled(true);
-		getActionBar().setIcon(R.drawable.actionbar_icon_white);
+		getActionBar().setIcon(R.drawable.menu_white);
+		this.setTitle("		Seleccionar Dieta");
 		
 		con = this;
 		

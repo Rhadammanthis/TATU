@@ -62,7 +62,7 @@ public class SelectDialogue extends DialogFragment {
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 		if(accept)
 		{
-			builder.setMessage("¿Deseas tomar esta dieta?")
+			builder.setMessage("¿Listo para iniciar esta dieta?")
 			.setPositiveButton("Si", new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
 

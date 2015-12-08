@@ -34,11 +34,12 @@ public class TutorialActivity extends ActionBarActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.baseline_tutorial);
+		setContentView(R.layout.activity_tutorial);
 		this.getActionBar().setDisplayHomeAsUpEnabled(true);
-		getActionBar().setIcon(R.drawable.actionbar_icon_white);
+		getActionBar().setIcon(R.drawable.menu_white);
+		this.setTitle("		Tutorial");
 		
-		setUpMenu();
+		//setUpMenu();
 
 		ViewPager viewPager = (ViewPager) findViewById(R.id.view_pager);
 		ImagePagerAdapter adapter = new ImagePagerAdapter();
@@ -193,7 +194,6 @@ public class TutorialActivity extends ActionBarActivity {
 
 	private class ImagePagerAdapter extends PagerAdapter {
 		private int[] mImages = new int[] {
-				R.drawable.image2,
 				R.drawable.image3,
 				R.drawable.image4,
 		};
