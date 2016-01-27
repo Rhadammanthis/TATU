@@ -12,8 +12,7 @@
         android:background="@null"
         android:scaleType="fitCenter"
         
-        android:layout_alignParentLeft="true"
-        android:src="@drawable/abc_ab_bottom_solid_dark_holo" />
+        android:layout_alignParentLeft="true"/>
 
     <ImageButton
         android:id="@+id/calendarRightB"
@@ -21,8 +20,7 @@
         android:layout_height="30dip"
         android:background="@null"
         android:scaleType="fitCenter"
-        android:layout_alignParentRight="true"
-        android:src="@drawable/abc_ab_bottom_solid_dark_holo" />
+        android:layout_alignParentRight="true" />
 
     <TextView
         android:id="@+id/cardTitle"

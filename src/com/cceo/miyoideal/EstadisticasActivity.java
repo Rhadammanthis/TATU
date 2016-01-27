@@ -1,9 +1,13 @@
 package com.cceo.miyoideal;
 
+import java.text.DecimalFormat;
+
 import shared.ui.actionscontentview.ActionsContentView;
 
 import com.cceo.DAO.DAO_Estadisticas;
+import com.cceo.DAO.DAO_Usuario;
 import com.cceo.DTO.DTO_Estadisticas;
+import com.cceo.DTO.DTO_Usuario;
 import com.cceo.miyoideal.R;
 import com.cceo.miyoideal.extra.API;
 import com.cceo.miyoideal.extra.Font;
@@ -41,6 +45,7 @@ public class EstadisticasActivity extends Activity{
 	TextView textIMC;
 	TextView textDiasConsecutivosDieta;
 	TextView textDiasConsecutivosEjercicio;
+	TextView textClasificacionIMC;
 	
 	//Style variables
 	private int styleMain;
@@ -77,6 +82,7 @@ public class EstadisticasActivity extends Activity{
 		textIMC = (TextView) findViewById(R.id.textIMC);
 		textDiasConsecutivosDieta = (TextView) findViewById(R.id.textDiasConsecutivosDieta);
 		textDiasConsecutivosEjercicio = (TextView) findViewById(R.id.textDiasConsecutivosEjercicio);
+		textClasificacionIMC = (TextView) findViewById(R.id.textClasificacionIMC);
 		
 		//Set the data to TextViews
 		textPesoActual.setText(dtoEstadisticas.getPesoActual());
@@ -91,9 +97,42 @@ public class EstadisticasActivity extends Activity{
 		textTallaActual.setText(dtoEstadisticas.getTallaActual());
 		textTallaMaxima.setText(dtoEstadisticas.getTallaMaxima());
 		textTallaMinima.setText(dtoEstadisticas.getTallaMinima());
-		textIMC.setText(dtoEstadisticas.getIMC());
-		textDiasConsecutivosDieta.setText(dtoEstadisticas.getDiasConsecutivosDieta());
-		textDiasConsecutivosEjercicio.setText(dtoEstadisticas.getDiasConsecutivosEjercicio());	
+		textIMC.setText(getIMC());
+		textDiasConsecutivosDieta.setText(getClasificacionIMC(getIMC()));
+		textDiasConsecutivosEjercicio.setText(dtoEstadisticas.getDiasConsecutivosDieta());
+		textClasificacionIMC.setText(getClasificacionIMC(dtoEstadisticas.getDiasConsecutivosEjercicio()));
+	}
+	
+	private String getClasificacionIMC(String imcClas) {
+		// TODO Auto-generated method stub
+		float imc = Float.valueOf(imcClas);
+		
+		if(imc <= 18)
+			return "Peso bajo";
+		if(imc > 18 && imc < 24.9)
+			return "Normal";
+		if(imc >= 25 && imc < 26.9)
+			return "Sobrepeso";
+		if(imc >= 27 && imc < 29.9)
+			return "Obesidad grado I";
+		if(imc >= 30 && imc < 39.9)
+			return "Obesidad grado II";
+		if(imc >= 40)
+			return "Obesidad grado III";
+		
+		return "XX";
+	}
+
+	public String getIMC()
+	{
+		DTO_Usuario user = new DAO_Usuario(con).getUsuario();
+		
+		float imc = (float) (Integer.valueOf(user.getPeso())/Math.pow(Integer.valueOf(user.getEestatura()),2)) * (10000);
+		
+		DecimalFormat df = new DecimalFormat();
+		df.setMaximumFractionDigits(2);
+		
+		return String.valueOf(df.format(imc));
 	}
 	
 	//Saves selected style colors to local variables
@@ -166,6 +205,12 @@ public class EstadisticasActivity extends Activity{
 
 			Font f = new Font();					
 			f.changeFontRaleway(con, facebook_name);
+		}
+		else
+		{
+			MenuFragment fragment = (MenuFragment) getFragmentManager().findFragmentById(R.id.simple_menu_fragment);
+			fragment.setContext(con);
+			fragment.setDefaultProfilePic();
 		}
 	}
 
@@ -268,9 +313,22 @@ public class EstadisticasActivity extends Activity{
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		//If the Logo clicked
-		Intent intent = new Intent(this, HomeActivity.class);
-		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		startActivity(intent);
+		switch (item.getItemId()) 
+		{
+			case android.R.id.home:
+				if(viewActionsContentView.isContentShown())
+					viewActionsContentView.showActions();
+				else
+					viewActionsContentView.showContent();
+			return true;
+
+			default:
+				Intent intent = new Intent(this, HomeActivity.class);
+				intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+				startActivity(intent);
+			break;
+		}
+
 		return super.onOptionsItemSelected(item);
 	}
 }

@@ -356,6 +356,12 @@ public class CalendarioActivity extends Activity {
 			f.changeFontRaleway(ctx, facebook_name);
 
 		}
+		else
+		{
+			MenuFragment fragment = (MenuFragment) getFragmentManager().findFragmentById(R.id.simple_menu_fragment);
+			fragment.setContext(ctx);
+			fragment.setDefaultProfilePic();
+		}
 	}
 
 	private void showActivity(int position) 

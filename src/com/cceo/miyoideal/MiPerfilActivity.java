@@ -543,6 +543,12 @@ public class MiPerfilActivity extends FragmentActivity implements DialogInterfac
 			Font f = new Font();					
 			f.changeFontRaleway(con, facebook_name);
 		}
+		else
+		{
+			MenuFragment fragment = (MenuFragment) getFragmentManager().findFragmentById(R.id.simple_menu_fragment);
+			fragment.setContext(con);
+			fragment.setDefaultProfilePic();
+		}
 	}
 
 	private void showActivity(int position) 

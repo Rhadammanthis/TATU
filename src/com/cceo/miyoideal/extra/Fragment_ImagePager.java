@@ -1,6 +1,6 @@
 package com.cceo.miyoideal.extra;
 
-import com.cceo.miyoideal.R;
+
 import com.cceo.miyoideal.TutorialActivity;
 import com.viewpagerindicator.CirclePageIndicator;
 
@@ -18,6 +18,7 @@ import android.support.v4.view.ViewPager;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import com.cceo.miyoideal.R;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;

@@ -118,6 +118,12 @@ public class TutorialActivity extends ActionBarActivity {
 			Font f = new Font();					
 			f.changeFontRaleway(TutorialActivity.this, facebook_name);
 		}
+		else
+		{
+			MenuFragment fragment = (MenuFragment) getFragmentManager().findFragmentById(R.id.simple_menu_fragment);
+			fragment.setContext(this);
+			fragment.setDefaultProfilePic();
+		}
 	}
 
 	private void showActivity(int position) 

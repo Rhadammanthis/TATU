@@ -48,6 +48,7 @@ import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.v4.view.MotionEventCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
 import android.util.Log;
 import android.view.Display;
@@ -181,6 +182,7 @@ public class HomeActivity extends Activity implements OnTouchListener, OnClickLi
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.baseline4);
 		this.getActionBar().setDisplayHomeAsUpEnabled(true);
+		getActionBar().setDisplayShowHomeEnabled(true);
 		getActionBar().setIcon(R.drawable.menu_white);
 		getActionBar().setTitle("");
 
@@ -728,9 +730,17 @@ public class HomeActivity extends Activity implements OnTouchListener, OnClickLi
 		{
 			DTO_Usuario user = new DAO_Usuario(cont).getUsuario();
 			if(user.getSexo().equals("Masculino"))
-				menu_profile_pic.setImageResource(R.drawable.com_facebook_profile_picture_blank_square);
+			{
+				Bitmap icon = BitmapFactory.decodeResource(cont.getResources(),
+                        R.drawable.com_facebook_profile_picture_blank_square);
+				menu_profile_pic.setImageBitmap(API.getRoundedShape(icon));
+			}
 			else
-				menu_profile_pic.setImageResource(R.drawable.female);
+			{
+				Bitmap icon = BitmapFactory.decodeResource(cont.getResources(),
+                        R.drawable.female);
+				menu_profile_pic.setImageBitmap(API.getRoundedShape(icon));
+			}
 		}
 
 	}

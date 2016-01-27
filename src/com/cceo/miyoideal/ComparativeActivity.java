@@ -235,6 +235,12 @@ public class ComparativeActivity extends Activity{
 			TextView facebook_name = (TextView) findViewById(R.id.tvLOL_simple);
 			facebook_name.setText(new API(con).getFacebookName());
 		}
+		else
+		{
+			MenuFragment fragment = (MenuFragment) getFragmentManager().findFragmentById(R.id.simple_menu_fragment);
+			fragment.setContext(con);
+			fragment.setDefaultProfilePic();
+		}
 	}
 	
 	private void showActivity(int position) 

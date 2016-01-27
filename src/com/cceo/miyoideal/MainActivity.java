@@ -62,8 +62,8 @@ import io.fabric.sdk.android.Fabric;
 public class MainActivity extends Activity implements SQLiteFactory{
 
 	// Note: Your consumer key and secret should be obfuscated in your source code before shipping.
-	private static final String TWITTER_KEY = "W0MKS891WG6RThT1rXA0ZXrk2";
-	private static final String TWITTER_SECRET = "qtSPokpJDNzJlIoOKq4rftqW0ibXRXlJYy8vZGjINcSm3yveBe";
+	public static final String TWITTER_KEY = "W0MKS891WG6RThT1rXA0ZXrk2";
+	public static final String TWITTER_SECRET = "qtSPokpJDNzJlIoOKq4rftqW0ibXRXlJYy8vZGjINcSm3yveBe";
 	
 	//layout components
 	private ImageButton button;
@@ -98,7 +98,7 @@ public class MainActivity extends Activity implements SQLiteFactory{
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		this.getActionBar().setDisplayHomeAsUpEnabled(true);
-		getActionBar().setIcon(R.drawable.abc_ab_bottom_solid_dark_holo);
+		//getActionBar().setIcon(R.drawable.abc_ab_bottom_solid_dark_holo);
 		TwitterAuthConfig authConfig = new TwitterAuthConfig(TWITTER_KEY, TWITTER_SECRET);
 		Fabric.with(this, new Twitter(authConfig));
 		FacebookSdk.sdkInitialize(getApplicationContext());
@@ -290,8 +290,8 @@ public class MainActivity extends Activity implements SQLiteFactory{
 
 	public static void setFacebokProfilePic(Bitmap bitMap)
 	{		
-		if(bitMap != null && profilePic!=null)
-			profilePic.setImageResource(R.drawable.abc_ic_cab_done_holo_light);
+		//if(bitMap != null && profilePic!=null)
+			//profilePic.setImageResource(R.drawable.abc_ic_cab_done_holo_light);
 	}
 	
 	public Bitmap getUserPic(String userID) {

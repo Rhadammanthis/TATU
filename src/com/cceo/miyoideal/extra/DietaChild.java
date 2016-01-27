@@ -152,16 +152,19 @@ public class DietaChild {
 		checkBox = new CheckBox(context);
 		checkBox.setChecked(false);
 		FrameLayout.LayoutParams params2 = new FrameLayout.LayoutParams(
-				LayoutParams.WRAP_CONTENT, LayoutParams.FILL_PARENT);
+			//LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT); 
+				(int) (40 * scale + 0.5f), (int) (40 * scale + 0.5f));
 		params2.gravity=Gravity.RIGHT | Gravity.CENTER_VERTICAL;
-		params2.setMargins(0, 0, (int) (-40 * scale + 0.5f), 0); 
+	//	params2.setMargins(0, 0, (int) (-40 * scale + 0.5f), 0); 
 		checkBox.setLayoutParams(params2);
-		checkBox.getLayoutParams().height = checkBox.getLayoutParams().height + (int) (45 * scale + 0.5f); 
-		checkBox.setButtonDrawable(null);
-		checkBox.setScaleY(0.75f);
-		checkBox.setScaleX(0.25f);
-		
+	//	checkBox.setPadding((int) (45 * scale + 0.5f), (int) (45 * scale + 0.5f),  (int) (45 * scale + 0.5f), (int) (45 * scale + 0.5f));
+		//checkBox.getLayoutParams().height = checkBox.getLayoutParams().height + (int) (45 * scale + 0.5f); 
 		checkBox.setBackgroundResource(R.drawable.selector_checkbox_clean);
+		checkBox.setButtonDrawable(null);
+//		checkBox.setScaleY(0.65f);
+//		checkBox.setScaleX(0.25f);
+		
+	//	checkBox.setBackgroundResource(R.drawable.selector_checkbox_clean);
 		
 //		String style = new API(context).getStyle();
 //		if(style.equals("masculino"))

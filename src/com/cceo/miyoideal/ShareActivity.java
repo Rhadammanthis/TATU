@@ -18,9 +18,9 @@ import com.facebook.share.model.SharePhotoContent;
 import com.facebook.share.widget.LikeView;
 import com.facebook.share.widget.ShareButton;
 import com.facebook.share.widget.ShareDialog;
-import com.google.android.gms.plus.Plus;
-import com.google.android.gms.plus.PlusOneButton;
-import com.google.android.gms.plus.PlusShare;
+//import com.google.android.gms.plus.Plus;
+//import com.google.android.gms.plus.PlusOneButton;
+//import com.google.android.gms.plus.PlusShare;
 
 
 import java.io.File;
@@ -76,7 +76,14 @@ import android.widget.Toast;
 import android.provider.MediaStore;
 import io.fabric.sdk.android.Fabric;
 
+import com.twitter.sdk.android.Twitter;
 import com.twitter.sdk.android.tweetcomposer.TweetComposer;
+import com.twitter.sdk.android.core.*;
+import com.twitter.sdk.android.core.Callback;
+import com.twitter.sdk.android.core.Result;
+import com.twitter.sdk.android.core.TwitterException;
+import com.twitter.sdk.android.core.TwitterSession;
+import com.twitter.sdk.android.core.identity.TwitterLoginButton;
 
 public class ShareActivity extends Activity implements View.OnClickListener {
 	PhotoManager photoManager;
@@ -294,6 +301,24 @@ public class ShareActivity extends Activity implements View.OnClickListener {
 				// App code
 			}
 		}); 
+		
+		TwitterAuthConfig authConfig = new TwitterAuthConfig(MainActivity.TWITTER_KEY, MainActivity.TWITTER_SECRET);
+		Fabric.with(this, new Twitter(authConfig));
+		
+		TwitterLoginButton loginTwitterButton = (TwitterLoginButton) findViewById(R.id.login_button);
+		loginTwitterButton.setCallback(new Callback<TwitterSession>() {
+		   @Override
+		   public void success(Result<TwitterSession> result) {
+		       // Do something with result, which provides a TwitterSession for making API calls
+			   Toast.makeText(con, "succes", Toast.LENGTH_SHORT).show();
+		   }
+
+		   @Override
+		   public void failure(TwitterException exception) {
+		       // Do something on failure
+			   Toast.makeText(con, "failure", Toast.LENGTH_SHORT).show();
+		   }
+		});
 	}
 
 	protected void onResume() {
@@ -344,6 +369,12 @@ public class ShareActivity extends Activity implements View.OnClickListener {
 
 			Font f = new Font();					
 			f.changeFontRaleway(con, facebook_name);
+		}
+		else
+		{
+			MenuFragment fragment = (MenuFragment) getFragmentManager().findFragmentById(R.id.simple_menu_fragment);
+			fragment.setContext(con);
+			fragment.setDefaultProfilePic();
 		}
 	}
 
@@ -461,22 +492,22 @@ public class ShareActivity extends Activity implements View.OnClickListener {
 			builder.show();
 		}
 		else if(requestCode == GOOGLEPLUS_CAMERA_CODE && resultCode == RESULT_OK){
-			Intent shareIntent = new PlusShare.Builder(this)
-			.setType("text/plain")
-			.setContentUrl(Uri.parse("http://cceo.com.mx"))
-			.setText("Me siento genial con #YoIdeal")
-			.setStream(photoUri)
-			.getIntent();
-			startActivityForResult(shareIntent, 0);
+//			Intent shareIntent = new PlusShare.Builder(this)
+//			.setType("text/plain")
+//			.setContentUrl(Uri.parse("http://cceo.com.mx"))
+//			.setText("Me siento genial con #YoIdeal")
+//			.setStream(photoUri)
+//			.getIntent();
+//			startActivityForResult(shareIntent, 0);
 		}
 		else if(requestCode == GOOGLEPLUS_GALLERY_CODE){
-			Intent shareIntent = new PlusShare.Builder(this)
-			.setType("text/plain")
-			.setContentUrl(Uri.parse("http://cceo.com.mx"))
-			.setText("Me siento genial gracias a #YoIdeal")
-			.setStream(data.getData())
-			.getIntent();
-			startActivityForResult(shareIntent, 0);
+//			Intent shareIntent = new PlusShare.Builder(this)
+//			.setType("text/plain")
+//			.setContentUrl(Uri.parse("http://cceo.com.mx"))
+//			.setText("Me siento genial gracias a #YoIdeal")
+//			.setStream(data.getData())
+//			.getIntent();
+//			startActivityForResult(shareIntent, 0);
 		}
 		callbackManager.onActivityResult(requestCode, resultCode, data);
 	}

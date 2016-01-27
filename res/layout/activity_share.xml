@@ -81,6 +81,11 @@
         android:scaleType="fitXY"
         android:src="@drawable/share_gplus_circ"
         android:text="GPlus" />
+    
+    <com.twitter.sdk.android.core.identity.TwitterLoginButton
+     android:id="@+id/login_button"
+     android:layout_width="wrap_content"
+     android:layout_height="wrap_content" />
 
 </RelativeLayout>
 

@@ -8,6 +8,7 @@ import java.util.Calendar;
 import java.util.Currency;
 import java.util.Locale;
 
+import com.cceo.miyoideal.R;
 import android.R.bool;
 import android.content.Context;
 import android.content.res.Resources;
@@ -18,6 +19,7 @@ import android.graphics.drawable.Drawable;
 import android.sax.EndElementListener;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -210,7 +212,7 @@ public class CalendarCard extends RelativeLayout {
 					today++;
 
 				((TextView)v.getChildAt(0)).setText(item.getDayOfMonth().toString());
-				((TextView)v.getChildAt(0)).setTextSize(8 * getResources().getDisplayMetrics().density);
+				((TextView)v.getChildAt(0)).setTextSize(TypedValue.COMPLEX_UNIT_SP,14);
 				((TextView)v.getChildAt(0)).setTextColor(Color.WHITE);
 				font.changeFontRaleway(con, ((TextView)v.getChildAt(0)));
 
@@ -377,7 +379,9 @@ public class CalendarCard extends RelativeLayout {
 				celParam = (LayoutParams) v.getChildAt(0).getLayoutParams();
 
 				((TextView)v.getChildAt(0)).setText(item.getDayOfMonth().toString());
+				((TextView)v.getChildAt(0)).setTextSize(TypedValue.COMPLEX_UNIT_SP,14);
 				((TextView)v.getChildAt(0)).setTextColor(Color.WHITE);
+				font.changeFontRaleway(con, ((TextView)v.getChildAt(0)));
 
 				//hide non-current-month cells
 				int day = Integer.parseInt(((TextView)v.getChildAt(0)).getText().toString());
