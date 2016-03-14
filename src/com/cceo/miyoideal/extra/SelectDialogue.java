@@ -25,6 +25,7 @@ import com.cceo.DAO.DAO_Componente;
 import com.cceo.DAO.DAO_Dieta;
 import com.cceo.DAO.DAO_Dieta_Iteration;
 import com.cceo.DAO.DAO_Ejercicio;
+import com.cceo.DAO.DAO_Shopping;
 import com.cceo.DAO.DAO_TutorialControl;
 import com.cceo.DB.SQLiteControl;
 import com.cceo.DTO.DTO_Dieta;
@@ -152,6 +153,8 @@ public class SelectDialogue extends DialogFragment {
 					
 					//reset all dieta checkboxes to not selected
 					new DAO_Componente(con).setAllToNo(new API(con).getID_Dieta());
+					
+					new DAO_Shopping(con).resetChecks();
 					
 					Calendar c = Calendar.getInstance();
 					SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yy");

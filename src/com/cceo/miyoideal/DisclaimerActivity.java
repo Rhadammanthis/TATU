@@ -104,12 +104,13 @@ public class DisclaimerActivity extends Activity {
 				"Mi Dieta", 	//1
 				"Mi Ejercicio", //2
 				"Calendario", 	//3
-				"Seleccionar Dieta",	//4
-				"Antes y Despues", 	//5
-				"Comparte",	//6 
-				"Tip del Día", 	//7
-				"Pregúntanos", 	//8
-				"Tutorial",	//9
+				"Lista de Compras",	//4
+				"Seleccionar Dieta",	//5
+				"Antes y Despues", 	//6
+				"Comparte",	//7 
+				"Tip del Día", 	//8
+				"Pregúntanos", 	//9
+				"Tutorial",	//10
 				};	
 
 		final MyArrayAdapter adapter = new MyArrayAdapter(this,
@@ -170,33 +171,33 @@ public class DisclaimerActivity extends Activity {
 			startActivity(intent);
 			break;
 		case 4:
-			intent = new Intent(DisclaimerActivity.this, SelecDieta.class);
+			intent = new Intent(DisclaimerActivity.this, ShoppingActivity.class);
 			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(intent);
 			break;
 		case 5:
+			intent = new Intent(DisclaimerActivity.this, SelecDieta.class);
+			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(intent);
+			break;
+		case 6:
 			intent = new Intent(DisclaimerActivity.this, ComparativeActivity.class);
 			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(intent);
 
 			break;
-		case 6:
+		case 7:
 			intent = new Intent(DisclaimerActivity.this, ShareActivity.class);
 			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(intent);
 			break;
-		case 7:
+		case 8:
 			//tip del dia (blog)
 			Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.google.com"));
 			browserIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(browserIntent);
 			break;
-		case 8:
-			//preguntanos
-			intent = getOpenFacebookIntent(DisclaimerActivity.this);
-			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-			startActivity(intent);
-			break;
+
 		case 9:
 			intent = new Intent(DisclaimerActivity.this, TutorialActivity.class);
 			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

@@ -6,6 +6,7 @@ import java.util.Calendar;
 import com.cceo.DAO.DAO_Componente;
 import com.cceo.DAO.DAO_Dieta;
 import com.cceo.DAO.DAO_Ejercicio;
+import com.cceo.DAO.DAO_Shopping;
 import com.cceo.DB.SQLiteControl;
 import com.cceo.DTO.DTO_Dieta;
 import com.cceo.DTO.DTO_Ejercicio;
@@ -54,6 +55,8 @@ public class CancelDietaDialog extends DialogFragment{
 				
 				//reset all dieta checkboxes to not selected
 				new DAO_Componente(con).setAllToNo(new API(con).getID_Dieta());
+				
+				new DAO_Shopping(con).resetChecks();
 
 				//clears dieta information;
 				new API(con).clearDieta();

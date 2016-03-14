@@ -15,6 +15,8 @@ public interface SQLiteFactory {
 	
 	public void initRecommendationDB();
 	
+	public void initShoppingDB();
+	
 	public void initEstadisticasDB(String pesoActual, String tallaActual);
 	
 }

@@ -98,9 +98,9 @@ public class EstadisticasActivity extends Activity{
 		textTallaMaxima.setText(dtoEstadisticas.getTallaMaxima());
 		textTallaMinima.setText(dtoEstadisticas.getTallaMinima());
 		textIMC.setText(getIMC());
-		textDiasConsecutivosDieta.setText(getClasificacionIMC(getIMC()));
-		textDiasConsecutivosEjercicio.setText(dtoEstadisticas.getDiasConsecutivosDieta());
-		textClasificacionIMC.setText(getClasificacionIMC(dtoEstadisticas.getDiasConsecutivosEjercicio()));
+		textDiasConsecutivosDieta.setText(dtoEstadisticas.getDiasConsecutivosDieta());
+		textDiasConsecutivosEjercicio.setText(dtoEstadisticas.getDiasConsecutivosEjercicio());
+		textClasificacionIMC.setText(getClasificacionIMC(getIMC()));
 	}
 	
 	private String getClasificacionIMC(String imcClas) {
@@ -173,13 +173,14 @@ public class EstadisticasActivity extends Activity{
 				"Mi Dieta", 	//1
 				"Mi Ejercicio", //2
 				"Calendario", 	//3
-				"Seleccionar Dieta",	//4
-				"Antes y Despues", 	//5
-				"Comparte",	//6 
-				"Tip del Día", 	//7
-				"Pregúntanos", 	//8
-				"Tutorial",	//9
-		"Disclaimer"};	//10
+				"Lista de Compras",	//4
+				"Seleccionar Dieta",	//5
+				"Antes y Despues", 	//6
+				"Comparte",	//7 
+				"Tip del Día", 	//8
+				"Pregúntanos", 	//9
+				"Tutorial",	//10
+		"Disclaimer"};	//11
 
 		final MyArrayAdapter adapter = new MyArrayAdapter(this,
 				android.R.layout.simple_list_item_1, values);
@@ -239,39 +240,44 @@ public class EstadisticasActivity extends Activity{
 			startActivity(intent);
 			break;
 		case 4:
-			intent = new Intent(EstadisticasActivity.this, SelecDieta.class);
+			intent = new Intent(EstadisticasActivity.this, ShoppingActivity.class);
 			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(intent);
 			break;
 		case 5:
+			intent = new Intent(EstadisticasActivity.this, SelecDieta.class);
+			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(intent);
+			break;
+		case 6:
 			intent = new Intent(EstadisticasActivity.this, ComparativeActivity.class);
 			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(intent);
 
 			break;
-		case 6:
+		case 7:
 			intent = new Intent(EstadisticasActivity.this, ShareActivity.class);
 			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(intent);
 			break;
-		case 7:
+		case 8:
 			//tip del dia (blog)
 			Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.google.com"));
 			browserIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(browserIntent);
 			break;
-		case 8:
+		case 9:
 			//preguntanos
 			intent = getOpenFacebookIntent(con);
 			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(intent);
 			break;
-		case 9:
+		case 10:
 			intent = new Intent(EstadisticasActivity.this, TutorialActivity.class);
 			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(intent);			
 			break;
-		case 10:
+		case 11:
 			intent = new Intent(EstadisticasActivity.this, DisclaimerActivity.class);
 			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(intent);

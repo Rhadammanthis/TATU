@@ -76,6 +76,7 @@ import android.widget.Toast;
 
 import com.cceo.DAO.DAO_Componente;
 import com.cceo.DAO.DAO_DietaCompletada;
+import com.cceo.DAO.DAO_Shopping;
 import com.cceo.DAO.DAO_TutorialControl;
 import com.cceo.DAO.DAO_Usuario;
 import com.cceo.DB.SQLiteControl;
@@ -286,6 +287,8 @@ public class HomeActivity extends Activity implements OnTouchListener, OnClickLi
 			db.close();
 			
 			new DAO_Componente(cont).setAllToNo(new API(cont).getID_Dieta());
+			
+			new DAO_Shopping(cont).resetChecks();
 
 			//Call "Update Info" dialog
 			DietaCompletedDialog dialog = new DietaCompletedDialog(cont);
@@ -560,13 +563,14 @@ public class HomeActivity extends Activity implements OnTouchListener, OnClickLi
 				"Mi Dieta", 	//1
 				"Mi Ejercicio", //2
 				"Calendario", 	//3
-				"Seleccionar Dieta",	//4
-				"Antes y Despues", 	//5
-				"Comparte",	//6 
-				"Tip del Día", 	//7
-				"Pregúntanos", 	//8
-				"Tutorial",	//9
-		"Disclaimer"};	//10
+				"Lista de Compras", //4
+				"Seleccionar Dieta",	//5
+				"Antes y Despues", 	//6
+				"Comparte",	//7
+				"Tip del Día", 	//8
+				"Pregúntanos", 	//9
+				"Tutorial",	//10
+		"Disclaimer"};	//11
 
 		final MyArrayAdapter adapter = new MyArrayAdapter(this,
 				android.R.layout.simple_list_item_1, values);
@@ -838,39 +842,44 @@ public class HomeActivity extends Activity implements OnTouchListener, OnClickLi
 			startActivity(intent);
 			break;
 		case 4:
-			intent = new Intent(HomeActivity.this, SelecDieta.class);
+			intent = new Intent(HomeActivity.this, ShoppingActivity.class);
 			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(intent);
 			break;
 		case 5:
+			intent = new Intent(HomeActivity.this, SelecDieta.class);
+			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(intent);
+			break;
+		case 6:
 			intent = new Intent(HomeActivity.this, ComparativeActivity.class);
 			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(intent);
 
 			break;
-		case 6:
+		case 7:
 			intent = new Intent(HomeActivity.this, ShareActivity.class);
 			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(intent);
 			break;
-		case 7:
+		case 8:
 			//tip del dia (blog)
 			Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.google.com"));
 			browserIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(browserIntent);
 			break;
-		case 8:
+		case 9:
 			//preguntanos
 			intent = getOpenFacebookIntent(cont);
 			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(intent);
 			break;
-		case 9:
+		case 10:
 			intent = new Intent(HomeActivity.this, TutorialActivity.class);
 			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(intent);			
 			break;
-		case 10:
+		case 11:
 			intent = new Intent(HomeActivity.this, DisclaimerActivity.class);
 			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(intent);

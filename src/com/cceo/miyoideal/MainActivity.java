@@ -43,6 +43,7 @@ import com.cceo.DB.SQLiteEstadisticas;
 import com.cceo.DB.SQLiteFactory;
 import com.cceo.DB.SQLiteProgramaDB;
 import com.cceo.DB.SQLiteRecommendation;
+import com.cceo.DB.SQLiteShoppingDB;
 import com.cceo.DB.SQLiteTutorialControl;
 import com.cceo.DB.SQLiteUserDB;
 import com.cceo.DTO.DTO_Usuario;
@@ -98,7 +99,7 @@ public class MainActivity extends Activity implements SQLiteFactory{
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		this.getActionBar().setDisplayHomeAsUpEnabled(true);
-		//getActionBar().setIcon(R.drawable.abc_ab_bottom_solid_dark_holo);
+		getActionBar().setIcon(R.drawable.clear);
 		TwitterAuthConfig authConfig = new TwitterAuthConfig(TWITTER_KEY, TWITTER_SECRET);
 		Fabric.with(this, new Twitter(authConfig));
 		FacebookSdk.sdkInitialize(getApplicationContext());
@@ -176,6 +177,7 @@ public class MainActivity extends Activity implements SQLiteFactory{
 					initProgramaDB();
 					initTutorialControl();
 					initRecommendationDB();
+					initShoppingDB();
 										
 					Spinner sexo = (Spinner) main.getChildAt(1);
 					EditText edad = (EditText) main.getChildAt(2);
@@ -263,10 +265,12 @@ public class MainActivity extends Activity implements SQLiteFactory{
 		//if User has yet to sign to Facebook, we use the Facebook profile pic placeholder
 		else
 		{
+			Bitmap icon = BitmapFactory.decodeResource(con.getResources(),
+                    R.drawable.com_facebook_profile_picture_blank_square);
+			profilePic.setImageBitmap(API.getRoundedShape(icon));
 			
 			
-			
-			profilePic.setBackgroundResource(R.drawable.com_facebook_profile_picture_blank_square);
+			//profilePic.setBackgroundResource(R.drawable.com_facebook_profile_picture_blank_square);
 		}
 		
 	}
@@ -734,6 +738,53 @@ public class MainActivity extends Activity implements SQLiteFactory{
 		values.put("recommendation_less_second", "0");
 
 		db.getWritableDatabase().insert("recommendation", null, values);
+
+		db.close();
+	}
+
+
+	@Override
+	public void initShoppingDB() {
+		// TODO Auto-generated method stub
+		SQLiteShoppingDB db = new SQLiteShoppingDB(this);
+		db.getWritableDatabase();
+		
+		Log.d("db", "Control " + db.getDatabaseName());
+
+		ContentValues values = new ContentValues();
+		values.put("id_shopping", "1");
+		values.put("id_dieta", "1");
+		values.put("item", "Manzana");
+		values.put("status", "off");
+		db.getWritableDatabase().insert("shopping", null, values);
+		
+		values = new ContentValues();
+		values.put("id_shopping", "2");
+		values.put("id_dieta", "1");
+		values.put("item", "Pascado");
+		values.put("status", "off");
+		db.getWritableDatabase().insert("shopping", null, values);
+		
+		values = new ContentValues();
+		values.put("id_shopping", "3");
+		values.put("id_dieta", "1");
+		values.put("item", "Arroz");
+		values.put("status", "off");
+		db.getWritableDatabase().insert("shopping", null, values);
+		
+		values = new ContentValues();
+		values.put("id_shopping", "4");
+		values.put("id_dieta", "2");
+		values.put("item", "Yogurth");
+		values.put("status", "off");
+		db.getWritableDatabase().insert("shopping", null, values);
+		
+		values = new ContentValues();
+		values.put("id_shopping", "5");
+		values.put("id_dieta", "2");
+		values.put("item", "Brocoli");
+		values.put("status", "off");
+		db.getWritableDatabase().insert("shopping", null, values);
 
 		db.close();
 	}

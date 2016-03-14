@@ -300,13 +300,14 @@ public class EjercicioActivity extends Activity {
 				"Mi Perfil", 	//0 
 				"Mi Dieta", 	//1
 				"Calendario", 	//2
-				"Seleccionar Dieta",	//3
-				"Antes y Despues", 	//4
-				"Comparte",	//5
-				"Tip del Día", 	//6
-				"Pregúntanos", 	//7
-				"Tutorial",	//8
-		"Disclaimer"};	//9
+				"Lista de Compras", //3
+				"Seleccionar Dieta",	//4
+				"Antes y Despues", 	//5
+				"Comparte",	//6
+				"Tip del Día", 	//7
+				"Pregúntanos", 	//8
+				"Tutorial",	//9
+		"Disclaimer"};	//10
 
 		final MyArrayAdapter adapter = new MyArrayAdapter(this,
 				android.R.layout.simple_list_item_1, values);
@@ -361,39 +362,44 @@ public class EjercicioActivity extends Activity {
 			startActivity(intent);
 			break;
 		case 3:
-			intent = new Intent(EjercicioActivity.this, SelecDieta.class);
+			intent = new Intent(EjercicioActivity.this, ShoppingActivity.class);
 			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(intent);
 			break;
 		case 4:
+			intent = new Intent(EjercicioActivity.this, SelecDieta.class);
+			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(intent);
+			break;
+		case 5:
 			intent = new Intent(EjercicioActivity.this, ComparativeActivity.class);
 			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(intent);
 
 			break;
-		case 5:
+		case 6:
 			intent = new Intent(EjercicioActivity.this, ShareActivity.class);
 			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(intent);
 			break;
-		case 6:
+		case 7:
 			//tip del dia (blog)
 			Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.google.com"));
 			browserIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(browserIntent);
 			break;
-		case 7:
+		case 8:
 			//preguntanos
 			intent = getOpenFacebookIntent(con);
 			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(intent);
 			break;
-		case 8:
+		case 9:
 			intent = new Intent(EjercicioActivity.this, TutorialActivity.class);
 			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(intent);			
 			break;
-		case 9:
+		case 10:
 			intent = new Intent(EjercicioActivity.this, DisclaimerActivity.class);
 			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(intent);
