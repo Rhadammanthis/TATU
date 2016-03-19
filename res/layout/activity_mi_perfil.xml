@@ -196,7 +196,7 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="60dip"
+            android:layout_height="wrap_content"
             android:paddingLeft="40dip"
             android:paddingRight="40dip" >
 
@@ -215,6 +215,7 @@
             <Spinner
                 android:id="@+id/spinner1"
                 android:layout_width="100dip"
+                android:layout_centerVertical="true"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentTop="true" />
@@ -258,13 +259,6 @@
             android:windowSoftInputMode="stateHidden" >
 
         </EditText>
-        <TextView android:text="Escribe aquí tus Motivaciones"
-            android:textColor="#FFFFFF"
-            android:alpha=".30"
-            android:textSize="17sp"
-            android:layout_centerInParent="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
         </RelativeLayout>
 
         <RelativeLayout
@@ -280,7 +274,8 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
-                android:text="Fecha Límite"
+                android:layout_toLeftOf="@+id/goalDate"
+                android:text="Fecha para lograrlo"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="#ffffff"
                 android:textSize="20sp" />

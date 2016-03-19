@@ -48,7 +48,7 @@
             android:id="@+id/editTalla"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Talla en cm"
+            android:hint="Talla de Cintura en cm"
             android:inputType="numberDecimal"
             android:textColor="#FFFFFF"
             android:textColorHint="#FFFFFF" />
