@@ -51,12 +51,12 @@ public class ComparativeActivity extends Activity{
 	PhotoManager photoManager;
 	private File photoFile;
 	private Uri photoUri;
-	
+
 	private int CAMERA_CODE = 1;
-	
+
 	private ActionsContentView viewActionsContentView;
 	private ListView viewActionsList;
-	
+
 	@Override
 	public void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
@@ -64,14 +64,14 @@ public class ComparativeActivity extends Activity{
 		this.getActionBar().setDisplayHomeAsUpEnabled(true);
 		getActionBar().setIcon(R.drawable.menu_white);
 		this.setTitle("		Antes y Después");
-		
+
 		con = this;
-		
+
 		setUpMenu();
-		
+
 		initialImage = (ImageView) findViewById(R.id.imageViewInicial);
 		finalImage = (ImageView) findViewById(R.id.imageViewFinal);
-		
+
 		try {
 			imageFiles = getTheTwoImages();
 			if(imageFiles != null){
@@ -86,10 +86,11 @@ public class ComparativeActivity extends Activity{
 			e.printStackTrace();
 		}
 	}
-	
+
 	//loads first and last photos in album to ImageViews
 	public void loadImages()
 	{
+		
 		LayoutParams paramsInitialImage = (LayoutParams) initialImage.getLayoutParams();
 		LayoutParams paramsFinalImage = (LayoutParams) finalImage.getLayoutParams();
 		DisplayMetrics displaymetrics = new DisplayMetrics();
@@ -124,19 +125,26 @@ public class ComparativeActivity extends Activity{
 		}
 		Bitmap rotatedBitmapLast = Bitmap.createBitmap(lastBitmap, 0, 0,
                 lastBitmap.getWidth(), lastBitmap.getHeight(), matrix, true);
-		initialImage.setImageBitmap(ShrinkBitmap(imageFiles[0].getAbsolutePath(), 400, 400));
+		initialImage.setImageBitmap(getResizedBitmap(rotatedBitmapFirst,400,400));
 		initialImage.setScaleType(ScaleType.FIT_XY);
-		finalImage.setImageBitmap(ShrinkBitmap(imageFiles[1].getAbsolutePath(), 600, 600));
-		finalImage.setScaleType(ScaleType.FIT_XY);	
+		finalImage.setImageBitmap(getResizedBitmap(rotatedBitmapLast,400,400));
+		finalImage.setScaleType(ScaleType.FIT_XY);
+		
+		
+		
+//		initialImage.setScaleType(ImageView.ScaleType.MATRIX);   //required
+//		matrix.postRotate((float) 90, initialImage.getDrawable().getBounds().width()/2, initialImage.getDrawable().getBounds().height()/2);
+//		initialImage.setImageMatrix(matrix);
 	}
-	
+
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) 
 	{
-		loadImages();
+//	
+		
 		startActivity(getIntent());
 	}
-	
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		//Add the menu layout to the action bar
@@ -144,63 +152,48 @@ public class ComparativeActivity extends Activity{
 		inflater.inflate(R.menu.extra_button, menu);
 		return super.onCreateOptionsMenu(menu);
 	}
-	
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		//If the Logo clicked
-		Toast.makeText(con, String.valueOf(item.getItemId()), Toast.LENGTH_LONG).show();
+		//Toast.makeText(con, String.valueOf(item.getItemId()), Toast.LENGTH_LONG).show();
 
 		switch (item.getItemId()) 
 		{
-			case 16908332:
-				if(viewActionsContentView.isContentShown())
-					viewActionsContentView.showActions();
-				else
-					viewActionsContentView.showContent();
-			return true;
-			
-			case 2131165560:
-				try {
+		case R.id.action_home:
+			Intent intent = new Intent(this, HomeActivity.class);
+			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(intent);
+			break;
+
+		case R.id.action_photo:
+			try {
 				startCamera(CAMERA_CODE);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-				break;
-
-			default:
-				Intent intent = new Intent(this, HomeActivity.class);
-				intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-				startActivity(intent);
 			break;
+
+		default:
+			if(viewActionsContentView.isContentShown())
+				viewActionsContentView.showActions();
+			else
+				viewActionsContentView.showContent();
+			return true;
+			
 		}
 
-//		if(item.getItemId() == findViewById(R.id.action_home).getId())
-//		{
-//			Intent intent = new Intent(this, HomeActivity.class);
-//			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//			startActivity(intent);			
-//			
-//		}
-//		else
-//		{
-//			try {
-//				startCamera(CAMERA_CODE);
-//			} catch (IOException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-//		}
-		
+
 		return super.onOptionsItemSelected(item);
 	}
-	
+
 	private void setUpMenu()
 	{
 		viewActionsContentView = (ActionsContentView) findViewById(R.id.comparative_actionsContentView);
 
 		viewActionsList = (ListView) findViewById(R.id.actions_simple);
-		
+
 		final String[] values = new String[] { 
 				"Mi Perfil", 	//0 
 				"Mi Dieta", 	//1
@@ -226,13 +219,13 @@ public class ComparativeActivity extends Activity{
 
 			}
 		});
-		
+
 		if(!new API(con).getFacebookID().equals(""))
 		{
 			MenuFragment fragment = (MenuFragment) getFragmentManager().findFragmentById(R.id.simple_menu_fragment);
 			fragment.setFacebookId(new API(con).getFacebookID());
 			fragment.runImageAsyncTask();
-			
+
 			TextView facebook_name = (TextView) findViewById(R.id.tvLOL_simple);
 			facebook_name.setText(new API(con).getFacebookName());
 		}
@@ -243,7 +236,7 @@ public class ComparativeActivity extends Activity{
 			fragment.setDefaultProfilePic();
 		}
 	}
-	
+
 	private void showActivity(int position) 
 	{
 		final Intent intent;
@@ -309,7 +302,7 @@ public class ComparativeActivity extends Activity{
 			return;
 		}
 	}
-	
+
 	public static Intent getOpenFacebookIntent(Context context) {
 
 		try {
@@ -319,14 +312,14 @@ public class ComparativeActivity extends Activity{
 			return new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.facebook.com/miyoideal"));
 		}
 	}
-	
+
 	//Get the two images
 	private File[] getTheTwoImages() throws ParseException, IOException{
 		int last, first;
 		String[] namesList;
 		File[] arrayImages = null;
-		String state = Environment.getExternalStorageState();
-		if(state.contentEquals(Environment.MEDIA_MOUNTED) || state.contentEquals(Environment.MEDIA_MOUNTED_READ_ONLY)){
+//		String state = Environment.getExternalStorageState();
+//		if(state.contentEquals(Environment.MEDIA_MOUNTED) || state.contentEquals(Environment.MEDIA_MOUNTED_READ_ONLY)){
 			File yoIdealDirectory = Environment.getExternalStorageDirectory();
 			File yoIdealDir = new File(yoIdealDirectory.getAbsolutePath()+"/Pictures/YoIdeal/");
 			//If the directory doesn't exists
@@ -358,56 +351,54 @@ public class ComparativeActivity extends Activity{
 				else{
 					//Toast.makeText(this, "No se encontraron fotos para hacer la comparacion", Toast.LENGTH_LONG).show();
 					new AlertDialog.Builder(this) 
-				    	.setTitle("Bienvenido") 
-				    	.setMessage("Tómate una foto al terminar cada guía de alimentación para observar tu progreso") 
-				    	.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() { 
-				    		public void onClick(DialogInterface dialog, int which) { 
-				    			// continue with delete
-				    			
-				    		} 
-				    	}).setIcon(android.R.drawable.ic_dialog_alert) 
-				        .show(); 
+					.setTitle("Bienvenido") 
+					.setMessage("Tómate una foto al terminar cada guía de alimentación para observar tu progreso") 
+					.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() { 
+						public void onClick(DialogInterface dialog, int which) { 
+							// continue with delete
+
+						} 
+					}).setIcon(android.R.drawable.ic_dialog_alert) 
+					.show(); 
 					arrayImages = null;
 				}
 			}else{
 				new AlertDialog.Builder(this) 
-		    	.setTitle("Bienvenido") 
-		    	.setMessage("Tómate una foto al terminar cada guía de alimentación para observar tu progreso") 
-		    	.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() { 
-		    		public void onClick(DialogInterface dialog, int which) { 
-		    			// continue with delete
-		    			
-		    		} 
-		    	}).setIcon(android.R.drawable.ic_dialog_alert) 
-		        .show(); 
+				.setTitle("Bienvenido") 
+				.setMessage("Tómate una foto al terminar cada guía de alimentación para observar tu progreso") 
+				.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() { 
+					public void onClick(DialogInterface dialog, int which) { 
+						// continue with delete
+
+					} 
+				}).setIcon(android.R.drawable.ic_dialog_alert) 
+				.show(); 
 			}
-		}else{
-			arrayImages = null;
-		}
+		
 		return arrayImages;
 	}
-	
+
 	private Matrix verifyOrientation(String path) throws IOException{
-				 
+
 		ExifInterface exif = new ExifInterface(path);
 		int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED);
 		Matrix matrix = new Matrix(); 
 		switch (orientation) {
 		case ExifInterface.ORIENTATION_ROTATE_90:
-		    matrix.postRotate(90); 
-		    break; 
+			matrix.postRotate(90); 
+			break; 
 		case ExifInterface.ORIENTATION_ROTATE_180:
-		    matrix.postRotate(180); 
-		    break; 
+			matrix.postRotate(180); 
+			break; 
 		case ExifInterface.ORIENTATION_ROTATE_270:
-		    matrix.postRotate(270); 
-		    break; 
+			matrix.postRotate(270); 
+			break; 
 		default: 
-		    break; 
+			break; 
 		}
 		return matrix;
 	}
-	
+
 	//Set the extras for ShareActivity and start the camera
 	public void startCamera(int requestCode) throws IOException{
 		photoManager = new PhotoManager();
@@ -421,28 +412,21 @@ public class ComparativeActivity extends Activity{
 			startActivityForResult(takePictureIntent, requestCode);
 		}	
 	}
-	
-	Bitmap ShrinkBitmap(String file, int width, int height){
 
-		 BitmapFactory.Options bmpFactoryOptions = new BitmapFactory.Options();
-		    bmpFactoryOptions.inJustDecodeBounds = true;
-		    Bitmap bitmap = BitmapFactory.decodeFile(file, bmpFactoryOptions);
+	public Bitmap getResizedBitmap(Bitmap bm, int newWidth, int newHeight) {
+	    int width = bm.getWidth();
+	    int height = bm.getHeight();
+	    float scaleWidth = ((float) newWidth) / width;
+	    float scaleHeight = ((float) newHeight) / height;
+	    // CREATE A MATRIX FOR THE MANIPULATION
+	    Matrix matrix = new Matrix();
+	    // RESIZE THE BIT MAP
+	    matrix.postScale(scaleWidth, scaleHeight);
 
-		    int heightRatio = (int)Math.ceil(bmpFactoryOptions.outHeight/(float)height);
-		    int widthRatio = (int)Math.ceil(bmpFactoryOptions.outWidth/(float)width);
-
-		    if (heightRatio > 1 || widthRatio > 1)
-		    {
-		     if (heightRatio > widthRatio)
-		     {
-		      bmpFactoryOptions.inSampleSize = heightRatio;
-		     } else {
-		      bmpFactoryOptions.inSampleSize = widthRatio; 
-		     }
-		    }
-
-		    bmpFactoryOptions.inJustDecodeBounds = false;
-		    bitmap = BitmapFactory.decodeFile(file, bmpFactoryOptions);
-		 return bitmap;
-		}
+	    // "RECREATE" THE NEW BITMAP
+	    Bitmap resizedBitmap = Bitmap.createBitmap(
+	        bm, 0, 0, width, height, matrix, false);
+	    bm.recycle();
+	    return resizedBitmap;
+	}
 }

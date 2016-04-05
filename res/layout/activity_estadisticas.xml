@@ -73,7 +73,7 @@
 	        android:layout_alignLeft="@+id/textView3"
 	        android:layout_below="@+id/textView3"
 	        android:layout_marginTop="11dp"
-	        android:text="Peso Perdido Ultimo Tratamiento" />
+	        android:text="Peso Perdido Último Tratamiento" />
 	
 	    <TextView
 	        android:id="@+id/textPesoPerdidoTratamiento"
@@ -93,7 +93,7 @@
 	        android:layout_alignLeft="@+id/textView4"
 	        android:layout_below="@+id/textView4"
 	        android:layout_marginTop="9dp"
-	        android:text="Peso Maximo" />
+	        android:text="Peso Máximo" />
 	
 	    <TextView
 	        android:id="@+id/textPesoMaximo"
@@ -123,7 +123,7 @@
 	        android:layout_alignLeft="@+id/textView6"
 	        android:layout_below="@+id/textView6"
 	        android:layout_marginTop="8dp"
-	        android:text="Peso Minimo" />
+	        android:text="Peso Mínimo" />
 	
 	    <TextView
 	        android:id="@+id/textView8"
@@ -164,7 +164,7 @@
 	        android:layout_alignLeft="@+id/textView9"
 	        android:layout_below="@+id/textView9"
 	        android:layout_marginTop="8dp"
-	        android:text="Talla Maxima" />
+	        android:text="Talla Máxima" />
 	
 	    <TextView
 	        android:id="@+id/textTallaMaximo"
@@ -184,7 +184,7 @@
 	        android:layout_below="@+id/textView7"
 	        android:layout_marginTop="9dp"
 	        android:paddingBottom="15dip"
-	        android:text="Talla Minima" />
+	        android:text="Talla Mínima" />
 	
 	    <TextView
 	        android:id="@+id/textTallaMinima"
