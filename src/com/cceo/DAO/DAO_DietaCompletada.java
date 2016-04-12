@@ -109,7 +109,7 @@ public class DAO_DietaCompletada {
 		SQLiteDietaCompletadaDB db = new SQLiteDietaCompletadaDB(con);
 		db.getReadableDatabase();
 
-		String query = "select * from (select * from dieta_completada order by id_dieta_completada DESC limit 4) order by id_dieta_completada DESC;";
+		String query = "select * from (select * from dieta_completada order by id_dieta_completada DESC limit 4) order by id_dieta_completada ASC;";
 		Cursor cursor = db.getReadableDatabase().rawQuery(query, null);
 		
 		Log.d("grafica", "retrieve usuario");

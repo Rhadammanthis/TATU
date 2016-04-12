@@ -91,8 +91,8 @@ public class DietaCompleteNotification extends BroadcastReceiver {
 
 					NotificationCompat.Builder mNotificationBuilder = new NotificationCompat.Builder(context)
 					.setSmallIcon(R.drawable.notification_icon)
-					.setContentTitle("My Notification")
-					.setContentText("Se completo la Dieta");
+					.setContentTitle("Yo Ideal")
+					.setContentText("Has completado la dieta!");
 					//Implicit intent
 					Intent resultIntent = new Intent(context, MainActivity.class);
 					//resultIntent.putExtra("response", true);
