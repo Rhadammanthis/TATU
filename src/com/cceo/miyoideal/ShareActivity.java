@@ -24,6 +24,7 @@ import com.facebook.share.widget.ShareDialog;
 
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -79,10 +80,6 @@ import io.fabric.sdk.android.Fabric;
 import com.twitter.sdk.android.Twitter;
 import com.twitter.sdk.android.tweetcomposer.TweetComposer;
 import com.twitter.sdk.android.core.*;
-import com.twitter.sdk.android.core.Callback;
-import com.twitter.sdk.android.core.Result;
-import com.twitter.sdk.android.core.TwitterException;
-import com.twitter.sdk.android.core.TwitterSession;
 import com.twitter.sdk.android.core.identity.TwitterLoginButton;
 
 public class ShareActivity extends Activity implements View.OnClickListener {
@@ -108,8 +105,9 @@ public class ShareActivity extends Activity implements View.OnClickListener {
 	private Button facebookButton;
 	private ImageButton twitterButton;
 	private ImageButton googlePlusButton;
+	private ImageButton instaButton;
 	//private PlusOneButton mPlusOneButton;
-	private Button twitterFollowButton;
+	//private Button twitterFollowButton;
 	private Uri tempUri;
 	private Uri photoUri;
 	private ShareDialog shareDialog;
@@ -149,19 +147,22 @@ public class ShareActivity extends Activity implements View.OnClickListener {
 		twitterButton = (ImageButton) findViewById(TWITTER_BUTTON);
 		twitterButton.setOnClickListener(this);
 
-		twitterFollowButton = (Button) findViewById(R.id.follow_button);
-		twitterFollowButton.setOnClickListener(this);
+//		twitterFollowButton = (Button) findViewById(R.id.follow_button);
+//		twitterFollowButton.setOnClickListener(this);
 
 		googlePlusButton = (ImageButton) findViewById(GOOGLEPLUS_BUTTON);
 		googlePlusButton.setOnClickListener(this);
+		
+		instaButton = (ImageButton) findViewById(R.id.shareInsta);
+		instaButton.setOnClickListener(this);
 
 		//mPlusOneButton = (PlusOneButton) findViewById(R.id.plus_one_button);
 
 		//AQUII
-		LikeView likeView = (LikeView) findViewById(R.id.like_facebook);
-		likeView.setObjectIdAndType(
-				"https://www.facebook.com/miyoideal",
-				LikeView.ObjectType.PAGE);
+//		LikeView likeView = (LikeView) findViewById(R.id.like_facebook);
+//		likeView.setObjectIdAndType(
+//				"https://www.facebook.com/miyoideal",
+//				LikeView.ObjectType.PAGE);
 
 
 		callbackManager = CallbackManager.Factory.create();
@@ -305,20 +306,20 @@ public class ShareActivity extends Activity implements View.OnClickListener {
 		TwitterAuthConfig authConfig = new TwitterAuthConfig(MainActivity.TWITTER_KEY, MainActivity.TWITTER_SECRET);
 		Fabric.with(this, new Twitter(authConfig));
 		
-		TwitterLoginButton loginTwitterButton = (TwitterLoginButton) findViewById(R.id.login_button);
-		loginTwitterButton.setCallback(new Callback<TwitterSession>() {
-		   @Override
-		   public void success(Result<TwitterSession> result) {
-		       // Do something with result, which provides a TwitterSession for making API calls
-			   Toast.makeText(con, "succes", Toast.LENGTH_SHORT).show();
-		   }
-
-		   @Override
-		   public void failure(TwitterException exception) {
-		       // Do something on failure
-			   Toast.makeText(con, "failure", Toast.LENGTH_SHORT).show();
-		   }
-		});
+//		TwitterLoginButton loginTwitterButton = (TwitterLoginButton) findViewById(R.id.login_button);
+//		loginTwitterButton.setCallback(new Callback<TwitterSession>() {
+//		   @Override
+//		   public void success(Result<TwitterSession> result) {
+//		       // Do something with result, which provides a TwitterSession for making API calls
+//			   Toast.makeText(con, "succes", Toast.LENGTH_SHORT).show();
+//		   }
+//
+//		   @Override
+//		   public void failure(TwitterException exception) {
+//		       // Do something on failure
+//			   Toast.makeText(con, "failure", Toast.LENGTH_SHORT).show();
+//		   }
+//		});
 	}
 
 	protected void onResume() {
@@ -514,6 +515,30 @@ public class ShareActivity extends Activity implements View.OnClickListener {
 //			.setStream(data.getData())
 //			.getIntent();
 //			startActivityForResult(shareIntent, 0);
+		}else if(requestCode == 123)
+		{
+	        Intent intent = getPackageManager().getLaunchIntentForPackage("com.instagram.android");
+	        if (intent != null)
+	        {
+	            Intent shareIntent = new Intent();
+	            shareIntent.setAction(Intent.ACTION_SEND);
+	            shareIntent.setPackage("com.instagram.android");
+	            
+	            String imagePath = "";
+	            shareIntent.putExtra(Intent.EXTRA_STREAM, photoUri);
+	            shareIntent.setType("image/jpeg");
+
+	            startActivity(shareIntent);
+	        }
+	        else
+	        {
+	            // bring user to the market to download the app.
+	            // or let them choose an app?
+	            intent = new Intent(Intent.ACTION_VIEW);
+	            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+	            intent.setData(Uri.parse("market://details?id="+"com.instagram.android"));
+	            startActivity(intent);
+	        }
 		}
 		callbackManager.onActivityResult(requestCode, resultCode, data);
 	}
@@ -522,16 +547,7 @@ public class ShareActivity extends Activity implements View.OnClickListener {
 	public void onClick(View v) {
 		//For Twitter, Facebook or Google+ share buttons
 		final int buttonId = v.getId();
-		if(buttonId == R.id.follow_button){
-			// Twitter follow button
-			try { 
-				//user_id get from http://gettwitterid.com
-				startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("twitter://follow?user_id=613887285"))); 
-			} catch (ActivityNotFoundException e) { 
-				startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://twitter.com/intent/follow?user_id=613887285"))); 
-			}
-		}
-		else{
+		
 			AlertDialog.Builder builder = new AlertDialog.Builder(ShareActivity.this);
 			CharSequence camera = getResources().getString(R.string.action_photo_camera);
 			CharSequence gallery = getResources().getString(R.string.action_photo_gallery);
@@ -550,6 +566,8 @@ public class ShareActivity extends Activity implements View.OnClickListener {
 							else if(buttonId == GOOGLEPLUS_BUTTON){
 								startCamera(GOOGLEPLUS_CAMERA_CODE);
 							}
+							else if(buttonId == R.id.shareInsta)
+								startCamera(123);
 						} catch (IOException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -566,7 +584,7 @@ public class ShareActivity extends Activity implements View.OnClickListener {
 				}
 			});
 			builder.show();
-		}
+		
 	}
 
 	@Override
